@@ -4,7 +4,2384 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Explore our comprehensive technical overview. Learn about our architecture, systems, and capabilities. Get detailed insights today.">
-    <title>Technical Overview | Blank Site 2026</title>
+    <title>Technical Oweb application/stitch/projects/15390106584015138410/screens/3172057542831781766
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>JAM Safety OS — Technical Architecture Deep Dive</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap"
+            rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+            rel="stylesheet">
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0
+            }
+    
+            html,
+            body {
+                height: 100%;
+                background: #0d1117;
+                font-family: Inter, system-ui, sans-serif;
+                color: #e6edf3;
+                -webkit-font-smoothing: antialiased
+            }
+    
+            .ms {
+                font-family: 'Material Symbols Outlined';
+                font-weight: 400;
+                font-style: normal;
+                line-height: 1;
+                white-space: nowrap;
+                font-feature-settings: 'liga';
+                -webkit-font-feature-settings: 'liga';
+                display: inline-block
+            }
+    
+            code,
+            pre,
+            .mono {
+                font-family: 'JetBrains Mono', monospace
+            }
+    
+            .layout {
+                display: flex;
+                min-height: 100vh
+            }
+    
+            /* NAV */
+            .sidenav {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 252px;
+                background: #010409;
+                display: flex;
+                flex-direction: column;
+                padding: 22px 14px;
+                z-index: 50;
+                border-right: 1px solid #21262d
+            }
+    
+            .nav-brand {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                padding: 4px 8px 18px;
+                border-bottom: 1px solid #21262d;
+                margin-bottom: 16px
+            }
+    
+            .nav-brand-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 7px;
+                background: #1f6feb;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: none
+            }
+    
+            .nav-section {
+                font-size: 12.5px;
+                font-weight: 700;
+                letter-spacing: .07em;
+                text-transform: uppercase;
+                color: #8b949e;
+                padding: 0 8px 7px;
+                margin-top: 6px
+            }
+    
+            .nav-items {
+                display: flex;
+                flex-direction: column;
+                gap: 2px
+            }
+    
+            .nav-item {
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                padding: 0 10px;
+                cursor: pointer;
+                border-radius: 6px;
+                font-size: 13.5px;
+                font-weight: 600;
+                color: #8b949e;
+                transition: background .12s, color .12s;
+                user-select: none
+            }
+    
+            .nav-item:hover {
+                background: #161b22;
+                color: #e6edf3
+            }
+    
+            .nav-item.active {
+                background: #1f6feb22;
+                color: #58a6ff
+            }
+    
+            .nav-item .ms {
+                font-size: 17px;
+                flex: none
+            }
+    
+            .nav-meta {
+                margin-top: auto;
+                background: #161b22;
+                border: 1px solid #21262d;
+                border-radius: 8px;
+                padding: 12px 14px
+            }
+    
+            /* MAIN */
+            .main {
+                flex: 1;
+                margin-left: 252px;
+                display: flex;
+                flex-direction: column;
+                min-width: 0
+            }
+    
+            .topbar {
+                position: sticky;
+                top: 0;
+                z-index: 40;
+                height: 66px;
+                background: rgba(13, 17, 23, .92);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid #21262d;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 34px
+            }
+    
+            .content {
+                flex: 1;
+                padding: 32px;
+                max-width: 1200px;
+                width: 100%
+            }
+    
+            .section {
+                display: none;
+                flex-direction: column;
+                gap: 24px
+            }
+    
+            .section.active {
+                display: flex
+            }
+    
+            /* CARDS */
+            .card {
+                background: #161b22;
+                border: 1px solid #21262d;
+                border-radius: 10px
+            }
+    
+            .card-header {
+                padding: 16px 20px;
+                border-bottom: 1px solid #21262d;
+                display: flex;
+                align-items: center;
+                gap: 10px
+            }
+    
+            .card-body {
+                padding: 20px 22px
+            }
+    
+            .card-dark {
+                background: #0d1117;
+                border: 1px solid #21262d;
+                border-radius: 10px
+            }
+    
+            /* Rule: a card with no table, code-block or internal grid (i.e. plain prose,
+       or a short stacked list) never spans more than ~50% of .content — long
+       unbroken text lines are unreadable at full width. Cards already confined
+       to a .grid-2/.grid-3 column don't need this; it's only for standalone cards. */
+            .card-narrow {
+                max-width: 600px
+            }
+    
+            /* BADGES */
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                border-radius: 5px;
+                padding: 3px 9px;
+                font-size: 13.5px;
+                font-weight: 600
+            }
+    
+            .badge-blue {
+                color: #58a6ff;
+                background: #1f6feb22;
+                border: 1px solid #1f6feb55
+            }
+    
+            .badge-green {
+                color: #3fb950;
+                background: #23863622;
+                border: 1px solid #23863655
+            }
+    
+            .badge-purple {
+                color: #bc8cff;
+                background: #8957e522;
+                border: 1px solid #8957e555
+            }
+    
+            .badge-orange {
+                color: #d29922;
+                background: #bb800022;
+                border: 1px solid #bb800055
+            }
+    
+            .badge-red {
+                color: #f85149;
+                background: #da363322;
+                border: 1px solid #da363355
+            }
+    
+            .badge-gray {
+                color: #8b949e;
+                background: #21262d;
+                border: 1px solid #30363d
+            }
+    
+            /* TYPOGRAPHY */
+            .eyebrow {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+                color: #58a6ff;
+                margin-bottom: 9px
+            }
+    
+            .h1 {
+                font-size: 44px;
+                font-weight: 800;
+                letter-spacing: -.03em;
+                color: #e6edf3;
+                line-height: 1.05
+            }
+    
+            .h2 {
+                font-size: 22px;
+                font-weight: 800;
+                color: #e6edf3;
+                letter-spacing: -.01em
+            }
+    
+            .h3 {
+                font-size: 15px;
+                font-weight: 700;
+                color: #e6edf3
+            }
+    
+            .h4 {
+                font-size: 14px;
+                font-weight: 700;
+                color: #c9d1d9
+            }
+    
+            .body {
+                font-size: 14.5px;
+                line-height: 1.75;
+                color: #8b949e
+            }
+    
+            .label {
+                font-size: 13.5px;
+                font-weight: 600;
+                color: #7d8590;
+                text-transform: uppercase;
+                letter-spacing: .06em
+            }
+    
+            /* GRIDS */
+            .grid-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px
+            }
+    
+            .grid-3 {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 14px
+            }
+    
+            /* CODE BLOCKS */
+            .code-block {
+                background: #0d1117;
+                border: 1px solid #21262d;
+                border-radius: 8px;
+                padding: 16px 18px;
+                font-size: 13px;
+                color: #e6edf3;
+                overflow-x: auto;
+                line-height: 1.6
+            }
+    
+            .code-block .kw {
+                color: #ff7b72
+            }
+    
+            .code-block .str {
+                color: #a5d6ff
+            }
+    
+            .code-block .cm {
+                color: #6e7680;
+                font-style: italic
+            }
+    
+            .code-block .fn {
+                color: #d2a8ff
+            }
+    
+            .code-block .num {
+                color: #79c0ff
+            }
+    
+            .code-block .op {
+                color: #ff7b72
+            }
+    
+            .code-block .ty {
+                color: #ffa657
+            }
+    
+            /* PERMISSION TABLE */
+            .perm-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px
+            }
+    
+            .perm-table th {
+                padding: 9px 12px;
+                text-align: left;
+                font-size: 12.5px;
+                font-weight: 700;
+                letter-spacing: .06em;
+                text-transform: uppercase;
+                color: #7d8590;
+                background: #0d1117;
+                border-bottom: 1px solid #21262d
+            }
+    
+            .perm-table td {
+                padding: 9px 12px;
+                border-bottom: 1px solid #1a2030;
+                vertical-align: middle
+            }
+    
+            .perm-table tr:last-child td {
+                border-bottom: none
+            }
+    
+            .perm-table tr:hover td {
+                background: #161b22
+            }
+    
+            .pcheck {
+                color: #3fb950;
+                font-size: 15px
+            }
+    
+            .pcross {
+                color: #6e7680;
+                font-size: 15px
+            }
+    
+            .padmin {
+                color: #d29922;
+                font-size: 15px
+            }
+    
+            /* MODEL CARDS */
+            .model-card {
+                background: #0d1117;
+                border: 1px solid #21262d;
+                border-radius: 9px;
+                padding: 16px
+            }
+    
+            .model-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                border-radius: 6px;
+                padding: 5px 10px;
+                font-size: 13.5px;
+                font-weight: 700
+            }
+    
+            /* FLOW DIAGRAM */
+            .flow-node {
+                background: #161b22;
+                border: 1px solid #21262d;
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 13px;
+                font-weight: 600;
+                color: #c9d1d9;
+                text-align: center
+            }
+    
+            .flow-arrow {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #30363d;
+                font-size: 18px
+            }
+    
+            /* BI CARDS */
+            .bi-metric {
+                background: #0d1117;
+                border: 1px solid #21262d;
+                border-radius: 9px;
+                padding: 16px 18px
+            }
+    
+            /* COVER */
+            .cover {
+                background: #010409;
+                border: 1px solid #21262d;
+                border-radius: 12px;
+                overflow: hidden;
+                position: relative;
+                padding: 44px 46px
+            }
+    
+            .cover::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 50%;
+                height: 100%;
+                background: radial-gradient(circle at 75% 40%, rgba(31, 111, 235, .15), transparent 65%);
+                pointer-events: none
+            }
+    
+            /* SELF LEARN */
+            .learn-node {
+                background: #161b22;
+                border: 1px solid #21262d;
+                border-radius: 8px;
+                padding: 14px 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 7px
+            }
+    
+            /* ADMIN ROWS */
+            .admin-row {
+                display: flex;
+                gap: 14px;
+                padding: 13px 0;
+                border-bottom: 1px solid #1a2030;
+                align-items: flex-start
+            }
+    
+            .admin-row:last-child {
+                border-bottom: none
+            }
+    
+            @keyframes pulse {
+    
+                0%,
+                100% {
+                    opacity: 1
+                }
+    
+                50% {
+                    opacity: .3
+                }
+            }
+    
+            .pulse {
+                animation: pulse 2.4s ease-in-out infinite
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="layout">
+    
+            <!-- ═══ LEFT NAV ═══ -->
+            <aside class="sidenav">
+                <div class="nav-brand">
+                    <div class="nav-brand-icon">
+                        <span class="ms" style="font-size:19px;color:#fff;font-variation-settings:'FILL' 1">terminal</span>
+                    </div>
+                    <div>
+                        <div style="font-size:14px;font-weight:800;color:#e6edf3;letter-spacing:.01em">JAM Safety</div>
+                        <div
+                            style="font-size:12.5px;font-weight:600;color:#8b949e;letter-spacing:.04em;text-transform:uppercase;margin-top:1px">
+                            × Heaventree</div>
+                    </div>
+                </div>
+                <div class="nav-section">Technical Deep Dive</div>
+                <div class="nav-items" id="navItems"></div>
+                <div class="nav-meta" style="margin-top:auto">
+                    <div style="display:flex;align-items:baseline;gap:6px">
+                        <span style="font-size:22px;font-weight:800;color:#e6edf3">16</span><span style="font-size:13px;font-weight:600;color:#8b949e">weeks</span>
+                    </div>
+                    <div style="display:flex;align-items:baseline;gap:6px;margin-top:3px">
+                        <span style="font-size:22px;font-weight:800;color:#e6edf3">€40k</span><span style="font-size:13px;font-weight:600;color:#8b949e">fixed · MVP+</span>
+                    </div>
+                    <div style="height:1px;background:#21262d;margin:10px 0"></div>
+                    <div style="font-size:13.5px;color:#8b949e;line-height:1.5">Architecture Reference · June 2026<br>Prepared for Conor Rainey
+                    </div>
+                    <a href="Delivery Plan v2.html"
+                        style="display:flex;align-items:center;gap:7px;margin-top:10px;background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);border-radius:7px;padding:8px 11px;text-decoration:none">
+                        <span class="ms" style="font-size:16px;color:#58a6ff">description</span>
+                        <span style="font-size:12px;font-weight:700;color:#58a6ff;line-height:1.3">Delivery Plan v2 →</span>
+                    </a>
+                </div>
+            </aside>
+    
+            <!-- ═══ MAIN ═══ -->
+            <main class="main">
+                <header class="topbar">
+                    <div>
+                        <div style="font-size:16px;font-weight:800;color:#e6edf3;letter-spacing:-.01em" id="topTitle">
+                            Platform Overview</div>
+                        <div style="font-size:14px;color:#8b949e;font-weight:500;margin-top:1px">NexOS — Internal
+                            Architecture Reference</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                        <a href="Delivery Plan v2.html"
+                            style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(88,166,255,.25);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;color:#58a6ff;text-decoration:none">
+                            <span class="ms" style="font-size:16px">description</span><span>Delivery Plan</span><span class="ms" style="font-size:14px">open_in_new</span>
+                        </a>
+                        <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid #30363d;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;color:#8b949e">
+            <span style="width:6px;height:6px;border-radius:50%;background:#3fb950" class="pulse"></span>Awaiting review
+                        </span>
+                    </div>
+                </header>
+    
+                <div style="flex:1;padding:28px 32px 80px;overflow-y:auto">
+                    <div style="max-width:1140px">
+    
+                        <!-- ══════ OVERVIEW ══════ -->
+                        <div class="section active" id="sec-overview">
+    
+                            <div class="cover">
+                                <div style="position:relative;z-index:1">
+                                    <div
+                                        style="display:inline-flex;align-items:center;gap:8px;background:rgba(31,111,235,.12);border:1px solid rgba(31,111,235,.3);border-radius:999px;padding:6px 13px;margin-bottom:22px">
+                                        <span class="ms" style="font-size:14px;color:#58a6ff">terminal</span>
+                                        <span style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#58a6ff">Architecture reference · June 2026</span>
+                                    </div>
+                                    <h1 class="h1">Under the hood:<br>how JAM Safety OS works</h1>
+                                    <p style="margin:16px 0 0;font-size:16px;line-height:1.6;color:#8b949e;max-width:70ch">
+                                        This document is the technical layer beneath the delivery plan. It covers every
+                                        system that gives JAM Safety its intelligence, security and scale — delivered as an
+                                        industry-specific deployment of <strong style="color:#e6edf3">NexOS</strong>,
+                                        Heaventree's proprietary business operating system.</p>
+                                    <div
+                                        style="display:inline-flex;align-items:center;gap:9px;margin-top:16px;background:#161b22;border:1px solid #21262d;border-radius:8px;padding:10px 14px">
+                                        <span class="ms" style="font-size:16px;color:#58a6ff">info</span>
+                                        <span style="font-size:13px;color:#8b949e;line-height:1.5"><strong style="color:#c9d1d9">NexOS</strong> is Heaventree's proprietary business operating system — the same battle-tested core architecture, security model and AI orchestration layer underpinning every enterprise platform we build. JAM Safety OS is a fully bespoke deployment on top of it: every portal, workflow and AI agent in this document is purpose-built for JAM's operation, engineered on infrastructure that has already been proven in production rather than assembled from first principles.</span>
+                                    </div>
+                                    <div
+                                        style="display:flex;gap:20px;flex-wrap:wrap;margin-top:30px;padding-top:26px;border-top:1px solid #21262d">
+                                        <div>
+                                            <div style="font-size:28px;font-weight:800;color:#58a6ff;line-height:1">IAM
+                                            </div>
+                                            <div style="font-size:14px;color:#8b949e;font-weight:600;margin-top:4px">
+                                                Granular permissions at scale</div>
+                                        </div>
+                                        <div style="width:1px;background:#21262d"></div>
+                                        <div>
+                                            <div style="font-size:28px;font-weight:800;color:#3fb950;line-height:1">4-tier
+                                            </div>
+                                            <div style="font-size:14px;color:#8b949e;font-weight:600;margin-top:4px">AI
+                                                model strategy</div>
+                                        </div>
+                                        <div style="width:1px;background:#21262d"></div>
+                                        <div>
+                                            <div style="font-size:28px;font-weight:800;color:#bc8cff;line-height:1">KB</div>
+                                            <div style="font-size:14px;color:#8b949e;font-weight:600;margin-top:4px">
+                                                Token-free second brain</div>
+                                        </div>
+                                        <div style="width:1px;background:#21262d"></div>
+                                        <div>
+                                            <div style="font-size:28px;font-weight:800;color:#d29922;line-height:1">RAG
+                                            </div>
+                                            <div style="font-size:14px;color:#8b949e;font-weight:600;margin-top:4px">
+                                                Regulatory intelligence</div>
+                                        </div>
+                                        <div style="width:1px;background:#21262d"></div>
+                                        <div>
+                                            <div style="font-size:28px;font-weight:800;color:#f85149;line-height:1">BI</div>
+                                            <div style="font-size:14px;color:#8b949e;font-weight:600;margin-top:4px">
+                                                Forecasting &amp; cost insight</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Stack summary -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#58a6ff">layers</span><span class="h3">The platform stack in full</span>
+                                </div>
+                                <div class="card-body">
+                                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+                                        <div>
+                                            <div class="label" style="margin-bottom:10px">Backend / API</div>
+                                            <div style="display:flex;flex-direction:column;gap:6px">
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#1f6feb22;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#58a6ff">Py</span>Python
+                                                    3.12 · FastAPI</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#1f6feb22;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#58a6ff">ORM</span>SQLAlchemy
+                                                    2 · Alembic</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#1f6feb22;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#58a6ff">Q</span>Redis
+                                                    task queue + pub/sub</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#1f6feb22;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#58a6ff">AI</span>CrewDock
+                                                    agent runtime</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#1f6feb22;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#58a6ff">KB</span>pgvector
+                                                    (embedding store)</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="label" style="margin-bottom:10px">Frontend</div>
+                                            <div style="display:flex;flex-direction:column;gap:6px">
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#23863622;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3fb950">UI</span>Next.js
+                                                    14 · React · TypeScript</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#23863622;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3fb950">CSS</span>Tailwind
+                                                    · shadcn/ui</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#23863622;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3fb950">PWA</span>Service
+                                                    Worker · IndexedDB</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#23863622;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#3fb950">BI</span>Recharts
+                                                    · custom dashboards</div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="label" style="margin-bottom:10px">Infrastructure</div>
+                                            <div style="display:flex;flex-direction:column;gap:6px">
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#8957e522;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#bc8cff">DB</span>PostgreSQL
+                                                    16 + pgvector</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#8957e522;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#bc8cff">TLS</span>Caddy
+                                                    (auto-cert HTTPS)</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#8957e522;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#bc8cff">OPS</span>Docker
+                                                    Compose · CI/CD</div>
+                                                <div
+                                                    style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c9d1d9">
+                                                    <span style="width:24px;height:24px;border-radius:5px;background:#8957e522;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#bc8cff">INT</span>MS
+                                                    Graph · Frappe · Anthropic</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Architecture diagram text representation -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#58a6ff">account_tree</span><span class="h3">System layers — data flow</span>
+                                </div>
+                                <div class="card-body">
+                                    <div style="display:flex;flex-direction:column;gap:4px">
+                                        <div
+                                            style="background:#1f6feb22;border:1px solid #1f6feb44;border-radius:9px;padding:14px 16px">
+                                            <div
+                                                style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#58a6ff;margin-bottom:9px">
+                                                Layer 5 — User Portals</div>
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                                                <span style="background:#1f6feb33;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">JAM Ops</span>
+                                                <span style="background:#1f6feb33;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Client Portal</span>
+                                                <span style="background:#1f6feb33;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Subcontractor</span>
+                                                <span style="background:#1f6feb33;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Staff Field PWA</span>
+                                                <span style="background:#1f6feb33;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Recruitment</span>
+                                            </div>
+                                        </div>
+                                        <div class="flow-arrow"><span class="ms">arrow_downward</span></div>
+                                        <div
+                                            style="background:#8957e522;border:1px solid #8957e544;border-radius:9px;padding:14px 16px">
+                                            <div
+                                                style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#bc8cff;margin-bottom:9px">
+                                                Layer 4 — IAM + API Gateway</div>
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                                                <span style="background:#8957e533;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">JWT Auth + refresh tokens</span>
+                                                <span style="background:#8957e533;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">RBAC permission resolver</span>
+                                                <span style="background:#8957e533;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Rate limiting</span>
+                                                <span style="background:#8957e533;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Audit logger</span>
+                                                <span style="background:#8957e533;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">CSP + security headers</span>
+                                            </div>
+                                        </div>
+                                        <div class="flow-arrow"><span class="ms">arrow_downward</span></div>
+                                        <div
+                                            style="background:#23863622;border:1px solid #23863644;border-radius:9px;padding:14px 16px">
+                                            <div
+                                                style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3fb950;margin-bottom:9px">
+                                                Layer 3 — NexOS Core Services (FastAPI)</div>
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                                                <span style="background:#23863633;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Document Engine</span>
+                                                <span style="background:#23863633;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Incident Service</span>
+                                                <span style="background:#23863633;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Staff & Roster</span>
+                                                <span style="background:#23863633;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Notification Bus</span>
+                                                <span style="background:#23863633;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Report Engine</span>
+                                                <span style="background:#23863633;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Finance Module</span>
+                                            </div>
+                                        </div>
+                                        <div class="flow-arrow"><span class="ms">arrow_downward</span></div>
+                                        <div
+                                            style="background:#bb800022;border:1px solid #bb800044;border-radius:9px;padding:14px 16px">
+                                            <div
+                                                style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#d29922;margin-bottom:9px">
+                                                Layer 2 — AI Intelligence Layer</div>
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                                                <span style="background:#bb800033;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">CrewDock Agent Runtime</span>
+                                                <span style="background:#bb800033;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Model Router</span>
+                                                <span style="background:#bb800033;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Internal KB (pgvector)</span>
+                                                <span style="background:#bb800033;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">RAG Engine</span>
+                                                <span style="background:#bb800033;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">Pattern Detector</span>
+                                                <span style="background:#bb800033;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#c9d1d9">BI Forecaster</span>
+                                            </div>
+                                        </div>
+                                        <div class="flow-arrow"><span class="ms">arrow_downward</span></div>
+                                        <div
+                                            style="background:#161b22;border:1px solid #30363d;border-radius:9px;padding:14px 16px">
+                                            <div
+                                                style="font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8b949e;margin-bottom:9px">
+                                                Layer 1 — Data Stores</div>
+                                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                                                <span style="background:#21262d;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#8b949e">PostgreSQL 16 (primary)</span>
+                                                <span style="background:#21262d;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#8b949e">pgvector (embeddings)</span>
+                                                <span style="background:#21262d;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#8b949e">Redis (cache + queue)</span>
+                                                <span style="background:#21262d;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;color:#8b949e">Object store (documents)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /overview -->
+    
+                        <!-- ══════ IAM ══════ -->
+                        <div class="section" id="sec-iam">
+    
+                            <div class="card card-narrow">
+                                <div class="card-body">
+                                    <div class="eyebrow">Identity &amp; access management</div>
+                                    <p class="body" style="max-width:90ch">JAM Safety runs thousands of staff across
+                                        concurrent events in multiple countries. The IAM system is designed from the ground
+                                        up for this scale — fine-grained permissions, group-based staff pools, event-scoped
+                                        access, and a full admin override layer. No user ever sees data they shouldn't, and
+                                        no permission change goes unlogged.</p>
+                                </div>
+                            </div>
+    
+                            <!-- Role overview -->
+                            <div>
+                                <div class="h2" style="margin-bottom:6px">The six base roles</div>
+                                <p class="body" style="margin-bottom:16px;max-width:80ch">Every user is assigned exactly one
+                                    base role. Permissions are additive within a role — admins can grant additional
+                                    capabilities at the user level without changing the role itself.</p>
+                                <div class="grid-3" style="gap:12px" id="roleCards"></div>
+                            </div>
+    
+                            <!-- Permission matrix -->
+                            <div class="card" style="overflow:hidden">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#58a6ff">table_chart</span><span class="h3">Feature permission matrix</span><span style="margin-left:auto;font-size:12px;color:#6e7680">✓ full &nbsp; ◎ read-only &nbsp; ✗ no access &nbsp; ★ admin-configurable</span>
+                                </div>
+                                <div style="overflow-x:auto">
+                                    <table class="perm-table" id="permTable"></table>
+                                </div>
+                            </div>
+    
+                            <!-- Granular controls -->
+                            <div class="h2" style="margin-bottom:4px">Granular permission architecture</div>
+                            <div class="grid-2">
+    
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#bc8cff">tune</span><span class="h3">Per-user overrides</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">Beyond the base role, any user can
+                                            receive individual capability grants or denials without changing their role.
+                                            This handles edge cases at scale without role explosion.</p>
+                                        <div class="code-block">
+                                            <span class="cm">-- Permission resolution order (highest wins)</span>
+                                            <span class="num">1.</span> <span class="ty">UserPermissionDeny</span>
+                                            <span class="cm">-- explicit block (security)</span>
+                                            <span class="num">2.</span> <span class="ty">UserPermissionGrant</span>
+                                            <span class="cm">-- individual override</span>
+                                            <span class="num">3.</span> <span class="ty">GroupPermission</span>
+                                            <span class="cm">-- staff pool / crew rules</span>
+                                            <span class="num">4.</span> <span class="ty">EventPermission</span>
+                                            <span class="cm">-- event-scoped access</span>
+                                            <span class="num">5.</span> <span class="ty">RolePermission</span>
+                                            <span class="cm">-- base role defaults</span>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#bc8cff">group</span><span class="h3">Staff pools &amp; group permissions</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">For large events with hundreds of field
+                                            staff, manage permissions at pool level. A "Steward Crew" pool might have
+                                            different access than a "Supervisor Crew" — and these are set once, applied to
+                                            all members instantly.</p>
+                                        <div style="display:flex;flex-direction:column;gap:8px">
+                                            <div
+                                                style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:10px 12px">
+                                                <div style="font-size:13px;font-weight:700;color:#c9d1d9;margin-bottom:3px">
+                                                    Pool: Festival Stewards (847 users)</div>
+                                                <div style="font-size:12.5px;color:#8b949e">Assigned: submit_site_report,
+                                                    submit_incident, view_safety_docs<br>Denied: view_staff_contacts, view_manpower_data
+                                                </div>
+                                            </div>
+                                            <div
+                                                style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:10px 12px">
+                                                <div style="font-size:13px;font-weight:700;color:#c9d1d9;margin-bottom:3px">
+                                                    Pool: Senior Supervisors (23 users)</div>
+                                                <div style="font-size:12.5px;color:#8b949e">Assigned: submit_*, view_*,
+                                                    approve_toolbox_talks<br>Override: view_incident_full_detail = true
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#bc8cff">event</span><span class="h3">Event-scoped access</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">A field staff member assigned to Event A
+                                            cannot see Event B's data — not the documents, not the reports, not the incident
+                                            list. Access is automatically revoked when the event ends. No manual cleanup
+                                            required.</p>
+                                        <div class="code-block"><span class="cm">-- How event scope is enforced</span>
+                                            <span class="kw">SELECT</span> * <span class="kw">FROM</span> incidents
+                                            <span class="kw">WHERE</span> event_id =
+                                            <span class="fn">current_user_event_scope</span>()
+                                            <span class="kw">AND</span> <span class="fn">check_permission</span>(user_id,
+                                            <span class="str">'view_incident'</span>)
+                                            <span class="cm">-- Row-level security enforced at DB layer</span>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#bc8cff">schedule</span><span class="h3">Time-bound &amp; temporary access</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">Ops Admins can grant time-limited
+                                            permissions — useful for contractor assessors who need read-only access to a
+                                            document library for 48 hours, or for temporary supervisory cover during sick
+                                            leave.</p>
+                                        <div style="display:flex;flex-direction:column;gap:7px">
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#c9d1d9">External Assessor · view_safety_docs</span>
+                                                <span style="color:#d29922;font-weight:700">Expires 24h</span>
+                                            </div>
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#c9d1d9">Deputy Supervisor · approve_toolbox</span>
+                                                <span style="color:#3fb950;font-weight:700">Active · 3 days</span>
+                                            </div>
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#8b949e">Client Junior → Senior upgrade</span>
+                                                <span style="color:#6e7680;font-weight:700">Expired 2d ago</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                            </div>
+    
+                            <!-- Auth & session -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#3fb950">lock</span><span class="h3">Authentication &amp; session security</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-3" style="gap:16px">
+                                        <div>
+                                            <div class="h4" style="margin-bottom:9px">Token architecture</div>
+                                            <div
+                                                style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#8b949e">
+                                                <div>Access token:
+                                                    <span style="color:#c9d1d9;font-weight:600">15 min expiry</span></div>
+                                                <div>Refresh token:
+                                                    <span style="color:#c9d1d9;font-weight:600">30 day, rotated on use</span>
+                                                </div>
+                                                <div>Token family tracking:
+                                                    <span style="color:#3fb950;font-weight:600">reuse = auto-revoke all</span>
+                                                </div>
+                                                <div>Refresh stored:
+                                                    <span style="color:#c9d1d9;font-weight:600">HttpOnly cookie (not JS-accessible)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="h4" style="margin-bottom:9px">MFA requirements by role</div>
+                                            <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px">
+                                                <div style="display:flex;justify-content:space-between">
+                                                    <span style="color:#8b949e">Ops Admin</span><span style="color:#f85149;font-weight:700">Required · TOTP</span>
+                                                </div>
+                                                <div style="display:flex;justify-content:space-between">
+                                                    <span style="color:#8b949e">Ops Staff</span><span style="color:#d29922;font-weight:700">Required</span>
+                                                </div>
+                                                <div style="display:flex;justify-content:space-between">
+                                                    <span style="color:#8b949e">Client Senior</span><span style="color:#d29922;font-weight:700">Required</span>
+                                                </div>
+                                                <div style="display:flex;justify-content:space-between">
+                                                    <span style="color:#8b949e">Client Junior</span><span style="color:#3fb950;font-weight:700">Optional</span>
+                                                </div>
+                                                <div style="display:flex;justify-content:space-between">
+                                                    <span style="color:#8b949e">Subcontractor</span><span style="color:#3fb950;font-weight:700">Optional</span>
+                                                </div>
+                                                <div style="display:flex;justify-content:space-between">
+                                                    <span style="color:#8b949e">Field Staff</span><span style="color:#6e7680;font-weight:700">PIN fallback (offline)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="h4" style="margin-bottom:9px">Security features</div>
+                                            <div
+                                                style="display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:#8b949e">
+                                                <div>• Brute-force lockout (5 attempts)</div>
+                                                <div>• IP-based anomaly detection</div>
+                                                <div>• Concurrent session limit (admin-set)</div>
+                                                <div>• Device fingerprinting + alerts</div>
+                                                <div>• Geo-fence alerts (optional)</div>
+                                                <div>• Full audit log (every auth event)</div>
+                                                <div>• GDPR-compliant data erasure by user</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Audit log -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#d29922">history</span><span class="h3">Immutable audit log</span><span style="margin-left:auto"><span class="badge badge-green">Tamper-evident</span></span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:14px">Every permission change, login, document
+                                        access, approval decision, and data export is written to an append-only audit log.
+                                        Rows cannot be updated or deleted — only read. Exportable as CSV for compliance or
+                                        investigation.</p>
+                                    <div class="code-block"><span class="cm">-- Sample audit log entries</span>
+                                        <span class="ty">timestamp</span> | <span class="ty">actor</span> |
+                                        <span class="ty">action</span> | <span class="ty">target</span> |
+                                        <span class="ty">outcome</span>
+                                        ─────────────────────┼────────────────┼───────────────────────────┼─────────────────┼─────────────
+                                        <span class="str">2026-06-14 21:04:12</span> | john@jam.ie | permission.grant |
+                                        user:847 | ok
+                                        <span class="str">2026-06-14 21:09:33</span> | sub_user_392 | document.read |
+                                        ESMP_Oxegen.pdf | ok
+                                        <span class="str">2026-06-14 21:14:01</span> | admin@jam.ie | role.change | user:12
+                                        → staff | ok
+                                        <span class="str">2026-06-14 21:31:44</span> | unknown | auth.login_attempt |
+                                        john@jam.ie | <span class="kw">FAIL</span> (lockout)
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /iam -->
+    
+                        <!-- ══════ AI STRATEGY ══════ -->
+                        <div class="section" id="sec-ai">
+    
+                            <div class="grid-2" style="align-items:start">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="eyebrow">AI model strategy</div>
+                                        <p class="body">No single model is the cheapest, fastest and most capable for every
+                                            task — so JAM Safety OS is not locked to one vendor. The platform routes every
+                                            AI call through <strong style="color:#e6edf3">OpenRouter</strong>, a unified
+                                            gateway that gives access to Claude, GPT, DeepSeek, Qwen and dozens of other
+                                            models behind one API. Tasks are matched to models on a
+                                            <strong style="color:#e6edf3">4-tier complexity ladder</strong>: day-to-day
+                                            lookups and routing decisions run on near-zero-cost local inference, and only
+                                            complex generation work reaches frontier-tier models. Every AI function has a
+                                            configurable model assignment in the admin panel — the client controls cost
+                                            directly, function by function.</p>
+                                    </div>
+                                </div>
+    
+                                <!-- Multi-vendor cost matrix -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:19px;color:#3fb950">model_training</span><span class="h3">Multi-vendor cost matrix — part of the self-improvement layer</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:12px">The model assigned to each function today
+                                            is not fixed. The platform continuously benchmarks cost, latency and output
+                                            quality across vendors — Claude, OpenAI, DeepSeek, Qwen and others reachable
+                                            through OpenRouter — for every AI function, and maintains a live cost/quality
+                                            matrix of which model is currently the best fit for each job.</p>
+                                        <p class="body" style="margin:0">This matrix is one input into the platform's
+                                            <strong style="color:#e6edf3">Self-Healing &amp; Improvement</strong>
+                                            intelligence: as pricing shifts or a better-fit model emerges, the system flags
+                                            the alternative for each function and the Ops Admin can re-assign with one click
+                                            among models already integrated via OpenRouter. Bringing on a model OpenRouter
+                                            doesn't yet carry — a brand-new vendor, or one with a non-standard API — is a
+                                            small, occasional integration task rather than a one-click swap. Either way, the
+                                            model strategy keeps getting sharper after launch instead of being locked in at
+                                            delivery.</p>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- 4 tier diagram -->
+                            <div>
+                                <div class="h2" style="margin-bottom:4px">The 4-tier model hierarchy</div>
+                                <p class="body" style="margin-bottom:16px;max-width:80ch">Tasks are routed by the Model
+                                    Router based on their complexity profile, not tied to a single vendor. Admins can
+                                    override any assignment; models shown are current best-fit picks from the live cost
+                                    matrix.</p>
+                                <div style="display:flex;flex-direction:column;gap:10px" id="modelTiers"></div>
+                            </div>
+    
+                            <!-- Model router -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#d29922">alt_route</span><span class="h3">The Model Router — how it decides</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:16px">Every AI request passes through the Model
+                                        Router before any model is called. The router reads the task's complexity profile
+                                        (from the admin-set assignment), checks the live cost/quality matrix for the current
+                                        best-fit vendor, checks budget headroom, and routes accordingly — through
+                                        OpenRouter, so swapping vendors is a config change, not a code change.</p>
+                                    <div class="code-block">
+                                        <span class="cm">-- Model Router decision logic (simplified)</span>
+                                        <span class="kw">def</span> <span class="fn">route</span>(task:
+                                        <span class="ty">AITask</span>) → <span class="ty">Model</span>:
+                                        config = <span class="fn">admin_settings</span>(task.function_key)
+                                        <span class="cm"># per-function override</span>
+                                        <span class="kw">if</span> config.model_override:
+                                        <span class="kw">return</span> config.model_override
+    
+                                        <span class="cm"># Auto-routing by task profile — best-fit model from the live cost matrix</span>
+                                        <span class="kw">match</span> task.profile:
+                                        <span class="kw">case</span> <span class="str">"generation_complex"</span>:
+                                        <span class="kw">return</span>
+                                        <span class="fn">cost_matrix</span>.<span class="fn">best_fit</span>(<span class="str">"tier1"</span>)
+                                        <span class="cm"># e.g. Claude Sonnet, GPT-4o, DeepSeek-V3</span>
+                                        <span class="kw">case</span> <span class="str">"generation_simple"</span>:
+                                        <span class="kw">return</span>
+                                        <span class="fn">cost_matrix</span>.<span class="fn">best_fit</span>(<span class="str">"tier2"</span>)
+                                        <span class="cm"># e.g. Claude Haiku, GPT-4o mini, Qwen2.5</span>
+                                        <span class="kw">case</span> <span class="str">"classification"</span>:
+                                        <span class="kw">return</span> <span class="ty">LOCAL_PHI3_MINI</span>
+                                        <span class="kw">case</span> <span class="str">"embedding"</span>:
+                                        <span class="kw">return</span> <span class="ty">NOMIC_EMBED_LOCAL</span>
+                                        <span class="kw">case</span> <span class="str">"kb_lookup"</span>:
+                                        <span class="kw">return</span> <span class="ty">VECTOR_SEARCH_ONLY</span>
+                                        <span class="cm"># 0 tokens</span>
+    
+                                        <span class="cm"># Budget guard</span>
+                                        <span class="kw">if</span> budget.<span class="fn">remaining</span>(task.model) &lt;
+                                        threshold:
+                                        <span class="kw">return</span> <span class="fn">downgrade</span>(task.model)
+                                        <span class="cm"># step down one tier</span>
+    
+                                        <span class="cm">-- Cost matrix refresh (runs continuously — part of Self-Healing & Improvement)</span>
+                                        <span class="kw">def</span> <span class="fn">refresh_cost_matrix</span>():
+                                        <span class="kw">for</span> vendor <span class="kw">in</span>
+                                        [<span class="str">"anthropic"</span>, <span class="str">"openai"</span>,
+                                        <span class="str">"deepseek"</span>, <span class="str">"qwen"</span>,
+                                        <span class="str">"..."</span>]: <span class="cm"># via OpenRouter</span>
+                                        <span class="fn">benchmark</span>(vendor, metrics=[<span class="str">"cost"</span>,
+                                        <span class="str">"latency"</span>, <span class="str">"quality"</span>])
+                                        <span class="fn">flag_improvements_for_admin_review</span>()
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Per-function model assignment table -->
+                            <div class="card" style="overflow:hidden">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#d29922">settings_suggest</span><span class="h3">Per-function model assignments (admin-configurable)</span>
+                                </div>
+                                <div style="overflow-x:auto">
+                                    <table class="perm-table" id="modelAssignTable"></table>
+                                </div>
+                            </div>
+    
+                            <!-- Cost governance -->
+                            <div class="grid-2">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#3fb950">savings</span><span class="h3">Budget governance</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div style="display:flex;flex-direction:column;gap:10px">
+                                            <div
+                                                style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:12px 14px">
+                                                <div
+                                                    style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:7px">
+                                                    Per-function budgets</div>
+                                                <div style="font-size:13.5px;color:#8b949e;line-height:1.65">Each AI
+                                                    function has a configurable monthly token budget in admin. When a
+                                                    function hits 80%, it alerts. At 100%, it auto-downgrades to the next
+                                                    cheaper model rather than blocking the user.</div>
+                                            </div>
+                                            <div
+                                                style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:12px 14px">
+                                                <div
+                                                    style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#d29922;margin-bottom:7px">
+                                                    Global cost ceiling</div>
+                                                <div style="font-size:13.5px;color:#8b949e;line-height:1.65">A global
+                                                    monthly AI spend ceiling is set by the Ops Admin. All model calls are
+                                                    logged with token count and cost estimate. Monthly summary report
+                                                    auto-emailed to billing contact.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#3fb950">monitoring</span><span class="h3">AI usage dashboard</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px">
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#c9d1d9">ESMP Generator</span><span style="color:#d29922">Claude Sonnet · €62 this month</span>
+                                            </div>
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#c9d1d9">CV Creator</span><span style="color:#3fb950">Claude Haiku · €8 this month</span>
+                                            </div>
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#c9d1d9">KB search + RAG lookup</span><span style="color:#3fb950">Local · €0 this month</span>
+                                            </div>
+                                            <div
+                                                style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                <span style="color:#c9d1d9">Pattern detector</span><span style="color:#3fb950">Local · €0 this month</span>
+                                            </div>
+                                            <div
+                                                style="padding:8px 12px;background:#23863611;border:1px solid #23863633;border-radius:6px;display:flex;justify-content:space-between">
+                                                <span style="color:#3fb950;font-weight:700">Total AI spend</span><span style="color:#3fb950;font-weight:700">€70 / €200 budget</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /ai -->
+    
+                        <!-- ══════ KNOWLEDGE BASE ══════ -->
+                        <div class="section" id="sec-kb">
+    
+                            <div class="card card-narrow">
+                                <div class="card-body">
+                                    <div class="eyebrow">Internal second brain</div>
+                                    <p class="body" style="max-width:90ch">The JAM Safety Knowledge Base is a continuously
+                                        learning internal intelligence layer. It indexes everything that happens in the
+                                        system — every document approved, every incident resolved, every staff decision made
+                                        — into a vector store that can be searched semantically. Unlike a generative AI
+                                        call, a KB lookup costs <strong style="color:#3fb950">zero tokens</strong>. The KB
+                                        is the system's long-term memory, and it gets smarter every day without additional
+                                        cost.</p>
+                                </div>
+                            </div>
+    
+                            <!-- Architecture -->
+                            <div class="h2" style="margin-bottom:4px">KB architecture</div>
+                            <div class="grid-2">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#bc8cff">memory</span><span class="h3">Storage engine — pgvector</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">All KB content is stored as vector
+                                            embeddings in PostgreSQL via the pgvector extension — the same database that
+                                            powers the rest of the platform. No separate vector DB service to maintain or
+                                            pay for.</p>
+                                        <div class="code-block"><span class="cm">-- KB embedding schema</span>
+                                            <span class="kw">CREATE TABLE</span> <span class="ty">kb_chunks</span> (
+                                            id <span class="ty">uuid</span>,
+                                            source_type <span class="ty">text</span>,
+                                            <span class="cm">-- 'incident', 'document', 'event'...</span>
+                                            source_id <span class="ty">uuid</span>,
+                                            content <span class="ty">text</span>,
+                                            embedding <span class="ty">vector(768)</span>,
+                                            <span class="cm">-- nomic-embed-text (local)</span>
+                                            created_at <span class="ty">timestamptz</span>
+                                            );
+                                            <span class="kw">CREATE INDEX</span> <span class="kw">ON</span> kb_chunks
+                                            <span class="kw">USING</span> <span class="fn">ivfflat</span> (embedding
+                                            <span class="ty">vector_cosine_ops</span>);
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#bc8cff">stream</span><span class="h3">Embedding model — local, free</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">Embeddings are generated by
+                                            <strong style="color:#e6edf3">nomic-embed-text</strong>, a high-quality
+                                            open-source embedding model running locally on the same server. No API call, no
+                                            cost, no data leaving the system.</p>
+                                        <div style="display:flex;flex-direction:column;gap:8px">
+                                            <div
+                                                style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:10px 14px">
+                                                <div style="font-size:12px;font-weight:700;color:#bc8cff;margin-bottom:3px">
+                                                    Why nomic-embed-text?</div>
+                                                <div style="font-size:13px;color:#8b949e">768-dimension vectors, Apache 2.0
+                                                    licence, runs on 2GB RAM. Outperforms OpenAI ada-002 on retrieval
+                                                    benchmarks. Runs via Ollama on the same server.</div>
+                                            </div>
+                                            <div
+                                                style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:10px 14px">
+                                                <div style="font-size:12px;font-weight:700;color:#3fb950;margin-bottom:3px">
+                                                    Cost of 10,000 KB queries/month</div>
+                                                <div style="font-size:13px;color:#8b949e">€0.00 — all local inference, no
+                                                    API. Scales linearly with server CPU, not spend.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- What the KB indexes -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#bc8cff">dataset</span><span class="h3">What the KB learns from (ingestion sources)</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-3" style="gap:12px" id="kbSources"></div>
+                                </div>
+                            </div>
+    
+                            <!-- Initial population -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#bc8cff">cloud_upload</span><span class="h3">Bringing JAM's existing knowledge into the system</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:14px">The KB is only as valuable as the history
+                                        loaded into it on day one. JAM Safety already holds years of ESMPs, RAMS, incident
+                                        records, rosters and correspondence — getting that into the system is a joint
+                                        workstream we plan together at the start of the build, not something dropped on
+                                        either side unannounced. Heaventree builds the ingestion tooling; JAM Safety
+                                        provides access to the source material; we agree the exact scope together before any
+                                        import runs.</p>
+                                    <div class="grid-2" style="gap:12px;margin-bottom:18px" id="ingestFormats"></div>
+                                    <div
+                                        style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px 16px">
+                                        <div
+                                            style="font-size:12.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#6e7680;margin-bottom:10px">
+                                            How we'll do this together</div>
+                                        <div style="display:flex;flex-direction:column;gap:9px">
+                                            <div
+                                                style="font-size:13.5px;color:#8b949e;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
+                                                <span style="color:#bc8cff;font-weight:700;margin-top:1px">1</span><span><strong style="color:#c9d1d9">Joint scoping session, early in the build.</strong> Heaventree and JAM Safety agree exactly which sources, formats and date ranges go into the initial load — nothing is assumed.</span>
+                                            </div>
+                                            <div
+                                                style="font-size:13.5px;color:#8b949e;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
+                                                <span style="color:#bc8cff;font-weight:700;margin-top:1px">2</span><span><strong style="color:#c9d1d9">Heaventree builds the ingestion pipeline</strong> for the agreed formats — parsing, chunking, embedding and source-tagging, so nothing has to be manually retyped.</span>
+                                            </div>
+                                            <div
+                                                style="font-size:13.5px;color:#8b949e;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
+                                                <span style="color:#bc8cff;font-weight:700;margin-top:1px">3</span><span><strong style="color:#c9d1d9">Bulk import runs alongside the rest of the build</strong> — this workstream doesn't block portal or workflow development; it progresses in parallel across the 16 weeks.</span>
+                                            </div>
+                                            <div
+                                                style="font-size:13.5px;color:#8b949e;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
+                                                <span style="color:#bc8cff;font-weight:700;margin-top:1px">4</span><span><strong style="color:#c9d1d9">Joint QA pass before go-live.</strong> Both teams review a sample of KB results together and sign off the dataset as live — a shared checkpoint, not a one-sided handover.</span>
+                                            </div>
+                                            <div
+                                                style="font-size:13.5px;color:#8b949e;line-height:1.6;display:flex;gap:8px;align-items:flex-start">
+                                                <span style="color:#bc8cff;font-weight:700;margin-top:1px">5</span><span><strong style="color:#c9d1d9">From go-live, the continuous learning pipeline takes over</strong> (see below) — the one-time import becomes an always-on process and the KB keeps growing automatically from there.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- How it surfaces -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#bc8cff">search</span><span class="h3">How the KB surfaces in the UI</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-2" style="gap:12px" id="kbUses"></div>
+                                </div>
+                            </div>
+    
+                            <!-- Continuous learning pipeline -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#bc8cff">sync</span><span class="h3">Continuous learning pipeline</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:14px">The KB ingestion pipeline runs asynchronously
+                                        via Redis queue — events in the system publish to the queue, the worker embeds and
+                                        indexes. No user action required; the KB grows automatically.</p>
+                                    <div class="code-block"><span class="cm"># KB ingestion pipeline</span>
+                                        <span class="kw">event</span>: <span class="str">incident.resolved</span>
+                                        → <span class="fn">queue.publish</span>(<span class="str">"kb_ingest"</span>,
+                                        {source: <span class="str">"incident"</span>, id: incident_id})
+                                        → <span class="fn">worker.embed</span>(incident.resolution_summary)
+                                        <span class="cm"># nomic-embed (local)</span>
+                                        → <span class="fn">pgvector.upsert</span>(chunk)
+                                        <span class="cm"># zero API cost</span>
+    
+                                        <span class="kw">event</span>: <span class="str">document.approved</span>
+                                        → <span class="fn">queue.publish</span>(<span class="str">"kb_ingest"</span>,
+                                        {source: <span class="str">"document"</span>, id: doc_id})
+                                        → <span class="fn">worker.chunk_and_embed</span>(document.extracted_text)
+                                        → <span class="fn">pgvector.upsert_many</span>(chunks)
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /kb -->
+    
+                        <!-- ══════ RAG ══════ -->
+                        <div class="section" id="sec-rag">
+                            <div class="card card-narrow">
+                                <div class="card-body">
+                                    <div class="eyebrow">Regulatory intelligence — RAG engine</div>
+                                    <p class="body" style="max-width:90ch">JAM Safety operates across multiple jurisdictions
+                                        — Ireland, UK, and potentially wider EU. Safety legislation changes. The RAG
+                                        (Retrieval-Augmented Generation) engine continuously indexes current legal sources
+                                        and makes them available to AI agents and staff without manual maintenance. When a
+                                        new ESMP is generated for a UK event, the system pulls current UK crowd safety
+                                        legislation automatically.</p>
+                                </div>
+                            </div>
+                            <div class="grid-2">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#58a6ff">language</span><span class="h3">Regulatory sources indexed</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="regSources" style="display:flex;flex-direction:column;gap:8px"></div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <span class="ms" style="font-size:18px;color:#58a6ff">update</span><span class="h3">Update pipeline</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="body" style="margin-bottom:14px">Regulatory sources are crawled on a
+                                            schedule. Changed content triggers a re-embed and version stamp. Ops Admins are
+                                            notified when a legal source updates so they can review the impact on active
+                                            ESMPs.</p>
+                                        <div class="code-block"><span class="cm"># RAG update scheduler</span>
+                                            <span class="kw">@cron</span>(<span class="str">"0 3 * * 1"</span>)
+                                            <span class="cm"># Every Monday 3am</span>
+                                            <span class="kw">async def</span>
+                                            <span class="fn">refresh_regulatory_index</span>():
+                                            <span class="kw">for</span> source <span class="kw">in</span>
+                                            <span class="fn">get_active_sources</span>():
+                                            html = <span class="kw">await</span> <span class="fn">fetch</span>(source.url)
+                                            <span class="kw">if</span> <span class="fn">content_hash</span>(html) !=
+                                            source.last_hash:
+                                            chunks = <span class="fn">chunk_legal_text</span>(html)
+                                            <span class="fn">embed_and_upsert</span>(chunks, source)
+                                            <span class="fn">notify_admin</span>(<span class="str">f"Regulatory update: {source.name}"</span>)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#58a6ff">integration_instructions</span><span class="h3">How RAG integrates with AI agents</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:14px">When the ESMP Generator agent runs, it first
+                                        performs a RAG lookup for the jurisdiction and event type — pulling the 5 most
+                                        relevant regulatory chunks. These are prepended to the Claude prompt as grounding
+                                        context. The model then generates a legally-grounded plan without hallucinating
+                                        outdated rules.</p>
+                                    <div class="code-block"><span class="cm"># ESMP generation with RAG grounding</span>
+                                        <span class="kw">async def</span> <span class="fn">generate_esmp</span>(brief:
+                                        <span class="ty">ESMPBrief</span>):
+                                        <span class="cm"># Step 1: RAG retrieval (local, zero tokens)</span>
+                                        legal_context = <span class="fn">pgvector_search</span>(
+                                        query=<span class="fn">embed</span>(<span class="str">f"crowd safety {brief.jurisdiction} {brief.event_type}"</span>),
+                                        k=<span class="num">5</span>, source_filter=<span class="str">"regulatory"</span>
+                                        )
+                                        <span class="cm"># Step 2: KB retrieval — past similar ESMPs</span>
+                                        past_esmps = <span class="fn">pgvector_search</span>(
+                                        query=<span class="fn">embed</span>(<span class="str">f"ESMP {brief.venue_type} {brief.capacity}"</span>),
+                                        k=<span class="num">3</span>, source_filter=<span class="str">"document"</span>
+                                        )
+                                        <span class="cm"># Step 3: Claude call (only this step costs tokens)</span>
+                                        prompt = <span class="fn">build_prompt</span>(brief, legal_context, past_esmps)
+                                        <span class="kw">return</span> <span class="kw">await</span>
+                                        <span class="fn">claude</span>.<span class="fn">generate</span>(prompt)
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /rag -->
+    
+                        <!-- ══════ BUSINESS INTELLIGENCE ══════ -->
+                        <div class="section" id="sec-bi">
+    
+                            <div class="card card-narrow">
+                                <div class="card-body">
+                                    <div class="eyebrow">Enterprise business intelligence</div>
+                                    <p class="body" style="max-width:90ch">The BI engine is not a bolted-on reporting tool —
+                                        it is built on top of the same database that runs the entire platform. Every piece
+                                        of data written to JAM Safety OS is simultaneously available for analysis,
+                                        forecasting and cost optimisation. No data warehouse, no sync delays, no data
+                                        engineering overhead.</p>
+                                </div>
+                            </div>
+    
+                            <!-- KPI dashboard -->
+                            <div>
+                                <div class="h2" style="margin-bottom:4px">Live KPI dashboards</div>
+                                <p class="body" style="margin-bottom:14px;max-width:80ch">Four role-specific dashboard
+                                    views. Each surfaces the metrics most relevant to that user's job — not a generic chart
+                                    dump.</p>
+                                <div class="grid-2" style="gap:12px" id="biDashboards"></div>
+                            </div>
+    
+                            <!-- Report builder -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#58a6ff">table_chart</span><span class="h3">Report builder</span><span class="badge badge-blue" style="margin-left:auto">No-code</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:16px">Ops staff build custom reports by selecting
+                                        dimensions, metrics and date ranges. Reports are saved, shareable by link, and can
+                                        be set to auto-send on a schedule to named recipients.</p>
+                                    <div class="grid-3" style="gap:10px">
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#58a6ff;margin-bottom:8px">
+                                                Dimensions (group by)</div>
+                                            <div style="font-size:13px;color:#8b949e;line-height:1.7">Event · Venue · Client
+                                                · Date range · Staff role · Site · Subcontractor · Incident category</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:8px">
+                                                Metrics (measure)</div>
+                                            <div style="font-size:13px;color:#8b949e;line-height:1.7">Incident count ·
+                                                Compliance rate · Staff hours · Overtime hours · Doc approval time · Cost
+                                                per event · Revenue · Margin</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#d29922;margin-bottom:8px">
+                                                Export formats</div>
+                                            <div style="font-size:13px;color:#8b949e;line-height:1.7">PDF (branded) · CSV ·
+                                                Excel · Scheduled email · Client-portal visible (toggle) · Regulatory
+                                                submission format</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Forecasting -->
+                            <div>
+                                <div class="h2" style="margin-bottom:4px">Forecasting engine</div>
+                                <p class="body" style="margin-bottom:14px;max-width:80ch">The forecaster runs statistical
+                                    models (not LLM) against historical event data. As the platform accumulates event
+                                    history, forecasts become more accurate. These are not AI-generated guesses — they are
+                                    trend-based projections from real data.</p>
+                                <div class="grid-2" style="gap:12px" id="forecasts"></div>
+                            </div>
+    
+                            <!-- Cost optimisation -->
+                            <div class="card card-narrow">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#3fb950">savings</span><span class="h3">Cost optimisation recommendations</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:16px">The BI engine runs a weekly cost optimisation
+                                        scan across all historical events. It surfaces findings as actionable
+                                        recommendations — each one showing the evidence, the potential saving, and a
+                                        suggested action.</p>
+                                    <div style="display:flex;flex-direction:column;gap:10px" id="costRecs"></div>
+                                </div>
+                            </div>
+    
+                            <!-- Compliance BI -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#d29922">verified_user</span><span class="h3">Compliance intelligence</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-3" style="gap:12px">
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div style="font-size:13px;font-weight:700;color:#c9d1d9;margin-bottom:6px">
+                                                Document submission SLA</div>
+                                            <div style="font-size:13px;color:#8b949e;line-height:1.6">Tracks average time
+                                                from request to approved submission per subcontractor. Surfaces consistent
+                                                late submitters before they become a project risk.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div style="font-size:13px;font-weight:700;color:#c9d1d9;margin-bottom:6px">
+                                                Inspection pass rate trends</div>
+                                            <div style="font-size:13px;color:#8b949e;line-height:1.6">Pass rate by venue,
+                                                site type and inspector over time. Identifies venues with systemic issues
+                                                and inspectors whose findings diverge from peers.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div style="font-size:13px;font-weight:700;color:#c9d1d9;margin-bottom:6px">
+                                                Incident resolution time</div>
+                                            <div style="font-size:13px;color:#8b949e;line-height:1.6">Average time from
+                                                incident submission to resolved status. Segmented by category and severity.
+                                                Feeds into ops performance reviews.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /bi -->
+    
+                        <!-- ══════ SELF-LEARNING ══════ -->
+                        <div class="section" id="sec-selflearn">
+    
+                            <div class="card card-narrow">
+                                <div class="card-body">
+                                    <div class="eyebrow">Self-learning &amp; pattern detection</div>
+                                    <p class="body" style="max-width:90ch">From day one, the platform watches for patterns —
+                                        not by looking for predefined rules, but by building a baseline of normal behaviour
+                                        from real data, then flagging deviations. Every new event makes the model more
+                                        accurate. This is applied to staff, venues, costs and compliance simultaneously. The
+                                        system surfaces patterns as intelligence, never as accusations — everything is
+                                        evidence-linked.</p>
+                                </div>
+                            </div>
+    
+                            <!-- Pattern categories -->
+                            <div class="h2" style="margin-bottom:4px">Four pattern detection domains</div>
+                            <div style="display:flex;flex-direction:column;gap:14px" id="patternDomains"></div>
+    
+                            <!-- Architecture -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#3fb950">model_training</span><span class="h3">How the self-learning engine works</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:16px">The engine uses three techniques in sequence.
+                                        No LLM is involved — this is statistics and local ML on structured data, which means
+                                        it runs at zero token cost and improves purely from usage.</p>
+                                    <div class="grid-3" style="gap:12px">
+                                        <div
+                                            style="background:#0d1117;border:1px solid #23863644;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:8px">
+                                                1 · Baseline profiling</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">For each entity
+                                                (staff member, venue, subcontractor) the engine builds a rolling baseline
+                                                from the last 12 months. Baseline = normal. Anything outside 2 standard
+                                                deviations is a candidate flag.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #23863644;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:8px">
+                                                2 · Vector similarity</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">The KB's pgvector
+                                                store is used to find historically similar situations. "This incident
+                                                matches 3 incidents at the same venue in 2023–2024 — all three led to a
+                                                barrier failure." Evidence-backed, not guessed.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #23863644;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:8px">
+                                                3 · Trend projection</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">Where a metric has
+                                                been trending for 3+ consecutive events, the engine projects forward and
+                                                flags expected future deviation. Gives JAM time to intervene before the
+                                                problem arrives.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Learning feedback loop -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#3fb950">loop</span><span class="h3">The feedback loop — how it improves</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:14px">The engine does not only observe — it learns
+                                        from actions taken. When an Ops Admin dismisses a flag ("not relevant") or acts on
+                                        it ("resolved: contractor replaced"), that outcome is written back to the model.
+                                        Over time, false-positive rates drop and the signal-to-noise ratio improves
+                                        automatically.</p>
+                                    <div class="code-block"><span class="cm"># Self-improvement feedback cycle</span>
+                                        <span class="kw">event</span>: ops_admin <span class="fn">dismisses</span>(flag_id,
+                                        reason=<span class="str">"false_positive"</span>)
+                                        → pattern_model.<span class="fn">record_outcome</span>(flag,
+                                        <span class="str">"false_positive"</span>)
+                                        → pattern_model.<span class="fn">adjust_threshold</span>(entity_type, metric,
+                                        delta=+<span class="num">0.15</span>)
+                                        →
+                                        <span class="cm"># Next time: flag won't fire until 2.15σ deviation (was 2.0σ)</span>
+    
+                                        <span class="kw">event</span>: ops_admin <span class="fn">acts_on</span>(flag_id,
+                                        action=<span class="str">"subcontractor_replaced"</span>)
+                                        → pattern_model.<span class="fn">record_outcome</span>(flag,
+                                        <span class="str">"confirmed_true_positive"</span>)
+                                        → pattern_model.<span class="fn">increase_weight</span>(feature_set)
+                                        →
+                                        <span class="cm"># Same pattern will trigger at 1.85σ next time (more sensitive)</span>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /selflearn -->
+    
+                        <!-- ══════ ADMIN ══════ -->
+                        <div class="section" id="sec-admin">
+    
+                            <div class="card card-narrow">
+                                <div class="card-body">
+                                    <div class="eyebrow">Admin control panel</div>
+                                    <p class="body" style="max-width:90ch">The admin panel is the nerve centre of the entire
+                                        platform. It is accessible only to the Ops Admin role and gives complete control
+                                        over every configurable aspect of the system — users, permissions, AI models,
+                                        knowledge base, integrations, billing, and security. Every action in admin is
+                                        audit-logged.</p>
+                                </div>
+                            </div>
+    
+                            <!-- Admin sections grid -->
+                            <div class="h2" style="margin-bottom:4px">Admin panel modules</div>
+                            <div class="grid-2" style="gap:14px" id="adminModules"></div>
+    
+                            <!-- AI model assignment panel detail -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#d29922">psychology</span><span class="h3">AI model assignment panel — detailed view</span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="body" style="margin-bottom:14px">This is the panel where JAM Safety chooses
+                                        which AI model powers each function. The client is never locked into one provider.
+                                        Each function has a dropdown with all available models and a test button to try a
+                                        sample output before committing.</p>
+                                    <div
+                                        style="background:#0d1117;border:1px solid #21262d;border-radius:9px;padding:18px;font-family:'JetBrains Mono',monospace;font-size:13px">
+                                        <div
+                                            style="display:grid;grid-template-columns:220px 1fr 1fr 100px;gap:0;border-bottom:1px solid #21262d;padding-bottom:8px;margin-bottom:8px">
+                                            <span style="color:#8b949e;font-size:13px;text-transform:uppercase;letter-spacing:.07em">Function</span>
+                                            <span style="color:#8b949e;font-size:13px;text-transform:uppercase;letter-spacing:.07em">Current model</span>
+                                            <span style="color:#8b949e;font-size:13px;text-transform:uppercase;letter-spacing:.07em">Budget / month</span>
+                                            <span style="color:#8b949e;font-size:13px;text-transform:uppercase;letter-spacing:.07em">Actions</span>
+                                        </div>
+                                        <div id="aiAdminRows"></div>
+                                    </div>
+                                    <p style="font-size:13px;color:#6e7680;margin-top:10px">Any row can be changed by Ops
+                                        Admin at any time. Changes take effect immediately — no deployment required. History
+                                        of all model changes is in the audit log.</p>
+                                </div>
+                            </div>
+    
+                            <!-- Integration management -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#58a6ff">cable</span><span class="h3">Integration management</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-2" style="gap:10px" id="integrations"></div>
+                                </div>
+                            </div>
+    
+                            <!-- System health -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#3fb950">monitor_heart</span><span class="h3">System health &amp; monitoring</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-3" style="gap:12px">
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:8px">
+                                                Uptime monitoring</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">All 5 services
+                                                monitored (API, frontend, DB, Redis, workers). Downtime alert via email +
+                                                push within 60 seconds. Public status page for client transparency.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#d29922;margin-bottom:8px">
+                                                Error rate dashboard</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">API error rates per
+                                                endpoint, broken down by portal and user role. P95 response times tracked.
+                                                Slow queries surfaced with their execution plan.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#58a6ff;margin-bottom:8px">
+                                                DB health</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">Table sizes, index
+                                                health, long-running queries, connection pool usage. Admin alerted before
+                                                storage or performance becomes an issue.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#bc8cff;margin-bottom:8px">
+                                                Worker queue depth</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">Redis queue depth
+                                                for all async workers (AI tasks, KB ingestion, email, sync). Alerts if queue
+                                                depth exceeds threshold — indicates a worker is down or overloaded.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#f85149;margin-bottom:8px">
+                                                Security events</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">Failed login spikes,
+                                                brute-force attempts, unusual API access patterns. Real-time security event
+                                                feed in admin with optional PagerDuty integration.</div>
+                                        </div>
+                                        <div
+                                            style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:14px">
+                                            <div
+                                                style="font-size:13.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#3fb950;margin-bottom:8px">
+                                                Backup status</div>
+                                            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">Automated daily
+                                                PostgreSQL backups. Admin panel shows last successful backup timestamp and
+                                                size. One-click restore to any point-in-time (14-day retention).</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Data & GDPR -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="ms" style="font-size:19px;color:#f85149">privacy_tip</span><span class="h3">Data governance &amp; GDPR tooling</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="grid-2" style="gap:14px">
+                                        <div>
+                                            <div class="h4" style="margin-bottom:9px">Data subject rights (admin-executed)
+                                            </div>
+                                            <div
+                                                style="display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:#8b949e">
+                                                <div style="display:flex;gap:8px">
+                                                    <span class="ms" style="color:#f85149;font-size:16px">delete</span><span><strong style="color:#c9d1d9">Right to erasure</strong> — search by user, preview all data held, execute erasure. Audit trail of what was deleted and when.</span>
+                                                </div>
+                                                <div style="display:flex;gap:8px">
+                                                    <span class="ms" style="color:#58a6ff;font-size:16px">download</span><span><strong style="color:#c9d1d9">Right to portability</strong> — export all data held about a user as structured JSON within 24 hours of request.</span>
+                                                </div>
+                                                <div style="display:flex;gap:8px">
+                                                    <span class="ms" style="color:#d29922;font-size:16px">notifications_active</span><span><strong style="color:#c9d1d9">72-hour breach notification</strong> — incident template pre-drafted, regulators listed by jurisdiction, send workflow timed from breach detection.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="h4" style="margin-bottom:9px">Retention policies
+                                                (admin-configurable)</div>
+                                            <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px">
+                                                <div
+                                                    style="display:flex;justify-content:space-between;padding:7px 10px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                    <span style="color:#8b949e">Incident records</span><span style="color:#c9d1d9;font-weight:600">7 years (RIDDOR default)</span>
+                                                </div>
+                                                <div
+                                                    style="display:flex;justify-content:space-between;padding:7px 10px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                    <span style="color:#8b949e">Staff records (left)</span><span style="color:#c9d1d9;font-weight:600">6 years (configurable)</span>
+                                                </div>
+                                                <div
+                                                    style="display:flex;justify-content:space-between;padding:7px 10px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                    <span style="color:#8b949e">Safety documents</span><span style="color:#c9d1d9;font-weight:600">10 years (configurable)</span>
+                                                </div>
+                                                <div
+                                                    style="display:flex;justify-content:space-between;padding:7px 10px;background:#0d1117;border:1px solid #21262d;border-radius:6px">
+                                                    <span style="color:#8b949e">Audit log</span><span style="color:#c9d1d9;font-weight:600">Permanent (cannot delete)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div><!-- /admin -->
+    
+                    </div><!-- /max-width -->
+                </div><!-- /content scroll -->
+            </main>
+        </div><!-- /layout -->
+    
+        <script>
+            const NAV = [
+      { id:'overview',  icon:'layers',             label:'Platform Overview',      group:'Architecture' },
+      { id:'iam',       icon:'manage_accounts',    label:'Identity & Access (IAM)',group:'Architecture' },
+      { id:'ai',        icon:'psychology',         label:'AI Model Strategy',      group:'Intelligence' },
+      { id:'kb',        icon:'memory',             label:'Internal Knowledge Base',group:'Intelligence' },
+      { id:'rag',       icon:'travel_explore',     label:'Regulatory RAG Engine',  group:'Intelligence' },
+      { id:'bi',        icon:'bar_chart',          label:'Business Intelligence',  group:'Intelligence' },
+      { id:'selflearn', icon:'model_training',     label:'Self-Learning Engine',   group:'Intelligence' },
+      { id:'admin',     icon:'admin_panel_settings',label:'Admin Control Panel',   group:'Admin' },
+    ];
+    
+    // Render nav
+    const navEl = document.getElementById('navItems');
+    let lastGroup = null;
+    NAV.forEach(n => {
+      if (n.group !== lastGroup) {
+        const lbl = document.createElement('div');
+        lbl.className = 'nav-section';
+        lbl.style.marginTop = lastGroup ? '14px' : '0';
+        lbl.textContent = n.group;
+        navEl.appendChild(lbl);
+        lastGroup = n.group;
+      }
+      const el = document.createElement('div');
+      el.className = 'nav-item' + (n.id === 'overview' ? ' active' : '');
+      el.id = 'nav-' + n.id;
+      el.innerHTML = `<span class="ms">${n.icon}</span><span>${n.label}</span>`;
+      el.onclick = () => goTo(n.id);
+      navEl.appendChild(el);
+    });
+    
+    function goTo(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const sec = document.getElementById('sec-' + id);
+      const nav = document.getElementById('nav-' + id);
+      if (sec) sec.classList.add('active');
+      if (nav) nav.classList.add('active');
+      const found = NAV.find(n => n.id === id);
+      document.getElementById('topTitle').textContent = found ? found.label : '';
+      window.scrollTo(0,0);
+    }
+    
+    // ── ROLE CARDS ───────────────────────────────────────────────────────────────
+    const ROLES = [
+      { name:'Ops Admin',       icon:'shield_person', color:'#f85149', bg:'#da363322', border:'#da363344',
+        desc:'Full system access. User management, permission grants, AI model assignment, billing controls, audit log.',
+        caps:['All portals','User CRUD','Permission matrix','AI config','Billing','Audit log'] },
+      { name:'Ops Staff',       icon:'support_agent', color:'#d29922', bg:'#bb800022', border:'#bb800044',
+        desc:'Operational day-to-day access. Manage events, approve documents, review incidents. No user management.',
+        caps:['Events & projects','Approve/reject docs','Incident management','Reports export','AI generators'] },
+      { name:'Client Senior',   icon:'corporate_fare', color:'#58a6ff', bg:'#1f6feb22', border:'#1f6feb44',
+        desc:'Full client-side access including revenue, P&L and cross-event analytics. Named directors only.',
+        caps:['All projects','Safety documents','Revenue & P&L','Cross-event reports','Manpower data'] },
+      { name:'Client Junior',   icon:'person', color:'#bc8cff', bg:'#8957e522', border:'#8957e544',
+        desc:'Safety-only view. Documents, incidents, manpower. No financial data visible.',
+        caps:['Assigned projects','Safety docs','Incident view','Manpower (read)'] },
+      { name:'Subcontractor',   icon:'engineering', color:'#3fb950', bg:'#23863622', border:'#23863644',
+        desc:'Submit and track compliance documents. Receive PTW. Access template packs. Scoped to their submissions only.',
+        caps:['Upload documents','Track submissions','PTW download','Template packs'] },
+      { name:'Field Staff',     icon:'smartphone', color:'#8b949e', bg:'#21262d', border:'#30363d',
+        desc:'Submit-only access via mobile PWA. Scoped to assigned event. Works offline. PIN fallback.',
+        caps:['Site report submit','Inspection submit','Incident submit','Toolbox talk submit','Read safety docs'] },
+    ];
+    const rcEl = document.getElementById('roleCards');
+    if (rcEl) rcEl.innerHTML = ROLES.map(r=>`
+      <div style="background:#161b22;border:1px solid ${r.border};border-radius:10px;padding:16px">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+          <div style="width:34px;height:34px;border-radius:7px;background:${r.bg};display:flex;align-items:center;justify-content:center">
+            <span class="ms" style="font-size:18px;color:${r.color}">${r.icon}</span>
+          </div>
+          <div style="font-size:14px;font-weight:800;color:#e6edf3">${r.name}</div>
+        </div>
+        <div style="font-size:13px;color:#8b949e;line-height:1.6;margin-bottom:10px">${r.desc}</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${r.caps.map(c=>`<div style="font-size:13px;font-weight:600;color:${r.color};display:flex;gap:6px;align-items:flex-start"><span style="margin-top:1px">›</span>${c}</div>`).join('')}
+        </div>
+      </div>`).join('');
+    
+    // ── PERMISSION TABLE ─────────────────────────────────────────────────────────
+    const PERM_FEATURES = [
+      ['Manage users & roles',        true,  false, false, false, false, false, true],
+      ['Set AI model per function',   true,  false, false, false, false, false, true],
+      ['View audit log',              true,  false, false, false, false, false, true],
+      ['Create / edit events',        true,  true,  false, false, false, false, false],
+      ['Approve subcontractor docs',  true,  true,  false, false, false, false, false],
+      ['Generate AI documents',       true,  true,  false, false, false, false, false],
+      ['View all incidents',          true,  true,  'r',   'r',   false, false, false],
+      ['View safety documents',       true,  true,  true,  true,  true,  'r',   false],
+      ['Revenue & P&L data',          true,  false, true,  false, false, false, false],
+      ['Submit site report',          false, false, false, false, false, true,  false],
+      ['Submit incident report',      false, false, false, false, false, true,  false],
+      ['Upload compliance docs',      false, false, false, false, true,  false, false],
+      ['Download PTW',                false, false, false, false, true,  false, false],
+      ['View BI dashboards',          true,  true,  true,  false, false, false, false],
+      ['Export reports',              true,  true,  true,  false, false, false, false],
+      ['KB admin & re-index',         true,  false, false, false, false, false, true],
+    ];
+    const COLS = ['Feature','Ops Admin','Ops Staff','Client Sr','Client Jr','Subcon','Field','System'];
+    const ptEl = document.getElementById('permTable');
+    if (ptEl) {
+      ptEl.innerHTML = `<thead><tr>${COLS.map(c=>`<th>${c}</th>`).join('')}</tr></thead>`;
+      const tbody = document.createElement('tbody');
+      PERM_FEATURES.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="font-size:13px;font-weight:600;color:#c9d1d9">${row[0]}</td>`
+          + row.slice(1).map(v => {
+              if (v === true)  return `<td><span class="ms pcheck">check_circle</span></td>`;
+              if (v === false) return `<td><span class="ms pcross">remove</span></td>`;
+              if (v === 'r')   return `<td><span class="ms padmin" title="Read-only">visibility</span></td>`;
+              return `<td><span class="ms" style="color:#bc8cff;font-size:15px" title="Admin-configurable">tune</span></td>`;
+            }).join('');
+        tbody.appendChild(tr);
+      });
+      ptEl.appendChild(tbody);
+    }
+    
+    // ── MODEL TIERS ──────────────────────────────────────────────────────────────
+    const TIERS = [
+      { tier:'Tier 1 — Heavy', badge:'Claude Sonnet/Opus · GPT-4o · DeepSeek-V3', color:'#f85149', bg:'#da363322', border:'#da363344',
+        cost:'~€0.003–0.015 / task',
+        tasks:['ESMP generation (full document)','Q-Schedule with complex logic','Regulatory analysis & interpretation','Custom AI responses to novel queries'],
+        when:'Complex, multi-step generation. Best-fit model picked from the live cost/quality matrix — expensive per call, used sparingly, cached where possible.' },
+      { tier:'Tier 2 — Standard', badge:'Claude Haiku · GPT-4o mini · Qwen2.5 · Gemini Flash', color:'#d29922', bg:'#bb800022', border:'#bb800044',
+        cost:'~€0.0002–0.001 / task',
+        tasks:['CV generation (structured template)','Short document summarisation','Q-Schedule from template (known format)','Notification drafting','Feedback analysis'],
+        when:'Moderate generation tasks. Fast, low cost. Default for most user-facing AI features — model choice re-optimised continuously across vendors.' },
+      { tier:'Tier 3 — Light', badge:'Local Ollama / Phi-3 Mini · Qwen2.5-small', color:'#3fb950', bg:'#23863622', border:'#23863644',
+        cost:'€0 (server CPU only)',
+        tasks:['Text classification (incident category)','Sentiment analysis on feedback','Anomaly flag scoring','Short form extraction (addresses, names, dates)','Routing decisions'],
+        when:'Classification, extraction and light inference. Runs on the same server. Zero token cost.' },
+      { tier:'Tier 4 — Zero-cost', badge:'pgvector / Rule engine', color:'#bc8cff', bg:'#8957e522', border:'#8957e544',
+        cost:'€0',
+        tasks:['KB semantic search','RAG regulatory retrieval','Pattern similarity matching','Embedding generation','Document retrieval by topic'],
+        when:'All retrieval and search operations. No LLM involved — pure vector maths. Used for the internal KB and all "find similar" queries.' },
+    ];
+    const mtEl = document.getElementById('modelTiers');
+    if (mtEl) mtEl.innerHTML = TIERS.map(t=>`
+      <div style="background:#161b22;border:1px solid ${t.border};border-radius:10px;padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+          <div style="font-size:14px;font-weight:800;color:${t.color}">${t.tier}</div>
+          <span style="background:${t.bg};border:1px solid ${t.border};border-radius:6px;padding:4px 10px;font-size:13px;font-weight:700;color:${t.color}">${t.badge}</span>
+          <span style="background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:4px 10px;font-size:13px;font-weight:600;color:#8b949e;margin-left:auto">${t.cost}</span>
+        </div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6e7680;margin-bottom:7px">Assigned tasks</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              ${t.tasks.map(task=>`<div style="font-size:13.5px;color:#8b949e;display:flex;gap:7px;align-items:flex-start"><span style="color:${t.color};margin-top:1px">›</span>${task}</div>`).join('')}
+            </div>
+          </div>
+          <div style="flex:1;min-width:220px;background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6e7680;margin-bottom:6px">When to use</div>
+            <div style="font-size:13.5px;color:#8b949e;line-height:1.6">${t.when}</div>
+          </div>
+        </div>
+      </div>`).join('');
+    
+    // ── MODEL ASSIGNMENT TABLE ────────────────────────────────────────────────────
+    const MA_ROWS = [
+      ['ESMP Generator',            'Tier 1','Claude Sonnet','generation_complex','High'],
+      ['CV Creator',                'Tier 2','Claude Haiku', 'generation_simple', 'Low'],
+      ['Q-Schedule Generator',      'Tier 2','Claude Haiku', 'generation_simple', 'Low'],
+      ['RAG legal lookup',          'Tier 4','pgvector',     'kb_lookup',         'Zero'],
+      ['KB semantic search',        'Tier 4','pgvector',     'kb_lookup',         'Zero'],
+      ['Incident auto-categorise',  'Tier 3','Phi-3 Mini',   'classification',    'Zero'],
+      ['Pattern detection',         'Tier 3','Phi-3 Mini',   'classification',    'Zero'],
+      ['BI anomaly scoring',        'Tier 3','Phi-3 Mini',   'classification',    'Zero'],
+      ['Notification drafting',     'Tier 2','Claude Haiku', 'generation_simple', 'Low'],
+      ['Regulatory change alert',   'Tier 3','Phi-3 Mini',   'classification',    'Zero'],
+      ['Presentation Creator',      'Tier 1','Claude Sonnet','generation_complex','High'],
+      ['Prompt Creator',            'Tier 2','Claude Haiku', 'generation_simple', 'Low'],
+    ];
+    const tierCol = t => t==='Tier 1'?'#f85149':t==='Tier 2'?'#d29922':t==='Tier 3'?'#3fb950':'#bc8cff';
+    const maEl = document.getElementById('modelAssignTable');
+    if (maEl) {
+      maEl.innerHTML = `<thead><tr>${['AI Function','Default tier','Default model','Task profile','Token cost'].map(c=>`<th>${c}</th>`).join('')}</tr></thead>`;
+      const tbody = document.createElement('tbody');
+      MA_ROWS.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="font-size:13.5px;font-weight:600;color:#c9d1d9">${r[0]}</td>
+          <td><span style="color:${tierCol(r[1])};font-size:13px;font-weight:700">${r[1]}</span></td>
+          <td><span style="font-size:13px;color:#8b949e;font-family:'JetBrains Mono',monospace">${r[2]}</span></td>
+          <td><code style="font-size:12px;color:#bc8cff;background:#8957e511;padding:2px 7px;border-radius:4px">${r[3]}</code></td>
+          <td><span style="color:${r[4]==='Zero'?'#3fb950':r[4]==='Low'?'#d29922':'#f85149'};font-size:13px;font-weight:700">${r[4]}</span></td>`;
+        tbody.appendChild(tr);
+      });
+      maEl.appendChild(tbody);
+    }
+    
+    // ── KB SOURCES ───────────────────────────────────────────────────────────────
+    const KB_SOURCES = [
+      { icon:'description', color:'#58a6ff', name:'Safety documents (all types)', bullets:['Every approved ESMP, RAMS, Crowd Management Plan chunked and indexed','Future ESMPs draw on past ones as templates','Version-controlled with expiry tracking'] },
+      { icon:'report',      color:'#f85149', name:'Incident records', bullets:['Resolved incidents with investigation notes and corrective actions','Enables pattern matching against future incidents','RIDDOR-compliant, GPS/time stamped'] },
+      { icon:'task_alt',    color:'#3fb950', name:'Inspection results', bullets:['Pass/fail results with corrective notes','Builds a spatial history of venue issues over time','Photo evidence linked per inspection'] },
+      { icon:'people',      color:'#bc8cff', name:'Staff profiles & history', bullets:['Qualifications, certifications, event history','Incident involvement and performance records','Feeds self-learning staff pattern detection'] },
+      { icon:'receipt_long',color:'#d29922', name:'Finance & PO data', bullets:['Invoice lines, PO amounts, event costs','Cost pattern learning and budget anomaly detection','Revenue tracking per event and client'] },
+      { icon:'chat',        color:'#58a6ff', name:'Approval feedback threads', bullets:['Every rejection reason and resubmission note','Approval comments and audit trail','Quality improvement feedback loop for subcontractors'] },
+      { icon:'event',       color:'#3fb950', name:'Event metadata', bullets:['Venue, capacity, dates, client, staff deployed','Feeds the BI forecasting model','Historical event comparisons'] },
+      { icon:'travel_explore',color:'#d29922',name:'Regulatory sources (RAG)', bullets:['Current legislation from IE/UK/EU/GCC jurisdictions','Separate namespace within the KB','Updated weekly, admin-addable'] },
+    ];
+    const kbsEl = document.getElementById('kbSources');
+    if (kbsEl) kbsEl.innerHTML = KB_SOURCES.map(s=>`
+      <div style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
+        <span class="ms" style="font-size:20px;color:${s.color};margin-top:1px;flex:none">${s.icon}</span>
+        <div><div style="font-size:13.5px;font-weight:700;color:#c9d1d9;margin-bottom:5px">${s.name}</div><ul style="margin:0;padding-left:16px;list-style:disc;font-size:13px;color:#8b949e;line-height:1.7">${s.bullets.map(b=>'<li>'+b+'</li>').join('')}</ul></div>
+      </div>`).join('');
+    
+    const INGEST_FORMATS = [
+      { icon:'picture_as_pdf', color:'#f85149', bg:'#da363322', border:'#da363344', name:'PDF documents', bullets:['ESMPs, RAMS, Crowd Management Plans, inspection reports — anything already issued as a PDF','Native text PDFs and scanned/photographed PDFs both supported, with OCR fallback for the latter'] },
+      { icon:'table_chart', color:'#3fb950', bg:'#23863622', border:'#23863644', name:'Excel / CSV', bullets:['Staff rosters, incident logs, finance & PO spreadsheets, audit trackers','Structured rows mapped to KB fields automatically where the format is consistent — agreed during scoping'] },
+      { icon:'description', color:'#58a6ff', bg:'#1f6feb22', border:'#1f6feb44', name:'Word documents', bullets:['Policy documents, plan templates, draft safety plans, correspondence','Version history preserved where multiple drafts exist, so precedent reflects what was actually approved'] },
+      { icon:'mail', color:'#d29922', bg:'#bb800022', border:'#bb800044', name:'Email', bullets:['Approval threads, incident correspondence, regulatory correspondence','Imported via a mailbox export or shared folder agreed up front — never live inbox access'] },
+    ];
+    const ifEl = document.getElementById('ingestFormats');
+    if (ifEl) ifEl.innerHTML = INGEST_FORMATS.map(f=>`
+      <div style="background:#0d1117;border:1px solid ${f.border};border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start">
+        <span class="ms" style="font-size:20px;color:${f.color};margin-top:1px;flex:none">${f.icon}</span>
+        <div><div style="font-size:13.5px;font-weight:700;color:#c9d1d9;margin-bottom:5px">${f.name}</div><ul style="margin:0;padding-left:16px;list-style:disc;font-size:13px;color:#8b949e;line-height:1.7">${f.bullets.map(b=>'<li>'+b+'</li>').join('')}</ul></div>
+      </div>`).join('');
+    
+    const KB_USES = [
+      { icon:'auto_fix_high', color:'#bc8cff', bg:'#8957e522', border:'#8957e544', title:'ESMP generation grounding',
+        bullets:[
+          'Retrieves the 3 most structurally similar past ESMPs before Claude drafts a new one, so output follows patterns clients and auditors already recognise',
+          'Pulls only the regulatory chunks relevant to the event’s jurisdiction (IE/UK/EU/GCC) — not the full regulatory corpus — keeping generation focused and fast',
+          'Claude works from real organisational precedent, not just its training data, so drafts reflect what has actually been approved before',
+          'Every approved ESMP is fed back into the KB automatically, compounding the reference library with every event run',
+        ] },
+      { icon:'person_search', color:'#58a6ff', bg:'#1f6feb22', border:'#1f6feb44', title:'Staff recommendation',
+        bullets:[
+          'Surfaces a staff member’s full venue history the moment they’re considered for an assignment — past events worked, lateness, no-shows, commendations',
+          'Flags pattern risk before it becomes an incident, e.g. "2 lateness records at this venue in the last 6 months"',
+          'Runs entirely on vector search — zero LLM cost, sub-second response, no token budget impact',
+          'Feeds directly into the self-learning staff pattern detection engine, so recommendations get sharper the more events run',
+        ] },
+      { icon:'quiz', color:'#3fb950', bg:'#23863622', border:'#23863644', title:'In-context search for ops staff',
+        bullets:[
+          'Natural-language search bar inside JAM Ops — staff type a real question, not keywords',
+          'Answers are drawn from actual historical records (incidents, corrective actions, inspections), not a generic model guess',
+          'Typical response time is under a second — pure vector retrieval, no model call involved',
+          'Removes the need to dig through folders, PDFs or institutional memory to find out "what happened last time"',
+        ] },
+      { icon:'insights', color:'#d29922', bg:'#bb800022', border:'#bb800044', title:'BI anomaly context',
+        bullets:[
+          'When the BI engine flags a cost or pattern anomaly, it attaches the most similar historical case automatically',
+          'Gives the Ops Admin a root-cause hypothesis immediately, e.g. "contractor overtime in the last 4 hours" — not just a bare number to investigate',
+          'Cuts investigation time on anomalies from hours of manual cross-referencing to minutes',
+          'Improves over time: every confirmed root cause is fed back into the KB as labelled precedent for the next anomaly',
+        ] },
+    ];
+    const kbuEl = document.getElementById('kbUses');
+    if (kbuEl) kbuEl.innerHTML = KB_USES.map(u=>`
+      <div style="background:#0d1117;border:1px solid ${u.border};border-radius:9px;padding:16px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="width:34px;height:34px;border-radius:7px;background:${u.bg};display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:18px;color:${u.color}">${u.icon}</span></div>
+          <div style="font-size:14.5px;font-weight:700;color:#e6edf3">${u.title}</div>
+        </div>
+        <ul style="margin:0;padding-left:16px;list-style:disc;font-size:13.5px;color:#8b949e;line-height:1.7">${u.bullets.map(b=>'<li style="margin-bottom:4px">'+b+'</li>').join('')}</ul>
+      </div>`).join('');
+    
+    // ── REGULATORY SOURCES ────────────────────────────────────────────────────────
+    const REG_SOURCES = [
+      { flag:'🇮🇪', name:'Ireland — Event Safety Guidelines (EMRA)', url:'Health & Safety Authority crowd event guidelines, local authority regulations, pre-event notification requirements' },
+      { flag:'🇬🇧', name:'UK — Purple Guide (Events Industry Forum)', url:'The definitive UK guide for health & safety at music and similar events' },
+      { flag:'🇬🇧', name:'UK — HSE Event Safety guidance', url:'Health and Safety Executive event-specific regulations and RIDDOR incident reporting obligations (7-year retention)' },
+      { flag:'🇬🇧', name:'UK — Licensing Act 2003 (relevant sections)', url:'Statutory licensing requirements for public events and venue capacity controls' },
+      { flag:'🇪🇺', name:'EU — GDPR (staff data, incident records)', url:'EU GDPR obligations on data held about employees and third parties; right to erasure, portability, 72-hour breach notification' },
+      { flag:'🇸🇦', name:'Saudi Arabia — Civil Defence & MOMAH Event Safety', url:'Saudi Civil Defence mass-gathering regulations, Ministry of Municipal and Rural Affairs event permit requirements, SASO safety standards for public assemblies' },
+      { flag:'🇦🇪', name:'UAE — Dubai Civil Defence & SIRA Crowd Management', url:'Dubai Civil Defence event safety code, Security Industry Regulatory Agency (SIRA) crowd management standards, DTCM event licensing requirements, Abu Dhabi NCEMA emergency protocols' },
+      { flag:'🇶🇦', name:'Qatar — MOI Mass Gathering Standards', url:'Qatar Ministry of Interior mass-gathering event guidelines, National Fire Protection Committee venue standards, post-World Cup event safety legacy framework' },
+      { flag:'🇧🇭', name:'Bahrain — Civil Defence Event Regulations', url:'Bahrain Civil Defence event permit requirements, National Taskforce for Combating Pandemics event guidance, GCC event safety alignment' },
+      { flag:'🌍',  name:'Custom sources (admin-addable)', url:'Ops Admin can add any URL or document as a regulatory source via the admin panel — new jurisdictions require no code changes' },
+    ];
+    const rsEl = document.getElementById('regSources');
+    if (rsEl) rsEl.innerHTML = REG_SOURCES.map(r=>`
+      <div style="display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #1a2030">
+        <span style="font-size:20px;flex:none">${r.flag}</span>
+        <div><div style="font-size:13.5px;font-weight:700;color:#c9d1d9">${r.name}</div><div style="font-size:13px;color:#8b949e;margin-top:2px">${r.url}</div></div>
+      </div>`).join('');
+        </script>
+        <script>
+            // ── BI DASHBOARDS ─────────────────────────────────────────────────────────────
+    const BI_DASH = [
+      { role:'JAM Ops Admin', color:'#f85149', bg:'#da363322', border:'#da363344', icon:'dashboard',
+        metrics:['Active events + status','Incident rate vs same period last year','Compliance rate by subcontractor','Staff utilisation by role','Outstanding approvals (aged)','AI spend this month vs budget','Revenue booked vs forecast','Top 5 cost anomalies flagged'] },
+      { role:'Ops Staff', color:'#d29922', bg:'#bb800022', border:'#bb800044', icon:'work',
+        metrics:['Events assigned to me','Outstanding subcontractor docs','Incidents requiring action','Today\'s inspections scheduled','Document expiry alerts (30 days)','Overtime hours this week'] },
+      { role:'Client Senior', color:'#58a6ff', bg:'#1f6feb22', border:'#1f6feb44', icon:'corporate_fare',
+        metrics:['Active project status','Safety compliance rate','Incident log (all events)','Manpower actual vs contracted','Revenue committed vs invoiced','YTD spend by event'] },
+      { role:'Client Junior', color:'#bc8cff', bg:'#8957e522', border:'#8957e544', icon:'person',
+        metrics:['Assigned event status','Document library (latest)','Incident summary','Daily report submissions','Inspection pass rate'] },
+    ];
+    const biDashEl = document.getElementById('biDashboards');
+    if (biDashEl) biDashEl.innerHTML = BI_DASH.map(d=>`
+      <div style="background:#161b22;border:1px solid ${d.border};border-radius:10px;padding:16px">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:7px;background:${d.bg};display:flex;align-items:center;justify-content:center"><span class="ms" style="font-size:17px;color:${d.color}">${d.icon}</span></div>
+          <div style="font-size:14px;font-weight:800;color:#e6edf3">${d.role}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${d.metrics.map(m=>`<div style="font-size:13px;color:#8b949e;display:flex;gap:7px"><span style="color:${d.color};flex:none">›</span>${m}</div>`).join('')}
+        </div>
+      </div>`).join('');
+    
+    // ── FORECASTING ───────────────────────────────────────────────────────────────
+    const FORECASTS = [
+      { icon:'people', color:'#bc8cff', title:'Staff demand forecasting',
+        desc:'Based on event type, venue capacity and historical staffing ratios, the system forecasts required headcount by role (supervisors, stewards, medics) before a brief is even written. Accuracy improves with each event run through the system.',
+        example:'Estimated output: "Outdoor festival · 12,000 capacity · 1 day → 87 stewards, 12 supervisors, 4 medics (±8% based on 14 similar events)"' },
+      { icon:'payments', color:'#3fb950', title:'Event cost forecasting',
+        desc:'Projects total event cost before the Q-Schedule is built — giving sales a ballpark to quote from, and ops a red-line to manage against. Broken down by labour, equipment and third-party costs from historical event actuals.',
+        example:'Estimated output: "Indoor concert · 4,000 cap · multi-day → €14,200–€17,800 based on 9 comparable events"' },
+      { icon:'trending_up', color:'#d29922', title:'Revenue & margin forecasting',
+        desc:'Connects pipeline (CRM) to historical win rates and margin by event type. Gives the MD a rolling 90-day revenue and margin projection — not a spreadsheet, a live dashboard fed by real data.',
+        example:'Rolling 90-day view: booked €128k, pipeline €74k, forecast conversion €41k, projected margin 23%' },
+      { icon:'warning', color:'#f85149', title:'Compliance risk forecasting',
+        desc:'Identifies events at risk of compliance failure before they start — based on subcontractor submission velocity, document expiry status and historical non-compliance patterns for that venue or subcontractor.',
+        example:'"Event X (4 weeks away): 3 of 7 required subcontractor docs not yet submitted. Based on this subcontractor\'s history, 40% probability of late delivery."' },
+    ];
+    const fcEl = document.getElementById('forecasts');
+    if (fcEl) fcEl.innerHTML = FORECASTS.map(f=>`
+      <div style="background:#161b22;border:1px solid #21262d;border-radius:10px;padding:18px">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+          <span class="ms" style="font-size:22px;color:${f.color}">${f.icon}</span>
+          <div style="font-size:14px;font-weight:800;color:#e6edf3">${f.title}</div>
+        </div>
+        <p style="font-size:13.5px;color:#8b949e;line-height:1.65;margin-bottom:10px">${f.desc}</p>
+        <div style="background:#0d1117;border:1px solid #21262d;border-radius:7px;padding:10px 13px;font-size:12.5px;color:${f.color};font-style:italic">${f.example}</div>
+      </div>`).join('');
+    
+    // ── COST RECS ─────────────────────────────────────────────────────────────────
+    const COST_RECS = [
+      { saving:'~€2,400/yr', icon:'schedule', color:'#3fb950', title:'Overtime concentration in final 2 hours',
+        desc:'Across 18 events in the last 12 months, 73% of unplanned overtime occurred in the final 2 hours. Pattern suggests shift handover timing — adjusting supervisor departure by 30 minutes could eliminate most of it.' },
+      { saving:'~€1,800/yr', icon:'engineering', color:'#d29922', title:'One subcontractor consistently resubmitting',
+        desc:'Subcontractor "X" has a 4.2 average resubmission count (platform average: 1.1). Each resubmission creates 2.3 hours of Ops review time. Consider a pre-submission briefing call as standard for this vendor.' },
+      { saving:'~€900/yr', icon:'place', color:'#58a6ff', title:'Venue-specific inspection overhead',
+        desc:'Inspections at Venue Y take 47% longer than comparable venues. KB history shows 3 recurring deficiencies in the same areas — a dedicated pre-event checklist for this venue could reduce inspection time to standard.' },
+    ];
+    const crEl = document.getElementById('costRecs');
+    if (crEl) crEl.innerHTML = COST_RECS.map(r=>`
+      <div style="display:flex;gap:13px;padding:14px;background:#0d1117;border:1px solid #21262d;border-radius:9px;align-items:flex-start">
+        <div style="background:#23863622;border:1px solid #23863644;border-radius:7px;padding:8px 10px;text-align:center;flex:none">
+          <div style="font-size:14px;font-weight:800;color:#3fb950">${r.saving}</div>
+          <div style="font-size:13px;color:#8b949e;font-weight:600;margin-top:1px">est. saving</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;color:#e6edf3;margin-bottom:4px"><span class="ms" style="font-size:15px;color:${r.color};vertical-align:text-bottom;margin-right:5px">${r.icon}</span>${r.title}</div>
+          <div style="font-size:13.5px;color:#8b949e;line-height:1.6">${r.desc}</div>
+        </div>
+      </div>`).join('');
+    
+    // ── PATTERN DOMAINS ───────────────────────────────────────────────────────────
+    const PATTERNS = [
+      { icon:'person_alert', color:'#f85149', bg:'#da363322', border:'#da363344', title:'Staff pattern detection',
+        signals:[
+          { name:'Attendance drift', desc:'A staff member\'s start-time trend is shifting later across consecutive events. Alert raised before it becomes a formal issue.' },
+          { name:'Incident involvement frequency', desc:'One staff member appears in 4 incident reports across 3 events — as witness or involved party. Pattern surfaced for ops review, not disciplinary action by default.' },
+          { name:'Qualification expiry clustering', desc:'Detects when multiple staff members\' certifications expire within the same 30-day window — a resourcing risk before peak season.' },
+          { name:'Performance score drift', desc:'Supervisor feedback scores trending down over 4+ events. Early indicator before it affects client perception.' },
+        ]},
+      { icon:'place', color:'#58a6ff', bg:'#1f6feb22', border:'#1f6feb44', title:'Venue pattern detection',
+        signals:[
+          { name:'Recurring incident location', desc:'3 crowd management incidents in the same sector of the same venue across different events. Structural or layout root cause likely — flagged for client\'s venue management team.' },
+          { name:'Inspection failure recurrence', desc:'The same inspection failure type appears at 70% of events at this venue. Not random — systemic issue identified.' },
+          { name:'Crowd flow anomalies', desc:'Entry incident rate for this venue is 2.3× the platform average. Crowd flow modelling suggested in the next ESMP.' },
+        ]},
+      { icon:'currency_pound', color:'#3fb950', bg:'#23863622', border:'#23863644', title:'Cost leak detection',
+        signals:[
+          { name:'Overtime pattern', desc:'Unplanned overtime is occurring at the same point in events (final shift segment). Systemic, not random — resolvable by shift timing change.' },
+          { name:'Equipment loss rate', desc:'Equipment logged out vs returned for this event type shows a consistent 8% loss rate. Quantified cost, not just a feeling.' },
+          { name:'Billing discrepancy', desc:'Invoiced hours consistently exceed scheduled hours for one subcontractor across 5 events. Automatic flag for review before payment.' },
+        ]},
+      { icon:'verified_user', color:'#d29922', bg:'#bb800022', border:'#bb800044', title:'Compliance pattern detection',
+        signals:[
+          { name:'Subcontractor submission velocity', desc:'This subcontractor\'s submission-to-approval time is trending longer over successive engagements. Risk increases with the next event\'s timeline.' },
+          { name:'Document category gaps', desc:'Across 6 recent events, one document type (Medical Deployment Plan) was submitted late 4 times. A systematic gap, not a one-off.' },
+          { name:'Inspection decline trend', desc:'Pass rate for a specific inspector is declining vs peers. Performance trend data, handled privately in ops review.' },
+        ]},
+    ];
+    const pdEl = document.getElementById('patternDomains');
+    if (pdEl) pdEl.innerHTML = PATTERNS.map(p=>`
+      <div style="background:#161b22;border:1px solid ${p.border};border-radius:10px;overflow:hidden">
+        <div style="background:${p.bg};border-bottom:1px solid ${p.border};padding:14px 20px;display:flex;align-items:center;gap:9px">
+          <span class="ms" style="font-size:20px;color:${p.color}">${p.icon}</span>
+          <span style="font-size:14px;font-weight:800;color:#e6edf3">${p.title}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+          ${p.signals.map((s,i)=>`
+          <div style="padding:14px 18px;${i%2===0?'border-right:1px solid #21262d;':''};${i<p.signals.length-2?'border-bottom:1px solid #21262d;':''}">
+            <div style="font-size:13.5px;font-weight:700;color:${p.color};margin-bottom:4px">${s.name}</div>
+            <div style="font-size:13px;color:#8b949e;line-height:1.6">${s.desc}</div>
+          </div>`).join('')}
+        </div>
+      </div>`).join('');
+    
+    // ── ADMIN MODULES ─────────────────────────────────────────────────────────────
+    const ADMIN_MODULES = [
+      { icon:'manage_accounts', color:'#58a6ff', title:'User & role management',
+        items:['Create, edit, deactivate users in bulk or individually','Assign/change base roles','Grant or deny individual permission overrides','Create and manage staff pools with group permissions','Bulk import staff via CSV (for large events)','View any user\'s current permission set and how it was resolved','Set concurrent session limits per role'] },
+      { icon:'lock', color:'#f85149', title:'Security & authentication',
+        items:['Set MFA requirement per role (required / optional / exempt)','Configure brute-force lockout threshold','Session timeout by role','IP allowlist / blocklist','Active sessions viewer — terminate any session remotely','Security event feed (failed logins, anomalies)','Rotate API keys and service credentials'] },
+      { icon:'psychology', color:'#d29922', title:'AI model assignment',
+        items:['Per-function model dropdown (all connected providers)','Test any function with a sample input before going live','Set monthly token budget per function','Auto-downgrade rule when budget exceeded','View real-time spend per function','Connect new AI providers (API key + endpoint)','Enable/disable individual AI functions system-wide'] },
+      { icon:'memory', color:'#bc8cff', title:'Knowledge base management',
+        items:['View KB index — all sources, chunk counts, last updated','Manually trigger re-index for any source','Add custom documents to the KB (PDFs, URLs)','Add/remove regulatory sources for RAG','KB query tester — try a question and see what it retrieves','Set retention policy for KB entries','View embedding model health and switch if needed'] },
+      { icon:'notifications', color:'#3fb950', title:'Notifications & automation',
+        items:['Configure all system notification triggers and recipients','Set escalation rules for incidents (time-to-escalate, to whom)','Manage scheduled report recipients and cadences','Configure insurance expiry alert thresholds (60/30/7 day)','Set document submission SLA thresholds','Push notification settings for field staff (per event)','Webhook config for external systems (Zapier, MS Teams)'] },
+      { icon:'cable', color:'#58a6ff', title:'Integration management',
+        items:['Connect / disconnect MS Graph (OAuth flow in-panel)','Set SharePoint library targets per document type','Configure Outlook inbox monitoring (select mailbox)','Manage Frappe connection (API key, sync settings)','Anthropic API key management (rate limits, model access)','Add custom OAuth integrations','View integration health and last-sync status'] },
+      { icon:'bar_chart', color:'#d29922', title:'BI & reporting config',
+        items:['Configure KPI dashboard widgets per role (drag-and-drop)','Set fiscal year and period definitions','Manage saved report templates','Schedule report distribution lists','Export full database snapshot (CSV)','Configure data retention per entity type','Set forecasting model parameters (lookback window, sensitivity)'] },
+      { icon:'history', color:'#8b949e', title:'Audit log & compliance',
+        items:['Full searchable audit log (all actions, all users)','Filter by user, action type, date range, outcome','Export audit log for regulatory submissions','GDPR right-to-erasure execution (with preview)','Data portability export per user','72-hour breach notification workflow','Configure log retention (permanent by default)'] },
+    ];
+    const amEl = document.getElementById('adminModules');
+    if (amEl) amEl.innerHTML = ADMIN_MODULES.map(m=>`
+      <div style="background:#161b22;border:1px solid #21262d;border-radius:10px;padding:16px">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+          <span class="ms" style="font-size:20px;color:${m.color}">${m.icon}</span>
+          <div style="font-size:14.5px;font-weight:800;color:#e6edf3">${m.title}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${m.items.map(item=>`<div style="font-size:13px;color:#8b949e;display:flex;gap:7px"><span style="color:${m.color};flex:none;margin-top:1px">›</span>${item}</div>`).join('')}
+        </div>
+      </div>`).join('');
+    
+    // ── AI ADMIN ROWS ─────────────────────────────────────────────────────────────
+    const AI_ADMIN = [
+      ['ESMP Generator',       'Claude Sonnet 4.6',  '€100/mo',  '#d29922'],
+      ['CV Creator',           'Claude Haiku 4.5',   '€20/mo',   '#3fb950'],
+      ['Q-Schedule Generator', 'Claude Haiku 4.5',   '€20/mo',   '#3fb950'],
+      ['Incident categoriser', 'Phi-3 Mini (local)', 'unlimited','#3fb950'],
+      ['Pattern detector',     'Phi-3 Mini (local)', 'unlimited','#3fb950'],
+      ['KB search',            'pgvector (local)',   'unlimited','#3fb950'],
+      ['RAG legal lookup',     'pgvector (local)',   'unlimited','#3fb950'],
+      ['Notification drafts',  'Claude Haiku 4.5',   '€15/mo',   '#3fb950'],
+    ];
+    const aarEl = document.getElementById('aiAdminRows');
+    if (aarEl) aarEl.innerHTML = AI_ADMIN.map(r=>`
+      <div style="display:grid;grid-template-columns:220px 1fr 1fr 100px;gap:0;padding:7px 0;border-bottom:1px solid #1a2030;align-items:center">
+        <span style="color:#c9d1d9">${r[0]}</span>
+        <span style="color:#58a6ff">${r[1]}</span>
+        <span style="color:${r[3]}">${r[2]}</span>
+        <span style="display:flex;gap:5px">
+          <span style="background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb44;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer">Edit</span>
+          <span style="background:#23863622;color:#3fb950;border:1px solid #23863644;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer">Test</span>
+        </span>
+      </div>`).join('');
+    
+    // ── INTEGRATIONS ──────────────────────────────────────────────────────────────
+    const INTEGRATIONS = [
+      { icon:'cloud_sync', color:'#58a6ff', name:'Microsoft 365 (MS Graph)', status:'Connected', statusColor:'#3fb950',
+        desc:'SharePoint bidirectional document sync. Outlook inbox PO monitoring. Azure AD optionally used for SSO. Requires Graph API permissions: Files.ReadWrite, Mail.Read, Sites.ReadWrite.All.',
+        setup:'Ops Admin connects via OAuth flow in-panel. No developer required once initially configured.' },
+      { icon:'psychology', color:'#d29922', name:'Anthropic Claude API', status:'Connected', statusColor:'#3fb950',
+        desc:'Powers ESMP Generator, CV Creator, Q-Schedule Generator, Notification Drafting. Model selection per function. Spend tracked per API key with budget caps.',
+        setup:'API key entered in admin. Model availability auto-detected. New Claude releases appear in the model dropdown automatically.' },
+      { icon:'account_balance', color:'#bc8cff', name:'Frappe (Finance)', status:'Connected', statusColor:'#3fb950',
+        desc:'Chart of accounts, PO generation, invoice creation, revenue tracking. Bidirectional sync — event data creates Frappe records automatically.',
+        setup:'Frappe instance URL + API key in admin. Sync rules configured per entity type.' },
+      { icon:'smartphone', color:'#3fb950', name:'Push notifications (PWA)', status:'Active', statusColor:'#3fb950',
+        desc:'Web Push API for field staff notifications. No native app required. Works on iOS and Android via Safari and Chrome. Ops can broadcast to all staff on an event or target individuals.',
+        setup:'Auto-configured at PWA install. Admin sets notification categories and opt-in/out rules per role.' },
+      { icon:'wb_sunny', color:'#d29922', name:'OpenWeather API', status:'Connected', statusColor:'#3fb950',
+        desc:'Real-time and forecast weather data for event planning and risk assessment. REST integration surfaces venue conditions on event records, triggers risk flags for field staff briefings and crowd management planning. Supports location-aware alerts and multi-day event forecasting.',
+        setup:'API key entered in admin panel. Weather widget auto-appears on event records. Configurable alert thresholds (wind speed, rainfall, temperature) per event type.' },
+      { icon:'receipt_long', color:'#bc8cff', name:'Xero / Sage / QuickBooks (Finance)', status:'Available', statusColor:'#d29922',
+        desc:'Native Frappe finance module is included in the build. For clients with an existing accountancy platform, bidirectional sync connectors are available for Xero, Sage 50/200 and QuickBooks Online — covering invoices, purchase orders and payment status without double-entry.',
+        setup:'Select provider in admin, authenticate via OAuth, map chart of accounts. Sync rules configurable per entity type (invoice, PO, credit note). Frappe remains the internal ledger.' },
+      { icon:'build_circle', color:'#58a6ff', name:'MCP Tool Registry (AI Agent Tools)', status:'Active', statusColor:'#3fb950',
+        desc:'Internal Model Context Protocol registry that exposes callable tools to AI agents — e.g. create_event, assign_staff, query_regulations, generate_esmp. New tools are registered without code changes. The model router automatically discovers available tools and selects the right one per request. Enables future AI autonomy without architectural changes.',
+        setup:'Admin registers tool name, natural-language description, endpoint URL and parameter schema. No developer intervention required for new tools.' },
+      { icon:'account_tree', color:'#3fb950', name:'Workflow Engine (Approval Routing)', status:'Active', statusColor:'#3fb950',
+        desc:'Configurable RACI-based approval routing for document sign-off, budget requests, subcontractor onboarding and incident escalation. Supports parallel and sequential approval steps, SLA timers, automatic chaser emails and escalation to senior approvers on timeout. Each workflow is fully configurable in admin with no code changes required.',
+        setup:'Admin builds workflows via step editor: assign approvers by role or named user, set SLA timers, configure escalation targets and chaser email templates.' },
+      { icon:'add_circle', color:'#484f58', name:'Custom webhook / Zapier', status:'Available', statusColor:'#484f58',
+        desc:'Any system event (incident raised, document approved, budget threshold hit) can trigger a webhook to an external URL. Enables integration with MS Teams, Slack, PagerDuty or any REST endpoint.',
+        setup:'Admin defines event trigger, target URL and payload format. No code required.' },
+    ];
+    const intEl = document.getElementById('integrations');
+    if (intEl) intEl.innerHTML = INTEGRATIONS.map(i=>`
+      <div style="display:flex;gap:13px;padding:14px;background:#0d1117;border:1px solid #21262d;border-radius:9px;align-items:flex-start">
+        <div style="width:38px;height:38px;border-radius:8px;background:#161b22;border:1px solid #21262d;display:flex;align-items:center;justify-content:center;flex:none">
+          <span class="ms" style="font-size:20px;color:${i.color}">${i.icon}</span>
+        </div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px;flex-wrap:wrap">
+            <span style="font-size:14px;font-weight:800;color:#e6edf3">${i.name}</span>
+            <span style="font-size:12px;font-weight:700;color:${i.statusColor};background:${i.statusColor}22;border:1px solid ${i.statusColor}44;border-radius:999px;padding:2px 9px">${i.status}</span>
+          </div>
+          <div style="font-size:13.5px;color:#8b949e;line-height:1.6;margin-bottom:6px">${i.desc}</div>
+          <div style="font-size:13px;color:#6e7680"><span style="color:#bc8cff;font-weight:600">Setup: </span>${i.setup}</div>
+        </div>
+      </div>`).join('');
+        </script>
+        <!-- Live two-sided comments (Heaventree ↔ JAM Safety) — backend on Netlify+Turso -->
+        <script>
+            window.JAM_DOC = 'tech';
+        </script>
+        <script>
+            (function(){var s=document.createElement('script');s.src='assets/comments.js?t='+Date.now();document.body.appendChild(s);})();
+        </script>
+    </body>
+    
+    </html>verview | Blank Site 2026</title>
     <style>
         * {
             margin: 0;
