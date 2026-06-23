@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore our comprehensive technical overview. Learn about our architecture, systems, and capabilities. Get detailed insights today.">
+    <title>Technical Overview | Blank Site 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-menu a:hover {
+            color: #0066cc;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            flex-direction: column;
+            list-style: none;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu li {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .mobile-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            background-color: #fff;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #0066cc;
+            margin-bottom: 20px;
+            font-size: 36px;
+        }
+        
+        h2 {
+            color: #0066cc;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        h3 {
+            color: #333;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .intro-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .architecture-diagram {
+            background-color: #f5f5f5;
+            border: 2px dashed #0066cc;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .diagram-placeholder {
+            color: #999;
+            font-size: 16px;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .spec-card {
+            background-color: #f9f9f9;
+            border-left: 4px solid #0066cc;
+            padding: 20px;
+            border-radius: 4px;
+        }
+        
+        .spec-card h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .spec-card p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .tech-item {
+            background-color: #e8f2ff;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+            color: #0066cc;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .features-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #555;
+        }
+        
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .contact-form {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        
+        .btn {
+            background-color: #0066cc;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0052a3;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            border-top: 1px solid #222;
+        }
+        
+        footer p {
+            color: #fff;
+            margin: 0;
+        }
+        
+        footer a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Blank Site 2026</a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="technical-overview.html">Technical Overview</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+        <ul class="mobile-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="technical-overview.html">Technical Overview</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <div class="section">
+            <h1>Technical Overview</h1>
+            <p class="intro-text">
+                Welcome to our comprehensive technical overview. This page provides detailed insights into our system architecture, technology stack, and capabilities. Whether you're a technical professional or exploring our platform, you'll find valuable information about how we build and maintain our solutions.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>System Architecture</h2>
+            <p>
+                Our system is built on a modern, scalable architecture designed to handle high-volume operations with exceptional reliability. We utilize a distributed microservices approach that ensures flexibility, resilience, and independent scaling of components.
+            </p>
+            <div class="architecture-diagram">
+                <div class="diagram-placeholder">
+                    <p>System Architecture Diagram</p>
+                    <p style="font-size: 12px; margin-top: 10px;">Frontend Layer → API Gateway → Microservices → Data Layer</p>
+                </div>
+            </div>
+            <p>
+                Our architecture separates concerns into distinct layers: the presentation layer handles user interfaces across web and mobile platforms, the API gateway manages routing and authentication, microservices handle specific business logic, and our data layer ensures persistent, reliable storage with redundancy.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Key Technical Specifications</h2>
+            <div class="specs-grid">
+                <div class="spec-card">
+                    <h4>Uptime Guarantee</h4>
+                    <p>99.99% SLA with redundant systems and automatic failover mechanisms across multiple geographic regions.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>Response Time</h4>
+                    <p>Average API response times under 100ms with 99th percentile latency under 500ms for standard operations.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>Scalability</h4>
+                    <p>Auto-scaling infrastructure capable of handling 10x traffic spikes without performance degradation.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>Data Retention</h4>
+                    <p>Comprehensive data archival with 7-year retention policy and compliance with international data regulations.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>Concurrent Users</h4>
+                    <p>Support for 100,000+ concurrent users with load balancing across multiple server instances.</p>
+                </div>
+                <div class="spec-card">
+                    <h4>API Rate Limits</h4>
+                    <p>Flexible rate limiting: 10,000 requests/minute for standard tier with burst capacity for premium users.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Technology Stack</h2>
+            <p>
+                We leverage industry-leading technologies and frameworks to build robust, maintainable, and performant systems:
+            </p>
+            <div class="tech-stack">
+                <div class="tech-item">Backend: Node.js & Python</div>
+                <div class="tech-item">Frontend: React & Vue.js</div>
+                <div class="tech-item">Databases: PostgreSQL & MongoDB</div>
+                <div class="tech-item">Caching: Redis & Memcached</div>
+                <div class="tech-item">Message Queue: RabbitMQ</div>
+                <div class="tech-item">Container: Docker & Kubernetes</div>
+                <div class="tech-item">Cloud: AWS & Google Cloud</div>
+                <div class="tech-item">CI/CD: Jenkins & GitLab</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Integration Capabilities</h2>
+            <p>
+                Our platform provides extensive integration capabilities through multiple interfaces and protocols:
+            </p>
+            <ul class="features-list">
+                <li>RESTful API with comprehensive documentation and SDKs for major programming languages</li>
+                <li>GraphQL endpoint for flexible data querying and efficient bandwidth usage</li>
+                <li>WebSocket support for real-time data streaming and live updates</li>
+                <li>Webhook system for event-driven integrations with third-party services</li>
+                <li>OAuth 2.0 and SAML 2.0 authentication for enterprise SSO integration</li>
+                <li>Pre-built connectors for popular platforms and services</li>
+                <li>Custom integration support with dedicated technical teams</li>
+                <li>API versioning strategy ensuring backward compatibility</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Security Features</h2>
+            <p>
+                Security is fundamental to our platform design. We implement multiple layers of protection to safeguard your data:
+            </p>
+            <ul class="features-list">
+                <li>End-to-end encryption for data in transit using TLS 1.3</li>
+                <li>AES-256 encryption for data at rest across all storage systems</li>
+                <li>Multi-factor authentication (MFA) with TOTP and hardware security keys</li>
+                <li>Role-based access control (RBAC) with granular permission management</li>
+                <li>Regular security audits and penetration testing by third-party experts</li>
+                <li>Compliance certifications including SOC 2 Type II, GDPR, and HIPAA</li>
+                <li>Comprehensive audit logging for all system activities and data access</li>
+                <li>Automated threat detection and incident response systems</li>
+                <li>Regular security patches and vulnerability management</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Performance Metrics</h2>
+            <p>
+                Our monitoring and analytics provide real-time visibility into system performance:
+            </p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">99.99%</div>
+                    <div class="metric-label">Uptime SLA</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&lt;100ms</div>
+                    <div class="metric-label">Avg Response Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">100K+</div>
+                    <div class="metric-label">Concurrent Users</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">10x</div>
+                    <div class="metric-label">Auto-Scale Capacity</div>
+                </div>
+            </div>
+            <p style="margin-top: 30px;">
+                We continuously monitor system performance through advanced analytics dashboards, distributed tracing, and custom metrics collection. Our DevOps team maintains 24/7 surveillance ensuring optimal performance and rapid response to any anomalies.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Technical Inquiries</h2>
+            <p>
+                Have technical questions or need more detailed information about our systems? Our technical team is ready to help. Fill out the form below and we'll get back to you within 24 hours.
+            </p>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company/Organization</label>
+                    <input type="text" id="company" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Technical Question/Inquiry *</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn">Submit Inquiry</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Blank Site. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
