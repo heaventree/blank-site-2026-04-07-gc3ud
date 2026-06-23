@@ -1,14 +1,1464 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JAM Safety OS — Enterprise Proposal v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#eef1f7;font-family:Inter,system-ui,sans-serif;color:#111c2c;-webkit-font-smoothing:antialiased}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;line-height:1;white-space:nowrap;font-feature-settings:'liga';-webkit-font-feature-settings:'liga';display:inline-block}
+.layout{display:flex;min-height:100vh}
+/* NAV */
+.sidenav{position:fixed;left:0;top:0;bottom:0;width:252px;background:#0a1e3a;display:flex;flex-direction:column;padding:22px 14px;z-index:50;border-right:1px solid rgba(255,255,255,.06)}
+.nav-brand{display:flex;align-items:center;gap:11px;padding:4px 8px 20px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:18px}
+.nav-brand-icon{width:38px;height:38px;border-radius:8px;background:#2B7FFF;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+.nav-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7f93b6;padding:0 8px 9px}
+.nav-items{display:flex;flex-direction:column;gap:3px}
+.nav-item{height:40px;display:flex;align-items:center;gap:12px;padding:0 11px;cursor:pointer;border-radius:7px;font-size:14px;font-weight:600;color:#dbe5f5;transition:background .15s;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:#13315c}
+.nav-meta{margin-top:auto;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:14px}
+/* MAIN */
+.main{flex:1;margin-left:252px;display:flex;flex-direction:column;min-width:0}
+.topbar{position:sticky;top:0;z-index:40;height:66px;background:rgba(238,241,247,.88);backdrop-filter:blur(8px) saturate(140%);border-bottom:1px solid #dce2ee;display:flex;align-items:center;justify-content:space-between;padding:0 34px}
+.content{flex:1;padding:30px 34px 80px;max-width:1160px;width:100%}
+/* SECTIONS */
+.section{display:none;flex-direction:column;gap:24px}
+.section.active{display:flex}
+/* CARDS */
+.card{background:#fff;border:1px solid #e3e8f2;border-radius:12px}
+.card-header{padding:18px 22px;border-bottom:1px solid #e3e8f2;display:flex;align-items:center;gap:10px}
+.card-body{padding:20px 22px}
+/* a standalone card with no table/internal grid never spans more than ~50% of content */
+.card-narrow{max-width:600px}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:4px 10px;font-size:13.5px;font-weight:600}
+.badge-mvp{color:#235c40;background:#eaf7f0;border:1px solid #cdeeda}
+.badge-plus{color:#1b5fc4;background:#e9f1ff;border:1px solid #cfe0ff}
+.badge-pp{color:#a83e58;background:#fdecef;border:1px solid #f6d0d8}
+.badge-green{color:#14B86A;background:#eaf7f0}
+/* TIER DOTS */
+.dot-mvp{width:8px;height:8px;border-radius:50%;background:#14B86A;flex:none}
+.dot-plus{width:8px;height:8px;border-radius:50%;background:#2B7FFF;flex:none}
+.dot-pp{width:8px;height:8px;border-radius:50%;background:#e8607a;flex:none}
+/* TYPOGRAPHY */
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#2B7FFF;margin-bottom:10px}
+.h1{font-size:48px;font-weight:800;letter-spacing:-.025em;color:#fff;line-height:1.05}
+.h2{font-size:22px;font-weight:800;color:#102B52;letter-spacing:-.01em}
+.h3{font-size:16px;font-weight:800;color:#102B52}
+.body{font-size:14px;line-height:1.7;color:#3a4759}
+.label{font-size:14px;font-weight:600;color:#4a5f7c}
+/* GRID HELPERS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+/* COVER */
+.cover{background:#0a1e3a;border-radius:14px;overflow:hidden;position:relative;padding:44px 46px 38px;box-shadow:0 24px 60px -28px rgba(10,30,58,.55)}
+.cover::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(120,150,200,.15) 1px,transparent 1px);background-size:26px 26px;opacity:.7;pointer-events:none}
+.cover::after{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:radial-gradient(circle at 80% 30%,rgba(43,127,255,.3),transparent 60%);pointer-events:none}
+/* ARCH DIAGRAM */
+.arch-layer{border-radius:11px;padding:16px 18px;margin-bottom:6px}
+.arch-layer-label{font-size:12.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+.arch-components{display:flex;flex-wrap:wrap;gap:8px}
+.arch-chip{border-radius:7px;padding:8px 13px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px}
+.arch-arrow{display:flex;justify-content:center;align-items:center;height:22px;color:#9fb0cc;font-size:13px;font-weight:700;letter-spacing:.04em}
+/* TIMELINE */
+.week-row{display:grid;grid-template-columns:88px 1fr;gap:0;border-bottom:1px solid #eef1f7}
+.week-row:last-child{border-bottom:none}
+.week-num{padding:16px 14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:18px;border-right:1px solid #eef1f7}
+.week-body{padding:16px 20px}
+.week-deliverable{font-size:14.5px;color:#2d3a4a;padding:3px 0;display:flex;align-items:flex-start;gap:7px}
+.milestone-flag{display:inline-flex;align-items:center;gap:6px;background:#0a1e3a;color:#fff;border-radius:7px;padding:6px 13px;font-size:13.5px;font-weight:700;margin-top:8px}
+/* PORTAL FEATURE */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:28px}
+.feat-row{padding:11px 0;border-bottom:1px solid #f1f4f9;display:flex;gap:12px;align-items:flex-start}
+.feat-row:last-child{border-bottom:none}
+.feat-name{font-size:14px;font-weight:700;color:#102B52}
+.feat-desc{font-size:14px;color:#3f5065;margin-top:2px;line-height:1.6}
+/* RISK TABLE */
+.risk-row{display:grid;grid-template-columns:2.2fr .7fr .7fr 3fr;gap:12px;padding:13px 22px;border-bottom:1px solid #eef1f7;align-items:start}
+.risk-row:last-child{border-bottom:none}
+.pill-high{font-size:13px;font-weight:700;color:#b3261e;background:#fbe3e3;border-radius:999px;padding:3px 10px}
+.pill-med{font-size:13px;font-weight:700;color:#9a6512;background:#fdeccf;border-radius:999px;padding:3px 10px}
+.pill-low{font-size:13px;font-weight:700;color:#2156a8;background:#e6f0ff;border-radius:999px;padding:3px 10px}
+/* SCOPE */
+.scope-item{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#26663f;background:#eaf7f0;border:1px solid #cdeeda;border-radius:6px;padding:5px 10px}
+/* QUERY */
+.query-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+.query-row{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid #f1f4f9;align-items:flex-start}
+.query-row:last-child{border-bottom:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+</style>
 </head>
 <body>
-    <nav>
-        <a href="technical-overview.html">technical overview</a>
-    </nav>
-    <p>hello world</p>
+<div class="layout">
+
+<!-- ═══ LEFT NAV ═══ -->
+<aside class="sidenav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon"><span class="ms" style="font-size:22px;color:#fff;font-variation-settings:'FILL' 1">shield</span></div>
+    <div>
+      <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:.01em">JAM Safety</div>
+      <div style="font-size:12.5px;font-weight:600;color:#9fb0cc;letter-spacing:.04em;text-transform:uppercase;margin-top:1px">× Heaventree</div>
+    </div>
+  </div>
+  <div class="nav-label">Enterprise Proposal v2</div>
+  <div class="nav-items" id="navItems"></div>
+  <div class="nav-meta" style="margin-top:auto">
+    <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:22px;font-weight:800;color:#fff">16</span><span style="font-size:13px;font-weight:600;color:#9fb0cc">weeks</span></div>
+    <div style="display:flex;align-items:baseline;gap:6px;margin-top:3px"><span style="font-size:22px;font-weight:800;color:#fff">€40k</span><span style="font-size:13px;font-weight:600;color:#9fb0cc">fixed · MVP+</span></div>
+    <div style="height:1px;background:rgba(255,255,255,.08);margin:10px 0"></div>
+    <div style="font-size:13.5px;color:#9fb0cc;line-height:1.5">Proposal v2 · June 2026<br>Prepared for Conor Rainey</div>
+    <a href="Technical Deep Dive.html" style="display:flex;align-items:center;gap:7px;margin-top:10px;background:rgba(43,127,255,.12);border:1px solid rgba(43,127,255,.25);border-radius:7px;padding:8px 11px;text-decoration:none">
+      <span class="ms" style="font-size:16px;color:#4d97ff">terminal</span>
+      <span style="font-size:12px;font-weight:700;color:#4d97ff;line-height:1.3">Technical Deep Dive →</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <header class="topbar">
+    <div>
+      <div style="font-size:18px;font-weight:800;color:#102B52;letter-spacing:-.01em" id="topTitle">Overview</div>
+      <div style="font-size:14px;color:#5a7099;font-weight:500;margin-top:1px">NexOS — Enterprise Proposal</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <button onclick="goTo('investment')" style="display:inline-flex;align-items:center;gap:6px;background:#eaf7f0;border:1px solid #cdeeda;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;color:#235c40;cursor:pointer;font-family:inherit">
+        <span class="ms" style="font-size:16px">payments</span>Investment
+      </button>
+      <button onclick="goTo('terms')" style="display:inline-flex;align-items:center;gap:6px;background:#eef3ff;border:1px solid #cfe0ff;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;color:#1b5fc4;cursor:pointer;font-family:inherit">
+        <span class="ms" style="font-size:16px">gavel</span>Terms
+      </button>
+      <a href="Technical Deep Dive.html" style="display:inline-flex;align-items:center;gap:6px;background:#0a1e3a;border:1px solid #13315c;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;color:#7f93b6;text-decoration:none">
+        <span class="ms" style="font-size:16px;color:#4d97ff">terminal</span><span style="color:#c9d1d9">Technical Deep Dive</span><span class="ms" style="font-size:14px">open_in_new</span>
+      </a>
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #dce2ee;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;color:#6b7d9c">
+        <span style="width:6px;height:6px;border-radius:50%;background:#14B86A;animation:pulse 2.4s ease-in-out infinite"></span>Awaiting review
+      </span>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:30px 34px 80px;overflow-y:auto">
+  <div style="max-width:1140px">
+
+  <!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+  <div class="section active" id="sec-overview">
+
+    <!-- Cover -->
+    <div class="cover" style="position:relative">
+      <div style="position:relative;z-index:1">
+        <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;margin-bottom:24px">
+          <span style="width:7px;height:7px;border-radius:50%;background:#2B7FFF"></span>
+          <span style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#cdd9ef">NexOS · Business OS &amp; Intelligence</span>
+        </div>
+        <h1 class="h1">The JAM Safety<br>Operating System</h1>
+        <p style="margin:16px 0 0;font-size:17px;line-height:1.55;color:#aebcd6;max-width:62ch;font-weight:450">A 16-week plan to take JAM Safety from whiteboard to a working, field-tested platform — five portals, AI-assisted compliance, and live operational intelligence. Powered by NexOS &mdash; Heaventree's proprietary business OS &mdash; and delivered by the team who built it.</p>
+        <div style="display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;padding-top:26px;border-top:1px solid rgba(255,255,255,.1)">
+          <div><div style="font-size:30px;font-weight:800;color:#fff;line-height:1">16</div><div style="font-size:13px;color:#8da1c4;font-weight:600;margin-top:5px">weeks end-to-end</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-size:30px;font-weight:800;color:#fff;line-height:1">€40,000</div><div style="font-size:13px;color:#8da1c4;font-weight:600;margin-top:5px">fixed, to MVP+</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-size:30px;font-weight:800;color:#fff;line-height:1">5</div><div style="font-size:13px;color:#8da1c4;font-weight:600;margin-top:5px">portals, one platform</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.1)"></div>
+          <div><div style="font-size:30px;font-weight:800;color:#2B7FFF;line-height:1">MVP+</div><div style="font-size:13px;color:#8da1c4;font-weight:600;margin-top:5px">core launch + more</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exec summary + nav links -->
+    <div class="grid-2" style="grid-template-columns:1.6fr 1fr">
+      <div class="card"><div class="card-body">
+        <div class="eyebrow">The engagement in one paragraph</div>
+        <p class="body">We deliver a working MVP across all four operational portals by <strong style="color:#102B52">Week 9</strong>, layer in AI document generation, finance automation and analytics through <strong style="color:#102B52">Weeks 10–12</strong>, then harden, pilot on a live event and go to production by <strong style="color:#102B52">Week 16</strong> — followed by four weeks of hypercare. The architecture section of this document explains every system component and how they connect. The week-by-week timeline removes all ambiguity from the schedule.</p>
+      </div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div onclick="goTo('architecture')" style="cursor:pointer;background:#102B52;color:#fff;border-radius:11px;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span><span style="display:block;font-size:14px;font-weight:700">System architecture</span><span style="display:block;font-size:13px;color:#9fb0cc;margin-top:2px">What is what &amp; how it connects</span></span>
+          <span class="ms" style="font-size:22px">arrow_forward</span>
+        </div>
+        <div onclick="goTo('timeline')" style="cursor:pointer;background:#fff;border:1px solid #e3e8f2;border-radius:11px;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span><span style="display:block;font-size:14px;font-weight:700;color:#102B52">16-week timeline</span><span style="display:block;font-size:13px;color:#6b7d9c;margin-top:2px">Week-by-week deliverables</span></span>
+          <span class="ms" style="font-size:22px;color:#2B7FFF">arrow_forward</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portal cards -->
+    <div>
+      <div class="h3" style="margin-bottom:13px">What we're building — one platform, five portals</div>
+      <div class="grid-4" style="grid-template-columns:repeat(5,1fr)">
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:9px">
+          <div style="width:38px;height:38px;border-radius:8px;background:#eef3ff;display:flex;align-items:center;justify-content:center"><span class="ms" style="font-size:20px;color:#2B7FFF">hub</span></div>
+          <div class="h3">JAM Ops</div><div class="label">Internal command centre — projects, incidents, AI documents, finance, staff management.</div>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:9px">
+          <div style="width:38px;height:38px;border-radius:8px;background:#eef3ff;display:flex;align-items:center;justify-content:center"><span class="ms" style="font-size:20px;color:#2B7FFF">corporate_fare</span></div>
+          <div class="h3">Client Portal</div><div class="label">Senior &amp; junior tiers — safety docs, manpower data, incident history, revenue reporting.</div>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:9px">
+          <div style="width:38px;height:38px;border-radius:8px;background:#eef3ff;display:flex;align-items:center;justify-content:center"><span class="ms" style="font-size:20px;color:#2B7FFF">engineering</span></div>
+          <div class="h3">Subcontractor</div><div class="label">Document submission, approvals workflow, template packs, PTW issuance.</div>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:9px">
+          <div style="width:38px;height:38px;border-radius:8px;background:#eef3ff;display:flex;align-items:center;justify-content:center"><span class="ms" style="font-size:20px;color:#2B7FFF">smartphone</span></div>
+          <div class="h3">Staff Field</div><div class="label">Mobile-first, offline-capable — site reports, inspections, incidents, toolbox talks.</div>
+        </div>
+        <div class="card" style="padding:18px;display:flex;flex-direction:column;gap:9px;border-top:3px solid #e8607a">
+          <div style="width:38px;height:38px;border-radius:8px;background:#fdecef;display:flex;align-items:center;justify-content:center"><span class="ms" style="font-size:20px;color:#e8607a">badge</span></div>
+          <div class="h3">Recruitment</div><div class="label" style="color:#a83e58">Future SOW — job board, CV submission, availability, qualifications.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- De-risk approach -->
+    <div>
+      <div class="h3" style="margin-bottom:13px">How we de-risk delivery</div>
+      <div class="grid-2">
+        <div class="card" style="padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+          <span class="ms" style="font-size:22px;color:#14B86A;margin-top:1px;flex:none">account_tree</span>
+          <div><div style="font-size:14px;font-weight:700;color:#102B52">Phased &amp; parallel</div><div class="label" style="margin-top:3px">Portals are built as parallel vertical slices — value lands early and integration risk is reduced.</div></div>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+          <span class="ms" style="font-size:22px;color:#14B86A;margin-top:1px;flex:none">verified_user</span>
+          <div><div style="font-size:14px;font-weight:700;color:#102B52">Security by design</div><div class="label" style="margin-top:3px">RBAC, audit logging, encryption and GDPR tooling are baked in from Week 1 — not bolted on.</div></div>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+          <span class="ms" style="font-size:22px;color:#14B86A;margin-top:1px;flex:none">fact_check</span>
+          <div><div style="font-size:14px;font-weight:700;color:#102B52">Pilot-validated</div><div class="label" style="margin-top:3px">MVP is tested on a real JAM event (Week 13–14) before production go-live at Week 16.</div></div>
+        </div>
+        <div class="card" style="padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+          <span class="ms" style="font-size:22px;color:#14B86A;margin-top:1px;flex:none">support_agent</span>
+          <div><div style="font-size:14px;font-weight:700;color:#102B52">Protected launch date</div><div class="label" style="margin-top:3px">Lowest-value scope flexes first — input delays move features, not the Week 16 launch. Four weeks of hypercare follow.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /overview -->
+
+  <!-- ══════════════════════ ARCHITECTURE ══════════════════════ -->
+  <div class="section" id="sec-architecture">
+
+    <div class="card"><div class="card-body">
+      <div class="eyebrow">NexOS Platform Architecture</div>
+      <p class="body" style="max-width:90ch">Every portal, every AI agent, every document and every approval runs on <strong style="color:#102B52">NexOS</strong> — Heaventree's proprietary business operating system. JAM Safety OS is an industry-specific deployment of NexOS: the platform handles identity, permissions, AI orchestration, document management, BI and integrations out of the box. What Heaventree builds for JAM Safety is the configuration, the portals, the workflows and the safety-industry intelligence — on top of a proven, battle-tested foundation. The diagram below shows all system layers and how they connect.</p>
+    </div></div>
+
+    <!-- Architecture Diagram -->
+    <div class="card"><div class="card-body" style="padding:24px">
+
+      <!-- PORTALS LAYER -->
+      <div class="arch-layer" style="background:#f4f7fc;border:1px solid #e3e8f2">
+        <div class="arch-layer-label" style="color:#2B7FFF"><span class="ms" style="font-size:14px;vertical-align:middle;margin-right:5px">layers</span>PRESENTATION — 5 user portals</div>
+        <div class="arch-components">
+          <div class="arch-chip" style="background:#0a1e3a;color:#fff"><span class="ms" style="font-size:16px">public</span>JAMSafety.com</div>
+          <div class="arch-chip" style="background:#102B52;color:#fff"><span class="ms" style="font-size:16px">hub</span>JAM Ops Portal</div>
+          <div class="arch-chip" style="background:#102B52;color:#fff"><span class="ms" style="font-size:16px">corporate_fare</span>Client Portal</div>
+          <div class="arch-chip" style="background:#102B52;color:#fff"><span class="ms" style="font-size:16px">engineering</span>Subcontractor Portal</div>
+          <div class="arch-chip" style="background:#163a6b;color:#fff"><span class="ms" style="font-size:16px">smartphone</span>Staff Field PWA</div>
+          <div class="arch-chip" style="background:#5a2535;color:#fff"><span class="ms" style="font-size:16px">badge</span>Recruitment (future)</div>
+        </div>
+        <div style="font-size:14px;color:#4a5f7c;margin-top:9px">Tech: <strong>Next.js 14 + React + TypeScript + Tailwind + shadcn/ui</strong> &nbsp;·&nbsp; Field portal: <strong>PWA with Service Worker + IndexedDB for offline</strong></div>
+      </div>
+
+      <div class="arch-arrow"><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span><span style="margin:0 8px">API Gateway (REST + WebSocket) — all portal requests route here</span><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span></div>
+
+      <!-- NEXOS CORE LAYER -->
+      <div class="arch-layer" style="background:#0a1e3a;border:1px solid #163a6b">
+        <div class="arch-layer-label" style="color:#4d97ff"><span class="ms" style="font-size:14px;vertical-align:middle;margin-right:5px">memory</span>NEXOS CORE — platform services</div>
+        <div class="arch-components">
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">lock</span>Auth &amp; RBAC</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">folder_open</span>Document Engine</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">account_tree</span>Workflow Engine</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">notifications</span>Notification Bus</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">smart_toy</span>Agent Orchestrator</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">extension</span>MCP Tool Registry</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">sync_alt</span>Field Sync Engine</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">bar_chart</span>Reporting Engine</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">payments</span>Finance Module</div>
+          <div class="arch-chip" style="background:#13315c;color:#dbe5f5"><span class="ms" style="font-size:15px;color:#4d97ff">monitoring</span>Cost Tracker</div>
+        </div>
+        <div style="font-size:14px;color:#7f93b6;margin-top:9px">Tech: <strong style="color:#9fb0cc">Python 3.12 + FastAPI + SQLAlchemy 2.0 + Alembic + Pydantic v2</strong> &nbsp;·&nbsp; Reverse proxy: <strong style="color:#9fb0cc">Caddy 2 (auto-TLS)</strong></div>
+      </div>
+
+      <div class="arch-arrow"><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span><span style="margin:0 8px">Agent Orchestrator dispatches tasks to the AI layer via Claude API</span><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span></div>
+
+      <!-- AI LAYER -->
+      <div class="arch-layer" style="background:#fffbeb;border:1px solid #fde68a">
+        <div class="arch-layer-label" style="color:#92400e"><span class="ms" style="font-size:14px;vertical-align:middle;margin-right:5px">psychology</span>AI INTELLIGENCE LAYER — Claude-powered agents</div>
+        <div class="arch-components">
+          <div class="arch-chip" style="background:#fef3c7;color:#78350f;border:1px solid #fde68a"><span class="ms" style="font-size:15px;color:#d97706">description</span>ESMP Generator</div>
+          <div class="arch-chip" style="background:#fef3c7;color:#78350f;border:1px solid #fde68a"><span class="ms" style="font-size:15px;color:#d97706">badge</span>CV Creator</div>
+          <div class="arch-chip" style="background:#fef3c7;color:#78350f;border:1px solid #fde68a"><span class="ms" style="font-size:15px;color:#d97706">schedule</span>Q-Schedule Generator</div>
+          <div class="arch-chip" style="background:#fef9ec;color:#92400e;border:1px dashed #fde68a"><span class="ms" style="font-size:15px;color:#d97706">auto_awesome</span>Presentation Creator*</div>
+          <div class="arch-chip" style="background:#fef9ec;color:#92400e;border:1px dashed #fde68a"><span class="ms" style="font-size:15px;color:#d97706">tips_and_updates</span>Prompt Creator*</div>
+          <div class="arch-chip" style="background:#fef9ec;color:#92400e;border:1px dashed #fde68a"><span class="ms" style="font-size:15px;color:#d97706">people</span>CRM Intelligence*</div>
+        </div>
+        <div style="font-size:14px;color:#92400e;margin-top:9px">Solid = MVP+ scope &nbsp;·&nbsp; Dashed* = time-permitting &nbsp;·&nbsp; Model: <strong>Claude (Anthropic API)</strong> &nbsp;·&nbsp; Protocol: <strong>MCP (Model Context Protocol)</strong></div>
+      </div>
+
+      <div class="arch-arrow"><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span><span style="margin:0 8px">MS Graph Bridge + Finance Connector push/pull to external systems</span><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span></div>
+
+      <!-- INTEGRATION LAYER -->
+      <div class="arch-layer" style="background:#eff6ff;border:1px solid #bfdbfe">
+        <div class="arch-layer-label" style="color:#1e40af"><span class="ms" style="font-size:14px;vertical-align:middle;margin-right:5px">cable</span>INTEGRATION LAYER — external services</div>
+        <div class="arch-components">
+          <div class="arch-chip" style="background:#dbeafe;color:#1e3a8a;border:1px solid #bfdbfe"><span class="ms" style="font-size:15px;color:#2563eb">cloud_sync</span>MS Graph (SharePoint + Outlook)</div>
+          <div class="arch-chip" style="background:#dbeafe;color:#1e3a8a;border:1px solid #bfdbfe"><span class="ms" style="font-size:15px;color:#2563eb">receipt_long</span>Finance (Xero / Sage / QB)</div>
+          <div class="arch-chip" style="background:#dbeafe;color:#1e3a8a;border:1px solid #bfdbfe"><span class="ms" style="font-size:15px;color:#2563eb">cloud</span>OpenWeather API</div>
+          <div class="arch-chip" style="background:#dbeafe;color:#1e3a8a;border:1px solid #bfdbfe"><span class="ms" style="font-size:15px;color:#2563eb">mail</span>Transactional Email</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span><span style="margin:0 8px">All application state persisted here</span><span class="ms" style="font-size:18px;color:#c8d3e6">arrow_downward</span></div>
+
+      <!-- DATA LAYER -->
+      <div class="arch-layer" style="background:#111827;border:1px solid #374151">
+        <div class="arch-layer-label" style="color:#9ca3af"><span class="ms" style="font-size:14px;vertical-align:middle;margin-right:5px">storage</span>DATA LAYER</div>
+        <div class="arch-components">
+          <div class="arch-chip" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151"><span class="ms" style="font-size:15px;color:#60a5fa">database</span>PostgreSQL 16 (primary)</div>
+          <div class="arch-chip" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151"><span class="ms" style="font-size:15px;color:#f87171">bolt</span>Redis 7 (cache + events)</div>
+          <div class="arch-chip" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151"><span class="ms" style="font-size:15px;color:#34d399">folder</span>Document Store (files/PDFs)</div>
+        </div>
+        <div style="font-size:14px;color:#4a5a6a;margin-top:9px">Deployment: <strong style="color:#9ca3af">Docker Compose → cloud VM</strong> &nbsp;·&nbsp; TLS: <strong style="color:#9ca3af">Caddy auto-cert</strong> &nbsp;·&nbsp; Backups: daily automated snapshots</div>
+      </div>
+
+    </div></div>
+
+    <!-- Component Dictionary -->
+    <div>
+      <div class="h2" style="margin-bottom:16px">Component dictionary — what each piece does</div>
+      <div class="grid-2">
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">lock</span><div><div class="h3">Auth &amp; RBAC</div><div class="label">Authentication and role-based access control</div></div></div>
+          <div class="card-body"><p class="body">Handles login, session management (JWT + refresh tokens) and enforces six distinct roles: <strong>Ops Admin, Ops Staff, Client Senior, Client Junior, Subcontractor</strong> and <strong>Field Staff</strong>. Every API endpoint checks the caller's role before responding. MFA enforced for Ops Admin. This is the first thing built in Week 1 — nothing else is secure without it.</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">folder_open</span><div><div class="h3">Document Engine</div><div class="label">Versioned document store with template rendering</div></div></div>
+          <div class="card-body"><p class="body">Stores and versions all 13 safety document types. Documents uploaded by JAM Ops are instantly accessible in the Client Portal and Staff Field Portal — same document, no sync lag. Supports template-based generation (the AI agents produce documents here). Tracks last-updated, expiry dates and read receipts per user.</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">account_tree</span><div><div class="h3">Workflow Engine</div><div class="label">Approval routing, escalation and notifications</div></div></div>
+          <div class="card-body"><p class="body">Powers every multi-step process: subcontractor document approvals, PTW issuance, incident escalation, and invoice sign-off. Configurable RACI routing — when Conor tells us who approves what, we programme it here. Tracks state (pending → approved/rejected), records who acted and when, and sends automatic chaser emails when deadlines approach.</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">smart_toy</span><div><div class="h3">Agent Orchestrator</div><div class="label">NexOS AI Runtime — CrewDock agent orchestration</div></div></div>
+          <div class="card-body"><p class="body">The brain of the AI layer. When an ops user triggers "generate ESMP" or "create CV", the orchestrator queues the task, calls the appropriate Claude-powered agent, tracks the job status, and delivers the result back to the UI. Handles retries, timeouts and cost tracking. Runs on NexOS's built-in CrewDock agent runtime, configured with JAM Safety-specific agent definitions.</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">extension</span><div><div class="h3">MCP Tool Registry</div><div class="label">Model Context Protocol — tools available to AI agents</div></div></div>
+          <div class="card-body"><p class="body">Lists the tools AI agents are allowed to call: read a staff profile, look up event details, fetch a document template, query weather data. MCP (Anthropic's open standard) ensures agents can only access data they're authorised to use. New tools are registered here as the platform grows — no code changes to the agents needed.</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">sync_alt</span><div><div class="h3">Field Sync Engine</div><div class="label">Offline-first architecture for the Staff Field PWA</div></div></div>
+          <div class="card-body"><p class="body">Field staff at venues often have poor connectivity. The sync engine uses a <strong>Service Worker + IndexedDB</strong> in the browser to cache forms locally. Staff can submit reports with zero signal — data queues on device and syncs automatically when connectivity returns. Conflict resolution handles the edge case where the same record is edited offline by two people.</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">cloud_sync</span><div><div class="h3">MS Graph Bridge</div><div class="label">Bidirectional Microsoft 365 integration</div></div></div>
+          <div class="card-body"><p class="body">Connects to JAM's Microsoft 365 tenant via the Graph API. <strong>SharePoint sync</strong>: documents created or approved in NexOS are automatically pushed to the relevant SharePoint library. <strong>Outlook monitoring</strong>: the finance module watches a designated inbox for PO receipts and client emails, extracting key data to pre-populate invoices — eliminating double-entry. Requires Graph API access from client IT (needed by Week 10).</p></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="ms" style="font-size:20px;color:#2B7FFF">payments</span><div><div class="h3">Finance Module</div><div class="label">Purchase orders, quotes, invoices and revenue tracking</div></div></div>
+          <div class="card-body"><p class="body">Generates POs, quotes and invoices from project data — no more manual spreadsheet work. Revenue auto-populates from MS Graph Outlook monitoring (when a PO arrives by email, the system reads it). Revenue Management in the Client Portal gives senior clients a live view of their spend. Tracks profitability per event for the analytics dashboard. Not a payment processor — it manages the paper trail, not the money flow.</p></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Portal connections -->
+    <div class="card" style="background:#0a1e3a">
+      <div class="card-body" style="padding:24px">
+        <div class="eyebrow" style="color:#4d97ff">How the portals talk to each other</div>
+        <div class="grid-2" style="margin-top:16px">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#13315c;border-radius:9px;padding:13px 16px">
+              <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:5px">JAM Ops ↔ Client Portal</div>
+              <div style="font-size:13.5px;color:#aebcd6;line-height:1.55">Documents approved in Ops are instantly visible in the Client Portal. Incident reports filed by field staff appear in both. Revenue data flows from Ops Finance into Client Revenue Management.</div>
+            </div>
+            <div style="background:#13315c;border-radius:9px;padding:13px 16px">
+              <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:5px">JAM Ops ↔ Subcontractor Portal</div>
+              <div style="font-size:13.5px;color:#aebcd6;line-height:1.55">Ops reviews and approves/rejects subcontractor submissions. PTW documents issued in Ops appear in the Subcontractor Portal immediately. Insurance expiry alerts trigger in Ops from subcontractor submission data.</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#13315c;border-radius:9px;padding:13px 16px">
+              <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:5px">Staff Field ↔ JAM Ops</div>
+              <div style="font-size:13.5px;color:#aebcd6;line-height:1.55">Every form submitted by field staff (site report, inspection, incident, toolbox talk) flows into the JAM Ops dashboard in real time. Time sheets from Field flow into Ops for approval. Daily site reports consolidate into Ops compliance view.</div>
+            </div>
+            <div style="background:#13315c;border-radius:9px;padding:13px 16px">
+              <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:5px">Document Engine ↔ All Portals</div>
+              <div style="font-size:13.5px;color:#aebcd6;line-height:1.55">The document library is shared. JAM Ops uploads the Event Safety Management Plan; the Client Portal and Staff Field Portal read the same version-controlled document instantly — there is no separate copy or manual distribution.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /architecture -->
+
+  <!-- ══════════════════════ TIMELINE ══════════════════════ -->
+  <div class="section" id="sec-timeline">
+
+    <div class="card"><div class="card-body">
+      <div class="eyebrow">16 weeks · 5 phases · 3 milestones</div>
+      <p class="body" style="max-width:90ch">The original scope was 22 weeks. We compress to 16 by running the four portals as <strong style="color:#102B52">parallel vertical slices</strong>, prioritising the three highest-value AI agents, and folding enhancement work into live phases. Every week below has a named owner and specific deliverables — nothing is left vague.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <div style="background:#f4f7fc;border:1px solid #e3e8f2;border-radius:9px;padding:11px 16px"><div style="font-size:13px;color:#5a7099;font-weight:700;text-transform:uppercase;letter-spacing:.06em">MVP Gate</div><div style="font-size:16px;font-weight:800;color:#102B52;margin-top:2px">Week 9</div></div>
+        <div style="background:#f4f7fc;border:1px solid #e3e8f2;border-radius:9px;padding:11px 16px"><div style="font-size:13px;color:#5a7099;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Pilot Event</div><div style="font-size:16px;font-weight:800;color:#102B52;margin-top:2px">Weeks 13–14</div></div>
+        <div style="background:#0a1e3a;border-radius:9px;padding:11px 16px"><div style="font-size:11px;color:#7f93b6;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Production Launch</div><div style="font-size:16px;font-weight:800;color:#fff;margin-top:2px">Week 16</div></div>
+        <div style="background:#eaf7f0;border:1px solid #cdeeda;border-radius:9px;padding:11px 16px"><div style="font-size:11px;color:#1c7a4a;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Hypercare</div><div style="font-size:16px;font-weight:800;color:#235c40;margin-top:2px">+4 weeks</div></div>
+      </div>
+    </div></div>
+
+    <!-- Gantt bar -->
+    <div class="card"><div class="card-body" style="overflow-x:auto">
+      <div style="min-width:700px">
+        <div style="display:grid;grid-template-columns:180px repeat(16,1fr);margin-bottom:8px">
+          <div style="font-size:11px;font-weight:700;color:#8a97ad;text-transform:uppercase;letter-spacing:.06em;padding-bottom:6px">Phase</div>
+          <div style="grid-column:2/18;display:grid;grid-template-columns:repeat(16,1fr)">
+            <div style="grid-column:1/3;font-size:11px;font-weight:700;color:#6b7d9c;text-transform:uppercase;letter-spacing:.07em">Found.</div>
+            <div style="grid-column:3/7;font-size:11px;font-weight:700;color:#6b7d9c;text-transform:uppercase;letter-spacing:.07em">Core Ops</div>
+            <div style="grid-column:7/10;font-size:11px;font-weight:700;color:#6b7d9c;text-transform:uppercase;letter-spacing:.07em">Field</div>
+            <div style="grid-column:10/13;font-size:11px;font-weight:700;color:#6b7d9c;text-transform:uppercase;letter-spacing:.07em">Intelligence</div>
+            <div style="grid-column:13/17;font-size:11px;font-weight:700;color:#6b7d9c;text-transform:uppercase;letter-spacing:.07em">Launch</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:grid;grid-template-columns:180px repeat(16,1fr);align-items:center"><div style="font-size:13px;font-weight:700;color:#102B52;padding-right:10px">1 · Foundation</div><div style="grid-column:2/4;height:28px;background:#0a1e3a;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:12px;font-weight:600">W1–2</div></div>
+          <div style="display:grid;grid-template-columns:180px repeat(16,1fr);align-items:center"><div style="font-size:13px;font-weight:700;color:#102B52;padding-right:10px">2 · Core Operations</div><div style="grid-column:4/8;height:28px;background:#163a6b;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:12px;font-weight:600">W3–6</div></div>
+          <div style="display:grid;grid-template-columns:180px repeat(16,1fr);align-items:center"><div style="font-size:13px;font-weight:700;color:#102B52;padding-right:10px">3 · Field &amp; Integration</div><div style="grid-column:8/11;height:28px;background:#1f5290;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:12px;font-weight:600">W7–9</div></div>
+          <div style="display:grid;grid-template-columns:180px repeat(16,1fr);align-items:center"><div style="font-size:13px;font-weight:700;color:#102B52;padding-right:10px">4 · Intelligence</div><div style="grid-column:11/14;height:28px;background:#2B7FFF;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:12px;font-weight:600">W10–12</div></div>
+          <div style="display:grid;grid-template-columns:180px repeat(16,1fr);align-items:center"><div style="font-size:13px;font-weight:700;color:#102B52;padding-right:10px">5 · Hardening &amp; Launch</div><div style="grid-column:14/18;height:28px;background:#4d97ff;border-radius:5px;display:flex;align-items:center;padding:0 10px;color:#fff;font-size:12px;font-weight:600">W13–16</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:180px repeat(16,1fr);margin-top:12px;padding-top:10px;border-top:1px dashed #d6deeb">
+          <div style="font-size:11px;font-weight:700;color:#8a97ad;text-transform:uppercase;letter-spacing:.06em">Milestones</div>
+          <div style="grid-column:2/18;display:grid;grid-template-columns:repeat(16,1fr);align-items:center">
+            <div style="grid-column:9;display:flex;flex-direction:column;align-items:center;gap:3px"><span class="ms" style="font-size:17px;color:#14B86A;font-variation-settings:'FILL' 1">flag</span><span style="font-size:11px;font-weight:700;color:#14B86A;white-space:nowrap">MVP</span></div>
+            <div style="grid-column:13/15;display:flex;flex-direction:column;align-items:center;gap:3px"><span class="ms" style="font-size:17px;color:#FFB547;font-variation-settings:'FILL' 1">flag</span><span style="font-size:11px;font-weight:700;color:#d9912b;white-space:nowrap">Pilot</span></div>
+            <div style="grid-column:16;display:flex;flex-direction:column;align-items:center;gap:3px"><span class="ms" style="font-size:17px;color:#2B7FFF;font-variation-settings:'FILL' 1">rocket_launch</span><span style="font-size:11px;font-weight:700;color:#2B7FFF;white-space:nowrap">Launch</span></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- Week-by-week -->
+    <div class="h2" style="margin-bottom:4px">Week-by-week delivery plan</div>
+    <p class="label" style="margin-bottom:16px">Every sprint named, every deliverable listed. Milestone gates shown in dark.</p>
+
+    <div class="card" style="overflow:hidden">
+      <!-- PHASE 1 -->
+      <div style="background:#0a1e3a;padding:12px 20px;display:flex;align-items:center;gap:10px"><span style="background:#fff;color:#0a1e3a;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:800">Phase 1</span><span style="font-size:14px;font-weight:700;color:#fff">Foundation &amp; Discovery</span><span style="font-size:13px;color:#7f93b6;margin-left:4px">Weeks 1–2</span></div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#0a1e3a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">1</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Kickoff &amp; Environment Setup</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Discovery workshop with Conor — requirements sign-off, data migration scope, pilot event confirmed</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Dev / staging / prod environments provisioned on cloud VM</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>PostgreSQL schema v1 — core entities: users, projects, events, staff, documents</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Authentication system — JWT + refresh tokens, 6 RBAC roles defined and seeded</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>JAM-branded design system — colours, typography, component library tokens</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>CI/CD pipeline — automated test + deploy on merge to main</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#0a1e3a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">2</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Portal Shells &amp; Security Baseline</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>JAMSafety.com landing page — role-based portal selector (Ops / Client / Subcontractor / Staff)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>All 4 portal shells deployed with RBAC routing — logged-out users redirected correctly</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Staff Field PWA shell — Service Worker registered, offline skeleton confirmed</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>MFA enforced for Ops Admin role</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Security baseline: TLS (Caddy auto-cert), Content Security Policy headers, audit log schema</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Data migration assessment report — current data format, volume, quality issues flagged</div>
+        </div>
+      </div>
+
+      <!-- PHASE 2 -->
+      <div style="background:#163a6b;padding:12px 20px;display:flex;align-items:center;gap:10px"><span style="background:#fff;color:#163a6b;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:800">Phase 2</span><span style="font-size:14px;font-weight:700;color:#fff">Core Operations</span><span style="font-size:13px;color:#7f93b6;margin-left:4px">Weeks 3–6</span></div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#163a6b;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">3</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Ops Core + Subcontractor Submission</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>JAM Ops: project CRUD, event dashboard, staff roster with double-booking detection</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Subcontractor: login, document submission form, submission status tracker</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Transactional email system — submission confirmations, review notifications</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Document Engine foundation — upload, versioning, access-controlled read by role</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#163a6b;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">4</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Client Portal + Safety Document Library</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Client Portal: login, dashboard (current projects), project dashboard (per-event view)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Safety document library — 6 of 13 types: ESMP, Risk Assessment, Crowd Management Plan, Template Packs, Emergency Egress Plan, Toolbox Talk Records</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Document version history, read receipts, expiry date tracking</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#163a6b;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">5</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Compliance, Incidents &amp; Remaining Docs</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Incident management — full CRUD, escalation rules, resolution tracking, audit trail</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Daily site reports — submission + ops consolidation view, filter by event/date/site</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Inspection scheduler — recurring schedules, assigned inspector, photo evidence slots</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Remaining 7 safety document types: Firefight Equipment Plan, Medical Deployment Plan, Dim ICE, Risk &amp; Congestion Map, Communication Metrics, Local Legislation Packs, Policy &amp; Procedures</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Insurance expiry alert engine — automated warnings at 60/30/7-day thresholds</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#163a6b;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">6</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Approvals, PTW, Inductions &amp; Data Migration</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Subcontractor: full approval / rejection / resubmit workflow with mandatory feedback notes</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>PTW (Permit to Work) issuance flow — Ops issues, Subcontractor sees immediately</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Template packs — downloadable JAM-standard submission templates</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Induction hosting foundation — digital induction viewing with completion tracking</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Data migration Phase 1 — staff records, client accounts, subcontractor profiles imported</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#163a6b;flex:none">check_circle</span>Finance: Frappe setup, chart of accounts, PO creation</div>
+        </div>
+      </div>
+
+      <!-- PHASE 3 -->
+      <div style="background:#1f5290;padding:12px 20px;display:flex;align-items:center;gap:10px"><span style="background:#fff;color:#1f5290;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:800">Phase 3</span><span style="font-size:14px;font-weight:700;color:#fff">Field Operations &amp; Integration</span><span style="font-size:13px;color:#7f93b6;margin-left:4px">Weeks 7–9</span></div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#1f5290;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">7</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Staff Field Portal — All 4 Submit Forms</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Field: project login, event assignment, dashboard</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Submit Daily Site Report — structured form, works offline, photo capture</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Submit Inspection / Audit — step-through checklists, pass/fail with corrective action notes</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Submit Accident / Incident Report — RIDDOR-compliant, GPS/time stamped</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Submit Toolbox Talk Record — attendee digital signatures (touch/stylus)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Service Worker + IndexedDB — all 4 forms cache and queue offline</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Photo upload with client-side compression — works over poor mobile connections</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#1f5290;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">8</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Offline Sync, Field Docs &amp; Manpower</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Sync engine with conflict resolution — forms queued offline sync on reconnect, conflicts surfaced to user</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Field: read-only safety document library for assigned event — same docs as Client Portal</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Manpower data module — real-time staffing by role, shift and site</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Pilot event selected (⚠ client must confirm by Week 8)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#1f5290;flex:none">check_circle</span>Cross-portal data flow tested end-to-end — field submission → ops dashboard → client view</div>
+        </div>
+      </div>
+
+      <div class="week-row" style="background:#f0fdf4">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#14B86A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">9</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">MVP Integration Sprint &amp; Gate</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#14B86A;flex:none">check_circle</span>Report generator — PDF/CSV export across all portals (compliance, incidents, manpower)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#14B86A;flex:none">check_circle</span>Client: communication metrics, accident/near miss view, generate reports</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#14B86A;flex:none">check_circle</span>API security hardening pass — input validation, rate limiting, auth audit</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#14B86A;flex:none">check_circle</span>Penetration test scope document prepared</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#14B86A;flex:none">check_circle</span>MVP UAT session with Conor Rainey — all four portals demonstrated</div>
+          <div class="milestone-flag"><span class="ms" style="font-size:16px;color:#14B86A;font-variation-settings:'FILL' 1">flag</span>MVP GATE — all 4 portals live, offline confirmed in field conditions</div>
+        </div>
+      </div>
+
+      <!-- PHASE 4 -->
+      <div style="background:#2B7FFF;padding:12px 20px;display:flex;align-items:center;gap:10px"><span style="background:#fff;color:#2B7FFF;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:800">Phase 4</span><span style="font-size:14px;font-weight:700;color:#fff">Intelligence &amp; Finance</span><span style="font-size:13px;color:#bfdbfe;margin-left:4px">Weeks 10–12</span></div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#2B7FFF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">10</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">AI Agent Runtime + MS Graph</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>NexOS agent runtime deployed — CrewDock orchestrator live in production</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>ESMP Generator agent v1 — produces Event Safety Management Plans from structured brief via Claude API</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>MS Graph authentication + SharePoint sync foundation (⚠ requires Microsoft 365 Graph access by Week 10)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Outlook inbox monitoring for PO receipts and client emails</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>AI data-security controls — PII filtering, agent permission scoping via MCP</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Cost tracker — per-agent AI spend logged, alerting on budget thresholds</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#2B7FFF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">11</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">CV Creator, Q-Schedule &amp; Finance Automation</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>CV Creator agent — generates JAM-format CVs from staff profiles in seconds via Claude API</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Q-Schedule generator — produces quotation schedules (staffing roles, day/night splits) from event parameters</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Finance: quote + invoice generation from project data</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Revenue auto-population from Outlook PO monitoring — eliminates double-entry</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>SharePoint bidirectional document sync — approved docs pushed to correct library automatically</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#2B7FFF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">12</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">CRM, Analytics, Timesheets &amp; Revenue</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>CRM module — client intelligence, contact history, opportunity tracking in JAM Ops</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Analytics dashboard — utilisation by role, profitability per event, compliance rates</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Time Sheet Generation — field staff hours → ops approval → payroll export</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>TOIL Day Management — time-off-in-lieu accrual and approval</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Revenue Management + Project Revenue Management in Client Portal (Senior tier)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#2B7FFF;flex:none">check_circle</span>Big Projects / ops capacity planner — visual view of staff across concurrent large events</div>
+          <div class="milestone-flag" style="background:#2B7FFF"><span class="ms" style="font-size:16px;color:#93c5fd;font-variation-settings:'FILL' 1">flag</span>AI &amp; Finance automation live (subject to MS365 + Claude API access)</div>
+        </div>
+      </div>
+
+      <!-- PHASE 5 -->
+      <div style="background:#4d97ff;padding:12px 20px;display:flex;align-items:center;gap:10px"><span style="background:#fff;color:#4d97ff;border-radius:6px;padding:2px 9px;font-size:13px;font-weight:800">Phase 5</span><span style="font-size:14px;font-weight:700;color:#fff">Hardening, Pilot &amp; Launch</span><span style="font-size:13px;color:#dbeafe;margin-left:4px">Weeks 13–16</span></div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#4d97ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">13</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Live Pilot Event + UAT</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Pilot: platform deployed at a real JAM Safety event — field staff use Field PWA live</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>UAT sessions with Conor — all portal flows walked through, acceptance criteria checked</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Emergency staff substitution workflow — last-minute sick/no-show replacement flow</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>JAM HQ Push Messages — ops broadcast to all field staff on an event</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Full cross-portal QA regression suite executed</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Training materials — ops guide, field staff quick-start, client guide</div>
+          <div class="milestone-flag" style="background:#FFB547;color:#78350f"><span class="ms" style="font-size:16px;font-variation-settings:'FILL' 1">flag</span>Pilot complete — real-world validation of all systems</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#4d97ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">14</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Pilot Debrief + Penetration Test</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Pilot debrief — bug triage, priority fixes from real-world feedback</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>GDPR tooling — data erasure, portability export, 72-hour breach notification workflow</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Penetration test execution by independent vendor (must be booked by Week 13)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Performance optimisation — load testing, slow-query fixes, CDN tuning</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Overtime / emergency workflows polished from pilot feedback</div>
+        </div>
+      </div>
+
+      <div class="week-row">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#4d97ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">15</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Pen Test Remediation + Production Deploy</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Penetration test: all critical/high findings remediated (5-day fix buffer built in)</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Production environment deployed — DNS cutover to JAMSafety.com</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Staff training — ops team, subcontractors, client users</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#4d97ff;flex:none">check_circle</span>Monitoring + alerting setup — uptime checks, error rate dashboards, on-call runbook</div>
+        </div>
+      </div>
+
+      <div class="week-row" style="background:#eff6ff">
+        <div class="week-num"><div style="width:36px;height:36px;border-radius:8px;background:#102B52;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">16</div></div>
+        <div class="week-body">
+          <div style="font-size:14px;font-weight:800;color:#102B52;margin-bottom:8px">Production Launch + Hypercare Begins</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#102B52;flex:none">check_circle</span>Go-live — JAMSafety.com live in production, all portals open to real users</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#102B52;flex:none">check_circle</span>4-week hypercare begins: daily standups weeks 1–2, weekly check-ins weeks 3–4</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#102B52;flex:none">check_circle</span>Bug SLA active: Critical 2h / High 8h / Medium 48h response</div>
+          <div class="week-deliverable"><span class="ms" style="font-size:15px;color:#102B52;flex:none">check_circle</span>Post-launch feature request backlog opened — MVP++ planning begins</div>
+          <div class="milestone-flag"><span class="ms" style="font-size:16px;color:#2B7FFF;font-variation-settings:'FILL' 1">rocket_launch</span>LAUNCH — Production live · Hypercare active · MVP+ delivered</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <!-- ══════════════════════ APP SITEMAP ══════════════════════ -->
+  <div class="section" id="sec-sitemap">
+
+    <div class="card"><div class="card-body">
+      <div class="eyebrow">The whole application, mapped to delivery</div>
+      <p class="body" style="max-width:92ch">Every module from your whiteboards, organised by portal and colour-coded exactly as marked. The colours map straight onto the plan: <strong style="color:#102B52">green is MVP</strong> (the core launch), <strong style="color:#102B52">blue is MVP+</strong> (the committed stretch), and <strong style="color:#102B52">pink is MVP++</strong> (a future statement of work).</p>
+      <div class="grid-3" style="margin-top:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#eaf7f0;border:1px solid #cdeeda;border-radius:9px;padding:13px 15px">
+          <span style="width:11px;height:11px;border-radius:50%;background:#14B86A;flex:none;margin-top:3px"></span>
+          <div><div style="font-size:14px;font-weight:800;color:#1c7a4a">MVP — core launch</div><div style="font-size:12.5px;color:#3a6b50;margin-top:2px">Phases 1–3 · delivered by Week 9</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#e9f1ff;border:1px solid #cfe0ff;border-radius:9px;padding:13px 15px">
+          <span style="width:11px;height:11px;border-radius:50%;background:#2B7FFF;flex:none;margin-top:3px"></span>
+          <div><div style="font-size:14px;font-weight:800;color:#1b5fc4">MVP+ — committed stretch</div><div style="font-size:12.5px;color:#3a5a8c;margin-top:2px">Phases 4–5 · Weeks 10–16</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#fdecef;border:1px solid #f6d0d8;border-radius:9px;padding:13px 15px">
+          <span style="width:11px;height:11px;border-radius:50%;background:#e8607a;flex:none;margin-top:3px"></span>
+          <div><div style="font-size:14px;font-weight:800;color:#b23a5a">MVP++ — future SOW</div><div style="font-size:12.5px;color:#9a5066;margin-top:2px">Post-launch · separate engagement</div></div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- root node -->
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <div style="background:#0a1e3a;border-radius:11px;padding:16px 26px;display:flex;align-items:center;gap:13px;box-shadow:0 12px 30px -16px rgba(10,30,58,0.5)">
+        <span class="ms" style="font-size:24px;color:#4d97ff">public</span>
+        <div style="line-height:1.2"><div style="font-size:17px;font-weight:800;color:#fff">JAMSafety.com</div><div style="font-size:13px;color:#8da1c4;margin-top:1px">Public landing &amp; role-based portal selector</div></div>
+        <span class="badge badge-mvp" style="margin-left:8px;font-size:13px">MVP</span>
+      </div>
+      <div style="width:2px;height:22px;background:#3a4b66"></div>
+      <div style="font-size:12.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#7f93b6">Routes to 5 portals</div>
+    </div>
+
+    <!-- portal grid -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start" id="sitemapGrid"></div>
+
+    <!-- delivery summary strip -->
+    <div style="background:#0a1e3a;border-radius:12px;padding:20px 26px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+      <span class="ms" style="font-size:22px;color:#4d97ff;flex:none">insights</span>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-right:auto">Stitched to the timeline</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap" id="sitemapSummary"></div>
+    </div>
+
+  </div><!-- /sitemap -->
+
+  <!-- ══════════════════════ PORTAL DEEP-DIVE ══════════════════════ -->
+  <div class="section" id="sec-portals">
+
+    <div class="card"><div class="card-body">
+      <div class="eyebrow">Portal deep-dive</div>
+      <p class="body" style="max-width:90ch">Every feature from your whiteboards, explained. What it does, why it matters, and how it connects to the rest of the platform. Colour-coded to delivery tier: <span class="badge badge-mvp" style="font-size:12px">MVP</span> by Week 9 &nbsp; <span class="badge badge-plus" style="font-size:12px">MVP+</span> Weeks 10–16 &nbsp; <span class="badge badge-pp" style="font-size:12px">MVP++</span> Future SOW.</p>
+    </div></div>
+
+    <!-- JAM OPS -->
+    <div class="card">
+      <div class="card-header" style="background:#0a1e3a">
+        <div style="width:38px;height:38px;border-radius:9px;background:#13315c;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:21px;color:#fff">hub</span></div>
+        <div><div style="font-size:17px;font-weight:800;color:#fff">JAM Ops Portal</div><div style="font-size:13px;color:#7f93b6;margin-top:1px">Internal command centre — JAM Safety operations team only</div></div>
+      </div>
+      <div class="card-body" style="padding:8px 22px 16px">
+        <div class="feat-grid">
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Dashboard &amp; Project Management <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Central command view — all active events, staff assignments, outstanding approvals and compliance alerts at a glance. Project CRUD with double-booking detection prevents the same staff member being assigned to two concurrent events.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Incident Management <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Log, assign, escalate and resolve on-site incidents with full audit trail. Incidents submitted via the Staff Field Portal appear here instantly. Structured resolution workflow with time-to-close tracking and regulatory compliance trail.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Daily Site Reports — Compliance <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Aggregated view of all daily site reports submitted by field staff. Filter by event, date, site and compliance status. Flags missing reports. Exportable for client reporting and regulatory submissions.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Documentation / Deliverables Tracker <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Kanban-style view of all documents owed to each client — submitted, outstanding, overdue. Automatic chase reminders. Directly connected to the Document Engine — approving a doc here makes it live in the Client Portal instantly.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Inspection Scheduler <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Schedule recurring site inspections with assigned inspector, recurrence rules (daily/weekly/per-event) and photo evidence slots. Field staff complete inspections via the Field Portal — results sync back here automatically.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Client Documentation Repository <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Upload and version-control all client-facing safety documents. Changes are live in the Client Portal within seconds — no emailing, no version confusion. Tracks who viewed what and when.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">ESMP Generator (AI) <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Fill in a structured brief (event type, venue, expected crowd, risk categories) and Claude generates a complete, JAM-standard Event Safety Management Plan. Ops reviews, edits and approves — the AI does the first draft. Delivered in under 2 minutes.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">JAM Format CV Creator (AI) <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Select a staff member and Claude generates a polished, consistently formatted CV in JAM's branded style — pulling experience, qualifications and certifications from their profile. Eliminates manual CV reformatting entirely.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Q-Schedule Generator (AI) <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Input event parameters (type, scale, duration, venue) and Claude produces a quotation schedule — staffing numbers by role, day/night splits, supervisor ratios. Dramatically speeds up quote preparation. Ops refines and approves before sending.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">SharePoint / Outlook Intelligence <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Bidirectional MS Graph integration. Approved documents push to SharePoint automatically. A designated Outlook inbox is monitored for PO receipts and client emails — key data extracts to pre-populate invoices. Requires MS365 Graph API access from client IT.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Finance Module <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Generate POs, quotes and invoices from project data. Revenue auto-populates from Outlook PO monitoring. No more double-entry between email and spreadsheet. Profitability tracked per event feeds directly into the analytics dashboard.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Analytics Dashboard <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Utilisation rates by role and event, profitability per project, compliance rates by site. Emergency &amp; overtime workflow tracking. The operational intelligence layer that turns data into decisions.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Time Sheet Management + TOIL <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Hours submitted by field staff flow here for review and approval before payroll export. TOIL (time off in lieu) accrual and approval managed in the same module. Big Projects capacity planner shows staff allocation across concurrent large events.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENT PORTAL -->
+    <div class="card">
+      <div class="card-header" style="background:#102B52">
+        <div style="width:38px;height:38px;border-radius:9px;background:#163a6b;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:21px;color:#fff">corporate_fare</span></div>
+        <div><div style="font-size:17px;font-weight:800;color:#fff">Client Portal</div><div style="font-size:13px;color:#7f93b6;margin-top:1px">Two tiers: Senior (full access incl. revenue) and Junior (safety docs + reporting)</div></div>
+      </div>
+      <div class="card-body" style="padding:8px 22px 16px">
+        <div class="feat-grid">
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Dashboard — Current Projects <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">At-a-glance view of all active events — status, key contacts, upcoming milestones and outstanding actions. Each project card links to the full Project Dashboard.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Project Dashboard (per-event) <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Full per-event view — document library, compliance status, manpower allocation, incident history and generated reports. The single source of truth for everything happening at a client's event.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Safety Documents Library (13 types) <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Always the latest version — same document, no email chains. All 13 types: Risk Assessment Reviews, Event Safety Management Plan, Crowd Management Plan, Template Packs, Emergency Egress Plan, Firefight Equipment Distribution Plan, Medical Deployment Plan, Dim ICE (In Case of Emergency), Risk &amp; Congestion Map, Communication Metrics, Local Legislation Packs, Toolbox Talk Records, Policy &amp; Procedures.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Accident Incidents &amp; Near Misses <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Client-facing view of all incidents at their events — submitted from the Field Portal and Ops, with investigation status and resolution. Full audit trail, no surprises in a post-event debrief.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Manpower Data &amp; Generate Reports <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Real-time and historical staffing data by role, shift and site. One-click PDF/CSV export of compliance reports, incident summaries, manpower utilisation and safety document status for client records.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Revenue Management + Project Revenue <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Senior-tier clients see a live view of quotations, invoices and spend. Project Revenue Management drills into per-event P&amp;L — quoted vs actuals with line-item detail. No more chasing finance for reports.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBCONTRACTOR -->
+    <div class="card">
+      <div class="card-header" style="background:#163a6b">
+        <div style="width:38px;height:38px;border-radius:9px;background:#1f5290;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:21px;color:#fff">engineering</span></div>
+        <div><div style="font-size:17px;font-weight:800;color:#fff">Subcontractor Portal</div><div style="font-size:13px;color:#7f93b6;margin-top:1px">Document submission, compliance approvals, PTW — all without phone calls or email chains</div></div>
+      </div>
+      <div class="card-body" style="padding:8px 22px 16px">
+        <div class="feat-grid">
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Subcontractor Submissions <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Upload required compliance documents (insurance certificates, qualifications, RAMS, method statements) via drag-and-drop. Automatic expiry tracking — the system flags documents approaching renewal before they lapse.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Submission Status <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Real-time dashboard showing each document's status: Approved ✓, Under Review ⏳, Rejected ✗, Expiring soon ⚠. No more chasing JAM Ops by phone to find out where a document stands.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Approvals &amp; Rejections <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">JAM Ops reviews submissions in their portal. Approvals are instant. Rejections require a reason — the subcontractor receives specific feedback, not a blank "rejected". Full conversation thread retained per document.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Template Packs &amp; PTW Issued <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Download JAM-standard submission templates so documents arrive in the correct format first time. PTW (Permit to Work) documents issued by Ops appear here immediately — no waiting for email.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Resubmit <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">After rejection, upload the corrected document and re-enter the approval queue — without losing the feedback history. The full thread of what was wrong and what was fixed is preserved for audit purposes.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Feedback <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Structured post-event feedback — rate the event, flag operational issues, suggest improvements. Aggregated in JAM Ops for continuous improvement tracking.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIELD PORTAL -->
+    <div class="card">
+      <div class="card-header" style="background:#1f5290">
+        <div style="width:38px;height:38px;border-radius:9px;background:#2B7FFF;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:21px;color:#fff">smartphone</span></div>
+        <div><div style="font-size:17px;font-weight:800;color:#fff">Staff Field Portal</div><div style="font-size:13px;color:#bfdbfe;margin-top:1px">Mobile-first PWA — works offline, syncs when signal returns. No app store required.</div></div>
+      </div>
+      <div class="card-body" style="padding:8px 22px 16px">
+        <div class="feat-grid">
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Submit Daily Site Report <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Structured digital form replacing paper reports. Captures shift summary, headcount, weather, notable incidents and supervisor sign-off. Works offline at venues with no signal — queues on device and syncs automatically when connectivity returns.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Submit Inspection / Audit <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Step-through inspection checklists per venue type. Photo capture for evidence (compressed for mobile). Passes/fails logged with mandatory corrective action notes for failures. Syncs to the Inspection Scheduler in JAM Ops on completion.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Submit Accident / Incident Report <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">RIDDOR-compliant incident form. Automatically time/date stamped. Witness fields, injury classification, immediate action record and photo evidence. Appears in JAM Ops Incident Management in real time — no delay, no phone call needed.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Submit Toolbox Talk Record <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Log toolbox talk attendance digitally. Captures topic, presenter and attendee signatures (touch/stylus). Replaces paper sign-in sheets that get lost. Searchable by date, topic or attendee in JAM Ops.</div></div></div>
+        <div class="feat-row"><div class="dot-mvp" style="margin-top:5px"></div><div><div class="feat-name">Safety Document Library (read-only) <span class="badge badge-mvp" style="font-size:11px;margin-left:6px">MVP</span></div><div class="feat-desc">Field staff access all 13 safety document types for their assigned event — always the current version. The same Document Engine as the Client Portal — no separate copies, no version drift. Key documents cached offline for zero-connectivity venues.</div></div></div>
+        <div class="feat-row"><div class="dot-plus" style="margin-top:5px"></div><div><div class="feat-name">Time Sheet Generation <span class="badge badge-plus" style="font-size:11px;margin-left:6px">MVP+</span></div><div class="feat-desc">Field staff log their own hours per shift with role and location. Submitted digitally for ops approval — eliminates paper timesheet collection and manual data entry into payroll systems.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECRUITMENT -->
+    <div class="card" style="border-top:3px solid #e8607a">
+      <div class="card-header" style="background:#5a2535">
+        <div style="width:38px;height:38px;border-radius:9px;background:#7d3048;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:21px;color:#fff">badge</span></div>
+        <div><div style="font-size:17px;font-weight:800;color:#fff">JAM Recruitment Portal</div><div style="font-size:13px;color:#f9a8c9;margin-top:1px">Future SOW — all features are MVP++. Planned as a separate post-launch engagement.</div></div>
+      </div>
+      <div class="card-body" style="padding:8px 22px 16px">
+        <div class="feat-grid">
+        <div class="feat-row"><div class="dot-pp" style="margin-top:5px"></div><div><div class="feat-name">Job Board + Submit CV <span class="badge badge-pp" style="font-size:11px;margin-left:6px">MVP++</span></div><div class="feat-desc">Public-facing job listings for event safety roles, managed from JAM Ops. Applicants submit CVs directly into the recruitment pipeline — no external job boards needed.</div></div></div>
+        <div class="feat-row"><div class="dot-pp" style="margin-top:5px"></div><div><div class="feat-name">Update Availabilities + Submit Quals <span class="badge badge-pp" style="font-size:11px;margin-left:6px">MVP++</span></div><div class="feat-desc">Staff update their availability calendar for upcoming events. Upload and manage qualification certificates with automatic expiry alerts — PSA licences, first aid certs, SIA badges.</div></div></div>
+        <div class="feat-row"><div class="dot-pp" style="margin-top:5px"></div><div><div class="feat-name">Asset Tracker + PPE Tracker <span class="badge badge-pp" style="font-size:11px;margin-left:6px">MVP++</span></div><div class="feat-desc">Track company assets (radios, hi-vis, kit) and PPE issued to staff per event. Log issue, return and condition. Image Recognition PPE Checker — AI-powered camera verification that the correct PPE is worn before entry.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /portals -->
+
+  <!-- ══════════════════════ SCOPE ══════════════════════ -->
+  <div class="section" id="sec-scope">
+    <div class="card"><div class="card-body">
+      <div class="eyebrow">What €40,000 covers</div>
+      <p class="body" style="max-width:90ch">The fixed scope is <strong style="color:#102B52">MVP+</strong>: the complete core platform across four portals plus the highest-value AI and finance work the 16 weeks can safely absorb. Below is an honest split — committed, flex, and future.</p>
+    </div></div>
+
+    <div class="grid-2" style="align-items:start">
+      <div class="card" style="overflow:hidden">
+        <div style="background:#0d2d18;padding:15px 20px;display:flex;align-items:center;gap:9px"><span class="ms" style="font-size:19px;color:#3fdd8a;font-variation-settings:'FILL' 1">task_alt</span><span style="font-size:14px;font-weight:800;color:#fff">Committed — MVP+</span></div>
+        <div style="padding:6px 20px 16px" id="scopeIn"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:#fff8ec;border:1px solid #f5e2bd;border-radius:12px;padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="ms" style="font-size:18px;color:#d9912b;font-variation-settings:'FILL' 1">schedule</span><span style="font-size:14px;font-weight:800;color:#8a5a12">Delivered if time allows</span></div>
+          <p style="font-size:13px;color:#946b2c;line-height:1.6;margin-bottom:10px">Sequenced into Phases 4–5. These flex first if anything slips — protecting the Week 16 launch date.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font-size:13px;font-weight:600;color:#8a5a12;background:#fdeecb;border:1px solid #f3dca6;border-radius:6px;padding:5px 9px">Timesheet generation</span><span style="font-size:13px;font-weight:600;color:#8a5a12;background:#fdeecb;border:1px solid #f3dca6;border-radius:6px;padding:5px 9px">TOIL management</span><span style="font-size:13px;font-weight:600;color:#8a5a12;background:#fdeecb;border:1px solid #f3dca6;border-radius:6px;padding:5px 9px">Presentation Creator (AI)</span><span style="font-size:13px;font-weight:600;color:#8a5a12;background:#fdeecb;border:1px solid #f3dca6;border-radius:6px;padding:5px 9px">Prompt Creator (AI)</span><span style="font-size:13px;font-weight:600;color:#8a5a12;background:#fdeecb;border:1px solid #f3dca6;border-radius:6px;padding:5px 9px">New-project AI Responder</span><span style="font-size:13px;font-weight:600;color:#8a5a12;background:#fdeecb;border:1px solid #f3dca6;border-radius:6px;padding:5px 9px">Advanced notification routing</span></div>
+        </div>
+        <div class="card" style="overflow:hidden">
+          <div style="background:#f4f7fc;padding:14px 20px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #e3e8f2"><span class="ms" style="font-size:19px;color:#6b7d9c">event_upcoming</span><span style="font-size:14px;font-weight:800;color:#102B52">Future statement of work</span></div>
+          <div style="padding:4px 20px 10px">
+            <div style="padding:12px 0;border-bottom:1px solid #eef1f7;display:flex;gap:11px;align-items:flex-start"><span class="ms" style="font-size:17px;color:#aab4c6">remove</span><div><div style="font-size:14px;font-weight:700;color:#3a4759">Recruitment module &amp; public job board</div><div style="font-size:13px;color:#8a97ad;margin-top:1px">MVP++ — distinct workstream, post-launch</div></div></div>
+            <div style="padding:12px 0;border-bottom:1px solid #eef1f7;display:flex;gap:11px;align-items:flex-start"><span class="ms" style="font-size:17px;color:#aab4c6">remove</span><div><div style="font-size:14px;font-weight:700;color:#3a4759">Asset / equipment tracker</div><div style="font-size:13px;color:#8a97ad;margin-top:1px">MVP++ — radios, badges, kit management</div></div></div>
+            <div style="padding:12px 0;border-bottom:1px solid #eef1f7;display:flex;gap:11px;align-items:flex-start"><span class="ms" style="font-size:17px;color:#aab4c6">remove</span><div><div style="font-size:14px;font-weight:700;color:#3a4759">Staff availability calendar</div><div style="font-size:13px;color:#8a97ad;margin-top:1px">MVP++ — depends on recruitment data model</div></div></div>
+            <div style="padding:12px 0;border-bottom:1px solid #eef1f7;display:flex;gap:11px;align-items:flex-start"><span class="ms" style="font-size:17px;color:#aab4c6">remove</span><div><div style="font-size:14px;font-weight:700;color:#3a4759">Native app-store apps (React Native)</div><div style="font-size:13px;color:#8a97ad;margin-top:1px">PWA covers field use; store apps are a later wrapper</div></div></div>
+            <div style="padding:12px 0;border-bottom:1px solid #eef1f7;display:flex;gap:11px;align-items:flex-start"><span class="ms" style="font-size:17px;color:#aab4c6">remove</span><div><div style="font-size:14px;font-weight:700;color:#3a4759">Performance reviews &amp; advanced offline</div><div style="font-size:13px;color:#8a97ad;margin-top:1px">Enhancement tier beyond the 16 weeks</div></div></div>
+            <div style="padding:12px 0;display:flex;gap:11px;align-items:flex-start"><span class="ms" style="font-size:17px;color:#aab4c6">remove</span><div><div style="font-size:14px;font-weight:700;color:#3a4759">Payment processing (PCI scope)</div><div style="font-size:13px;color:#8a97ad;margin-top:1px">System tracks invoices/POs; it does not take payments</div></div></div>
+          </div>
+        </div>
+        <div style="background:#0a1e3a;border-radius:12px;padding:20px;display:flex;gap:13px;align-items:flex-start">
+          <span class="ms" style="font-size:21px;color:#4d97ff;flex:none;margin-top:1px">payments</span>
+          <div><div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:5px">What the fixed price doesn't cover</div><p style="font-size:13.5px;color:#aebcd6;line-height:1.65">Ongoing operating costs are separate: cloud hosting (~€800–1,200/mo), Claude AI API usage (consumption-based), any maintenance/SLA beyond the 4-week hypercare period. We'll agree a simple monthly figure before launch.</p></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /scope -->
+
+  <!-- ══════════════════════ RISKS ══════════════════════ -->
+  <div class="section" id="sec-risks">
+
+    <div class="card"><div class="card-body">
+      <div class="eyebrow">Risk register &amp; blockers</div>
+      <p class="body" style="max-width:90ch">9 tracked risks reviewed weekly. Blockers are external dependencies on the critical path — each has a named owner and a need-by date. Delays move the dependent feature, not the Week 16 launch date.</p>
+    </div></div>
+
+    <div class="card" style="overflow:hidden">
+      <div style="padding:16px 22px;border-bottom:1px solid #e3e8f2;display:flex;align-items:center;gap:9px"><span class="ms" style="font-size:20px;color:#E14D4D">gpp_maybe</span><span style="font-size:15px;font-weight:800;color:#102B52">Risk register</span><span style="font-size:13px;color:#8a97ad;font-weight:600;margin-left:auto">9 tracked risks · reviewed weekly</span></div>
+      <div style="display:grid;grid-template-columns:2.2fr .7fr .7fr 3fr;gap:12px;padding:10px 22px;background:#f7f9fd;border-bottom:1px solid #eef1f7">
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a97ad">Risk</div>
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a97ad">Likelihood</div>
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a97ad">Impact</div>
+        <div style="font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a97ad">Mitigation</div>
+      </div>
+      <div id="riskRows"></div>
+    </div>
+
+    <div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px"><span class="ms" style="font-size:20px;color:#d9912b">block</span><div class="h2">Blockers — work that can't start without you</div></div>
+      <p class="label" style="margin-bottom:14px">Each item is an external dependency. The need-by date is when it must be in hand to stay on schedule.</p>
+      <div class="grid-2" id="blockerCards"></div>
+    </div>
+  </div><!-- /risks -->
+
+  <!-- ══════════════════════ QUERIES ══════════════════════ -->
+  <div class="section" id="sec-queries">
+
+    <div style="background:#0a1e3a;border-radius:14px;padding:32px 34px;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(120,150,200,.13) 1px,transparent 1px);background-size:24px 24px;opacity:.6;pointer-events:none"></div>
+      <div style="position:relative">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(43,127,255,.18);border:1px solid rgba(43,127,255,.35);border-radius:999px;padding:6px 13px;margin-bottom:14px"><span class="ms" style="font-size:16px;color:#7fb0ff">contact_support</span><span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#aecbff">What we need from you to begin</span></div>
+        <h2 style="font-size:28px;font-weight:800;letter-spacing:-.02em;color:#fff">23 questions to turn this plan into a kickoff</h2>
+        <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:#aebcd6;max-width:80ch">We don't need every answer on Day 1 — but the items flagged for Week 1 in Blockers must be settled at or shortly after kickoff. Every answer here directly de-risks the timeline.</p>
+      </div>
+    </div>
+
+    <div id="queryGroups"></div>
+
+    <div style="background:#f4f7fc;border:1px dashed #c8d3e6;border-radius:12px;padding:20px 24px;display:flex;gap:13px;align-items:center;flex-wrap:wrap">
+      <span class="ms" style="font-size:23px;color:#2B7FFF">handshake</span>
+      <div style="flex:1;min-width:240px"><div style="font-size:14px;font-weight:800;color:#102B52">Next step</div><div style="font-size:14px;color:#535f74;margin-top:2px;line-height:1.55">Work through these with us in a 90-minute kickoff workshop. We'll capture answers, confirm the MVP+ scope, and lock Week-1 dependencies so the build starts clean.</div></div>
+      <div onclick="goTo('timeline')" style="cursor:pointer;background:#102B52;color:#fff;border-radius:9px;padding:11px 18px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:7px;white-space:nowrap">Back to timeline <span class="ms" style="font-size:17px">arrow_forward</span></div>
+    </div>
+
+  </div><!-- /queries -->
+
+  <!-- ══════════════════════ INVESTMENT ══════════════════════ -->
+  <div class="section" id="sec-investment">
+
+    <!-- Hero -->
+    <div style="background:#0a1e3a;border-radius:14px;padding:36px 40px;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(120,150,200,.13) 1px,transparent 1px);background-size:26px 26px;opacity:.6;pointer-events:none"></div>
+      <div style="position:absolute;top:0;right:0;width:45%;height:100%;background:radial-gradient(circle at 80% 40%,rgba(43,127,255,.2),transparent 65%);pointer-events:none"></div>
+      <div style="position:relative">
+        <div class="eyebrow">Investment structure</div>
+        <h2 style="font-size:34px;font-weight:800;letter-spacing:-.025em;color:#fff;line-height:1.1;margin-bottom:14px">€40,000 flat fee.<br>16 weeks. Everything delivered.</h2>
+        <p style="font-size:14px;line-height:1.7;color:#aebcd6;max-width:72ch">We priced this as a <strong style="color:#fff">time-based engagement</strong> — not a feature list. That decision protects Conor. A platform of this scale has too many unknowns to quote by deliverable without building in risk premiums and change-order triggers on both sides. €2,500 per week is a clean, honest number. Every week, your team works. Everything we can build in 16 weeks, you get.</p>
+      </div>
+    </div>
+
+    <!-- The model explained -->
+    <div class="grid-2" style="grid-template-columns:1.4fr 1fr;align-items:start">
+      <div class="card"><div class="card-body">
+        <div class="eyebrow">Why time-based pricing</div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:8px;background:#eef3ff;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:18px;color:#2B7FFF">block</span></div>
+            <div><div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:3px">Eliminates change orders</div><div style="font-size:13.5px;color:#535f74;line-height:1.6">With a fixed-feature contract, every new requirement is a negotiation. With a time-based model, it's a priority conversation — "should we do this instead of that?" Not "that'll cost extra."</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:8px;background:#eef3ff;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:18px;color:#2B7FFF">align_items_stretch</span></div>
+            <div><div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:3px">No padding for unknowns</div><div style="font-size:13.5px;color:#535f74;line-height:1.6">A fixed-scope quote on a system this large would have 30–40% risk padding baked in. A time-based fee has none. You pay for real work, not contingency.</div></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:34px;height:34px;border-radius:8px;background:#eaf7f0;display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:18px;color:#14B86A">trending_up</span></div>
+            <div><div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:3px">MVP+ is included, not extra</div><div style="font-size:13.5px;color:#535f74;line-height:1.6">We commit to delivering MVP by Week 9 and spending the remaining 7 weeks on MVP+ features. The more efficiently we build, the more value you get — our incentives are aligned with yours.</div></div>
+          </div>
+        </div>
+      </div></div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="background:#fff;border:1px solid #e3e8f2;border-radius:12px;padding:20px 22px;text-align:center">
+          <div style="font-size:48px;font-weight:800;color:#102B52;letter-spacing:-.03em;line-height:1">€2,500</div>
+          <div style="font-size:14px;color:#6b7d9c;font-weight:600;margin-top:6px">per week · fixed</div>
+          <div style="height:1px;background:#eef1f7;margin:14px 0"></div>
+          <div style="font-size:14px;color:#3a4759;line-height:1.6">Covers the full Heaventree team: senior developer, project management, design, DevOps, QA, and a dedicated Microsoft Teams channel, email and WhatsApp throughout.</div>
+        </div>
+        <div style="background:#0a1e3a;border-radius:12px;padding:18px 22px">
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px"><span style="font-size:32px;font-weight:800;color:#fff">€40,000</span><span style="font-size:14px;color:#7f93b6;font-weight:600">total</span></div>
+          <div style="font-size:13px;color:#7f93b6">16 weeks × €2,500 — fixed, no overruns, no change orders</div>
+          <div style="height:1px;background:rgba(255,255,255,.08);margin:12px 0"></div>
+          <div style="font-size:13px;color:#9fb0cc;line-height:1.6">Payment schedule: advance before Week 1 · advance before Week 5 · advance before Week 9 · advance before Week 13</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase breakdown -->
+    <div>
+      <div class="h2" style="margin-bottom:4px">Phase investment allocation</div>
+      <p class="label" style="margin-bottom:16px">A €-per-phase view — not feature pricing, but a reflection of where effort concentrates across the 16 weeks.</p>
+      <div style="display:flex;flex-direction:column;gap:0;border:1px solid #e3e8f2;border-radius:12px;overflow:hidden">
+        <div id="phaseAlloc"></div>
+        <div style="background:#f4f7fc;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid #dce2ee">
+          <span style="font-size:14px;font-weight:800;color:#102B52">Total investment</span>
+          <div style="text-align:right"><span style="font-size:24px;font-weight:800;color:#102B52">€40,000</span><span style="font-size:14px;color:#6b7d9c;font-weight:600;margin-left:8px">MVP+ delivered</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's included -->
+    <div class="grid-2" style="align-items:start">
+      <div class="card" style="overflow:hidden">
+        <div style="background:#eaf7f0;border-bottom:1px solid #cdeeda;padding:14px 22px;display:flex;align-items:center;gap:8px">
+          <span class="ms" style="font-size:18px;color:#14B86A;font-variation-settings:'FILL' 1">task_alt</span>
+          <span style="font-size:14px;font-weight:700;color:#235c40">Included in the flat fee</span>
+        </div>
+        <div style="padding:6px 22px 14px">
+          <div id="feeIncludes"></div>
+        </div>
+      </div>
+      <div class="card" style="overflow:hidden">
+        <div style="background:#fff8ec;border-bottom:1px solid #f3dca6;padding:14px 22px;display:flex;align-items:center;gap:8px">
+          <span class="ms" style="font-size:18px;color:#d9912b">info</span>
+          <span style="font-size:14px;font-weight:700;color:#8a5a12">Separate from the build fee</span>
+        </div>
+        <div style="padding:6px 22px 14px">
+          <div id="feeExcludes"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market comparison -->
+    <div class="card card-narrow">
+      <div class="card-header"><span class="ms" style="font-size:19px;color:#2B7FFF">compare_arrows</span><span class="h3">Value in context — market comparison</span></div>
+      <div class="card-body">
+        <p class="body" style="margin-bottom:18px;max-width:80ch">The €40k figure makes more sense against what the alternatives would cost. These are realistic estimates, not cherry-picked outliers.</p>
+        <div style="display:flex;flex-direction:column;gap:10px" id="marketComp"></div>
+        <div style="background:#eaf7f0;border:1px solid #cdeeda;border-radius:9px;padding:14px 18px;margin-top:14px;display:flex;gap:10px;align-items:flex-start">
+          <span class="ms" style="font-size:20px;color:#14B86A;flex:none;font-variation-settings:'FILL' 1">star</span>
+          <div><div style="font-size:14px;font-weight:700;color:#235c40;margin-bottom:2px">You own it outright</div><div style="font-size:13.5px;color:#3a5c43;line-height:1.6">Unlike SaaS, the platform is yours. No per-seat fees that grow with your headcount, no vendor lock-in, no data held hostage. The IP, data and infrastructure are under JAM Safety's control from Day 1.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operating costs -->
+    <div class="card">
+      <div class="card-header"><span class="ms" style="font-size:19px;color:#6b7d9c">receipt_long</span><span class="h3">Ongoing operating costs (post-launch, separate)</span></div>
+      <div class="card-body">
+        <p class="body" style="margin-bottom:16px;max-width:80ch">After go-live, JAM Safety owns and operates the platform. These are the recurring costs to keep it running. We'll agree a simple maintenance retainer before Week 16 — typically €1,500–2,500/month for ongoing support, monitoring and bug fixes.</p>
+        <div class="grid-3" style="gap:12px" id="opsCosts"></div>
+        <div style="background:#f4f7fc;border:1px solid #dce2ee;border-radius:9px;padding:13px 18px;margin-top:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span style="font-size:14px;font-weight:700;color:#102B52">Estimated total year 1 running cost</span>
+          <div><span style="font-size:20px;font-weight:800;color:#102B52">~€18,000–24,000</span><span style="font-size:13px;color:#6b7d9c;font-weight:600;margin-left:8px">incl. hosting + AI + maintenance</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Companion doc link -->
+    <div style="background:#0a1e3a;border-radius:12px;padding:22px 26px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <span class="ms" style="font-size:28px;color:#7f93b6">terminal</span>
+      <div style="flex:1;min-width:240px">
+        <div style="font-size:14px;font-weight:800;color:#fff">Need the full technical architecture?</div>
+        <div style="font-size:13.5px;color:#7f93b6;margin-top:3px;line-height:1.55">The companion document covers IAM permissions at scale, the 4-tier AI model strategy, the internal knowledge base, regulatory RAG engine, BI forecasting, self-learning patterns and the full admin panel.</div>
+      </div>
+      <a href="Technical Deep Dive.html" style="background:#2B7FFF;color:#fff;border-radius:9px;padding:11px 18px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap">Technical Deep Dive <span class="ms" style="font-size:17px">open_in_new</span></a>
+    </div>
+
+  </div><!-- /investment -->
+
+  <!-- ══════════════════════ TERMS OF WORK ══════════════════════ -->
+  <div class="section" id="sec-terms">
+
+    <div style="background:linear-gradient(135deg,#0a1e3a 0%,#0d2d57 100%);border-radius:12px;padding:40px 44px;position:relative;overflow:hidden">
+      <div style="position:absolute;right:-60px;top:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(43,127,255,.12),transparent 70%);pointer-events:none"></div>
+      <div style="position:relative">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(43,127,255,.12);border:1px solid rgba(43,127,255,.3);border-radius:999px;padding:6px 14px;margin-bottom:18px">
+          <span class="ms" style="font-size:14px;color:#2B7FFF">gavel</span>
+          <span style="font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2B7FFF">Terms of Work · June 2026</span>
+        </div>
+        <h2 style="font-size:34px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1.1;margin-bottom:14px">JAM Safety OS<br>Terms of Work</h2>
+        <p style="font-size:14px;line-height:1.7;color:#7f93b6;max-width:60ch">This document forms part of the Agreement between Heaventree Ltd. (&ldquo;Consultant&rdquo;) and JAM Safety (&ldquo;Client&rdquo;). These terms govern the design, development and delivery of the JAM Safety OS platform.</p>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08)">
+          <div><div style="font-size:22px;font-weight:800;color:#14B86A">&euro;40,000</div><div style="font-size:12px;color:#7f93b6;font-weight:600;margin-top:3px">Fixed total + VAT</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.08)"></div>
+          <div><div style="font-size:22px;font-weight:800;color:#2B7FFF">16 weeks</div><div style="font-size:12px;color:#7f93b6;font-weight:600;margin-top:3px">Fixed time engagement</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.08)"></div>
+          <div><div style="font-size:22px;font-weight:800;color:#f59e0b">4 payments</div><div style="font-size:12px;color:#7f93b6;font-weight:600;margin-top:3px">Advance &middot; every 4 weeks</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.08)"></div>
+          <div><div style="font-size:22px;font-weight:800;color:#fff">Gibraltar law</div><div style="font-size:12px;color:#7f93b6;font-weight:600;margin-top:3px">Gibraltar courts</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="ms" style="font-size:19px;color:#2B7FFF">groups</span><span style="font-size:15px;font-weight:700;color:#0a1e3a">Parties to this Agreement</span></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div style="background:#f5f7fb;border:1px solid #dce2ee;border-radius:8px;padding:18px 20px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2B7FFF;margin-bottom:10px">The Consultant</div>
+            <div style="font-size:14px;font-weight:700;color:#0a1e3a;margin-bottom:6px">Heaventree Ltd.</div>
+            <div style="font-size:14px;color:#535f74;line-height:1.7">Suite 4.3.02, Block 4, Eurotowers<br>Gibraltar, GX11 1AA<br>sobyrne2000@gmail.com</div>
+          </div>
+          <div style="background:#f5f7fb;border:1px solid #dce2ee;border-radius:8px;padding:18px 20px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#14B86A;margin-bottom:10px">The Client</div>
+            <div style="font-size:14px;font-weight:700;color:#0a1e3a;margin-bottom:6px">JAM Safety</div>
+            <div style="font-size:14px;color:#535f74;line-height:1.7">Conor Rainey, Managing Director<br>[Registered address to be confirmed]<br>Ireland / United Kingdom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="ms" style="font-size:19px;color:#0a1e3a">article</span><span style="font-size:15px;font-weight:700;color:#0a1e3a">Standard Terms &amp; Conditions</span></div>
+      <div class="card-body" style="padding:0"><div id="clauseList"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="ms" style="font-size:19px;color:#0a1e3a">draw</span><span style="font-size:15px;font-weight:700;color:#0a1e3a">Execution &amp; Signatures</span></div>
+      <div class="card-body">
+        <p style="font-size:14px;color:#535f74;line-height:1.6;margin-bottom:22px">By signing below both parties confirm they have read, understood and agree to be bound by all terms of this Agreement.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2B7FFF;margin-bottom:14px">On behalf of the Consultant</div>
+            <div style="border-bottom:2px solid #0a1e3a;height:52px;margin-bottom:8px"></div>
+            <div style="font-size:13px;color:#535f74;margin-bottom:16px">Signature</div>
+            <div style="font-size:14px;font-weight:600;color:#0a1e3a">Sean O&#39;Byrne &middot; Director, Heaventree Ltd.</div>
+            <div style="border-bottom:1px solid #dce2ee;height:36px;margin:12px 0 6px"></div>
+            <div style="font-size:13px;color:#535f74">Date: ___________________</div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#14B86A;margin-bottom:14px">On behalf of the Client</div>
+            <div style="border-bottom:2px solid #dce2ee;height:52px;margin-bottom:8px"></div>
+            <div style="font-size:13px;color:#535f74;margin-bottom:16px">Signature</div>
+            <div style="border-bottom:1px solid #dce2ee;height:36px;margin-bottom:6px"></div>
+            <div style="font-size:13px;color:#535f74;margin-bottom:16px">Print name &amp; role</div>
+            <div style="border-bottom:1px solid #dce2ee;height:36px;margin:12px 0 6px"></div>
+            <div style="font-size:13px;color:#535f74">Date: ___________________</div>
+          </div>
+        </div>
+        <div style="margin-top:24px;padding:14px 16px;background:#f5f7fb;border:1px solid #dce2ee;border-radius:8px;font-size:13px;color:#535f74;line-height:1.65">
+          This Agreement, together with the Delivery Plan v2 (June 2026), constitutes the entire agreement between the parties and supersedes all prior representations, proposals or agreements. Any variation must be in writing signed by both parties.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /terms -->
+  <script>
+  const CLAUSES = [
+    { n:1, title:'Interpretation', body:`In this Agreement: <strong>"Consultant"</strong> means Heaventree Ltd.; <strong>"Client"</strong> means JAM Safety; <strong>"the Work"</strong> means the JAM Safety OS platform described in the Delivery Plan v2; <strong>"Hypercare Period"</strong> means the four (4) weeks immediately following production go-live; <strong>"Out-of-Scope"</strong> means any feature not described in the Delivery Plan v2 that both parties agree in writing to add post-signature.` },
+    { n:2, title:'Description of Work', body:`The Consultant shall design, develop and deliver the JAM Safety OS platform as described in the Delivery Plan v2. This is a time-based engagement: the Consultant commits 16 weeks of full-time dedicated resource. Features marked <strong>MVP+</strong> are committed deliverables within the 16-week window. Features marked <strong>Flex</strong> will be delivered subject to remaining capacity after committed features are complete. No committed feature shall be deprioritised without written agreement.` },
+    { n:3, title:'Fees &amp; Payment Schedule', body:`The total fee is <strong>&euro;40,000 + VAT</strong> payable as four advance payments of <strong>&euro;10,000 + VAT each</strong>, due every four weeks: <strong>Payment 1</strong> &mdash; due before work commences; <strong>Payment 2</strong> &mdash; due at the start of Week 5; <strong>Payment 3</strong> &mdash; due at the start of Week 9; <strong>Payment 4</strong> &mdash; due at the start of Week 13. Each payment must be received in full before work continues for that period. Overdue payments suspend work without penalty to the Consultant; any resulting delays are not counted against the 16-week commitment. Payments are non-refundable except in the case of material breach by the Consultant. The flat fee excludes hosting (~&euro;800&ndash;1,200/month), AI API charges, third-party software licences, penetration test fees and post-Hypercare maintenance.` },
+    { n:4, title:'Intellectual Property &amp; Software Licence', body:`Heaventree Ltd. retains full ownership of all source code, design systems, the NexOS platform (including its CrewDock agent runtime), database schemas and platform architecture. On receipt of all payments, the Client is granted a <strong>perpetual, non-exclusive, non-transferable licence</strong> to operate the JAM Safety OS platform as a <strong>single production instance for JAM Safety&rsquo;s internal business use only</strong>. The following are expressly prohibited without prior written consent: (a) copying, reproducing or extracting the source code; (b) distributing, sub-licensing, reselling or white-labelling the platform; (c) deploying additional instances for any other legal entity; (d) reverse-engineering or decompiling any platform component; (e) transferring or assigning the licence upon sale, merger or restructure of the Client&rsquo;s business. A technical licence enforcement mechanism will be built into the platform to enforce the single-instance licence. Breach of these terms constitutes material breach of this Agreement, entitling Heaventree Ltd. to terminate the licence and seek injunctive relief.` },
+    { n:5, title:'Confidentiality', body:`Both parties agree to keep confidential all non-public information received from the other in connection with this project. This obligation survives termination for three (3) years. Exceptions: (a) information already in the public domain through no fault of the receiving party; (b) information independently developed without reference to the confidential information; (c) information required to be disclosed by law or court order &mdash; in which case the disclosing party shall give reasonable prior notice.` },
+    { n:6, title:'Client Obligations', body:`The Client shall provide in a timely manner: (a) all technical access including MS Graph API credentials, hosting access and test accounts; (b) decision-maker availability for weekly check-ins and milestone sign-offs within 48 hours of request; (c) pilot event confirmation by Week 8; (d) UAT participants per agreed schedule; (e) migration data in agreed formats; (f) penetration test vendor confirmed by Week 13. Delays caused by the Client failing to meet these obligations extend the timeline by an equivalent period without reduction in fee.` },
+    { n:7, title:'Change Requests', body:`This Agreement is time-based &mdash; there are no change orders within the 16-week engagement. Features not in the committed MVP+ scope may be considered as time-permitting Flex items. Any request for a material departure from the agreed architecture will be either (a) substituted for a lower-priority feature of equivalent effort, or (b) quoted separately in a future Statement of Work. Changes estimated to increase effort by 35% or more require a new proposal. Additional agreed services outside this engagement are billed at <strong>&euro;85 + VAT/hour</strong>.` },
+    { n:8, title:'Hypercare, Warranty &amp; Bug SLA', body:`The Consultant will provide four (4) weeks of Hypercare from go-live: Weeks 1&ndash;2 daily standups; Weeks 3&ndash;4 weekly check-ins. Bug response SLA during Hypercare: <strong style="color:#c0392b">Critical</strong> (platform down or data loss) &mdash; 2-hour response; <strong style="color:#d68910">High</strong> (major feature non-functional) &mdash; 8-hour response; <strong style="color:#14B86A">Medium</strong> (minor feature degraded) &mdash; 48-hour response. Bugs during Hypercare are remediated at no charge. The warranty does not cover defects caused by Client-side modifications, third-party API changes or infrastructure failures outside the Consultant's control.` },
+    { n:9, title:'Post-Hypercare Maintenance', body:`After the Hypercare Period, ongoing support is available under a separate maintenance retainer (estimated &euro;1,500&ndash;&euro;2,500/month). The retainer includes a built-in <strong>Support &amp; Reporting Module</strong> providing: (a) in-app issue reporting with automatic log capture and severity tagging; (b) structured error and event audit logs retained for 12 months; (c) a support ticket queue visible to both the Client and the Consultant; (d) uptime and deployment status monitoring. All support communications are delivered via <strong>Microsoft Teams channel, email and WhatsApp</strong>. Without a retainer, support is billed at <strong>&euro;85 + VAT/hour</strong>. The Consultant will provide a retainer proposal no later than Week 14.` },
+    { n:10, title:'Limitation of Liability', body:`The Consultant's total aggregate liability shall not exceed the total fees paid by the Client at the time the claim arises. The Consultant shall not be liable for: (a) loss of profits or revenue; (b) indirect or consequential loss; (c) data loss resulting from Client-side actions or third-party service failures; (d) downtime caused by hosting provider, MS365, Claude API or any other third-party service. The Client indemnifies the Consultant against any third-party claims arising from content, data or instructions provided by the Client.` },
+    { n:11, title:'Data Governance &amp; Jurisdictional Compliance', body:`Both parties acknowledge that the Work involves processing personal data across multiple jurisdictions. Each party is separately responsible for its own data protection obligations. The Consultant will build GDPR tooling (erasure, portability, 72-hour breach notification) as agreed. The Client is responsible for: (a) lawful basis for processing staff personal data; (b) employment and privacy law compliance in each jurisdiction of operation; (c) RIDDOR reporting (UK) and equivalent obligations in Ireland; (d) local law compliance in all jurisdictions including Saudi Arabia, UAE and other GCC countries. The Consultant's regulatory RAG engine is a reference tool, not legal advice. The Client remains data controller and compliance duty-holder in all jurisdictions.` },
+    { n:12, title:'Termination', body:`Either party may terminate on 30 days' written notice. On termination: (a) the Client pays all work completed pro-rata on a weekly basis to the termination date; (b) IP in completed and paid-for work transfers to the Client; (c) IP in work not yet paid for reverts to the Consultant; (d) the Consultant delivers a handover pack (all code, documentation, credentials) within 10 business days. Milestone payments already received on termination without cause by the Client are non-refundable. If the Consultant terminates without cause, prepaid fees for work not yet commenced will be refunded.` },
+    { n:13, title:'Force Majeure', body:`Neither party is liable for failure or delay caused by circumstances beyond its reasonable control, including acts of God, pandemic, civil unrest, government action, war or widespread infrastructure failure. The affected party shall notify the other as soon as reasonably practicable. If a force majeure event persists for more than 60 consecutive days, either party may terminate without liability.` },
+    { n:14, title:'Governing Law &amp; Entire Agreement', body:`This Agreement is governed by and construed in accordance with the laws of Gibraltar. Both parties submit to the exclusive jurisdiction of the courts of Gibraltar. This Agreement, together with the Delivery Plan v2, constitutes the entire agreement between the parties and supersedes all prior representations, proposals or agreements. Any waiver of any provision must be in writing signed by both parties.` },
+  ];
+  const clauseEl = document.getElementById('clauseList');
+  if (clauseEl) clauseEl.innerHTML = CLAUSES.map((c,i) => `
+    <div style="padding:18px 22px;${i < CLAUSES.length-1 ? 'border-bottom:1px solid #edf0f7;' : ''}">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="min-width:28px;height:28px;border-radius:6px;background:#eef3ff;border:1px solid #cfe0ff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#2B7FFF;flex:none">${c.n}</div>
+        <div style="flex:1">
+          <div style="font-size:14.5px;font-weight:700;color:#0a1e3a;margin-bottom:8px">${c.title}</div>
+          <div style="font-size:14px;line-height:1.75;color:#535f74">${c.body}</div>
+        </div>
+      </div>
+    </div>`).join('');
+  </script>
+
+  </div><!-- /max-width -->
+  </div><!-- /content scroll -->
+</main>
+</div><!-- /layout -->
+
+<script>
+const NAV = [
+  { id:'overview',     icon:'dashboard',       label:'Overview' },
+  { id:'architecture', icon:'memory',           label:'Architecture' },
+  { id:'timeline',     icon:'timeline',         label:'Timeline' },
+  { id:'sitemap',      icon:'account_tree',     label:'App Sitemap' },
+  { id:'portals',      icon:'grid_view',        label:'Portal Deep-Dive' },
+  { id:'scope',        icon:'fact_check',       label:'Scope' },
+  { id:'risks',        icon:'gpp_maybe',        label:'Risks &amp; Blockers' },
+  { id:'queries',      icon:'contact_support',  label:'Client Queries' },
+  { id:'investment',   icon:'payments',         label:'Investment' },
+  { id:'terms',        icon:'gavel',            label:'Terms of Work' },
+];
+
+// Render nav
+const navEl = document.getElementById('navItems');
+NAV.forEach(n => {
+  const el = document.createElement('div');
+  el.className = 'nav-item' + (n.id === 'overview' ? ' active' : '');
+  el.id = 'nav-' + n.id;
+  el.innerHTML = `<span class="ms" style="font-size:19px;flex:none">${n.icon}</span><span>${n.label}</span>`;
+  el.onclick = () => goTo(n.id);
+  navEl.appendChild(el);
+});
+
+function goTo(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('sec-' + id);
+  const nav = document.getElementById('nav-' + id);
+  if (sec) sec.classList.add('active');
+  if (nav) nav.classList.add('active');
+  const found = NAV.find(n => n.id === id);
+  document.getElementById('topTitle').textContent = found ? found.label.replace(/&amp;/g,'&') : '';
+  window.scrollTo(0,0);
+}
+</script>
+<script>
+// ── APP SITEMAP ────────────────────────────────────────────────────────────
+const SITEMAP_PORTALS = [
+  { icon:'hub', iconBg:'#102B52', name:'JAM Ops Portal',
+    mvp:['Incident Management','Client Documentation Repository','Daily Site Reports — Compliance','Documentation / Deliverables Tracker','Inspection Scheduler','Automated ESMP Creation &amp; Updating'],
+    plus:['Claude Integration','JAM HQ Push Messages','JAM Format — CV Creator','Automated Q Schedules','SharePoint / Outlook Intelligence','Finance','Big Projects / Ops Capacity','Time Sheet Generation','TOIL Day Management','Recruitment (basic)'],
+    pp:['CRM &amp; Client Intelligence','Weather Channel','Policy &amp; Procedure Repository','New Project Responder','Prompt Creator','Presentation Creator'] },
+  { icon:'corporate_fare', iconBg:'#102B52', name:'Client Portal',
+    mvp:['Client Login','Dashboard — Current Projects','Project Dashboard','Safety Documents Library (13 types)','Accident Incidents &amp; Near Misses','Manpower Data','Generate Reports','Revenue Management (Senior)','Project Revenue Management'],
+    plus:[], pp:[], note:'Every client-facing module is MVP — clients see value from launch.' },
+  { icon:'engineering', iconBg:'#102B52', name:'Subcontractor Portal',
+    mvp:['Subcontractor Login','Submissions','Submission Status','Approvals','Rejections','Template Packs','PTW Issued','Resubmit'],
+    plus:['Feedback'],
+    pp:['Induction Hosting'] },
+  { icon:'smartphone', iconBg:'#102B52', name:'Staff Field Portal',
+    mvp:['Staff Project Login','Submit Daily Site Report','Submit Inspection / Audit','Submit Accident / Incident Report','Submit Toolbox Talk Record','Safety Documents (read-only)'],
+    plus:['Time Sheet Generation'],
+    pp:['Generate PTW','Generate QR Code — Site Info'] },
+  { icon:'badge', iconBg:'#7d3048', name:'JAM Recruitment',
+    mvp:[], plus:[],
+    pp:['Job Board','Submit CV','Update Availabilities','Asset Tracker','Submit Qualifications'],
+    note:'An entirely post-launch portal — scoped as a separate engagement.' },
+];
+const sitemapBucket = (items, dot, labelColor, label, bg, border, textColor) => items.length ? `
+  <div style="margin-top:13px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px"><span style="width:7px;height:7px;border-radius:50%;background:${dot}"></span><span style="font-size:11.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:${labelColor}">${label}</span></div>
+    <div style="display:flex;flex-direction:column;gap:5px">${items.map(m=>`<div style="font-size:13px;font-weight:600;color:${textColor};background:${bg};border:1px solid ${border};border-radius:6px;padding:6px 9px;line-height:1.3">${m}</div>`).join('')}</div>
+  </div>` : '';
+const sitemapGridEl = document.getElementById('sitemapGrid');
+if (sitemapGridEl) sitemapGridEl.innerHTML = SITEMAP_PORTALS.map(p => `
+  <div class="card" style="padding:16px;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:10px;padding-bottom:13px;border-bottom:1px solid #eef1f7">
+      <div style="width:34px;height:34px;border-radius:8px;background:${p.iconBg};display:flex;align-items:center;justify-content:center;flex:none"><span class="ms" style="font-size:19px;color:#fff">${p.icon}</span></div>
+      <div style="line-height:1.15"><div style="font-size:14.5px;font-weight:800;color:#102B52">${p.name}</div><div style="font-size:12px;color:#8a97ad;margin-top:1px">${p.mvp.length+p.plus.length+p.pp.length} modules</div></div>
+    </div>
+    ${sitemapBucket(p.mvp,'#14B86A','#1c7a4a','MVP · by Week 9','#eaf7f0','#cdeeda','#235c40')}
+    ${sitemapBucket(p.plus,'#2B7FFF','#1b5fc4','MVP+ · Weeks 10–16','#e9f1ff','#cfe0ff','#1b5fc4')}
+    ${sitemapBucket(p.pp,'#e8607a','#b23a5a','MVP++ · Future','#fdecef','#f6d0d8','#a83e58')}
+    ${p.note ? `<div style="margin-top:13px;padding-top:14px"><div style="font-size:12px;color:#8a97ad;font-style:italic;line-height:1.5">${p.note}</div></div>` : ''}
+  </div>`).join('');
+const smMvpCount = SITEMAP_PORTALS.reduce((n,p)=>n+p.mvp.length,0);
+const smPlusCount = SITEMAP_PORTALS.reduce((n,p)=>n+p.plus.length,0);
+const smPpCount = SITEMAP_PORTALS.reduce((n,p)=>n+p.pp.length,0);
+const sitemapSummaryEl = document.getElementById('sitemapSummary');
+if (sitemapSummaryEl) sitemapSummaryEl.innerHTML = `
+  <div style="background:rgba(20,184,106,0.16);border:1px solid rgba(20,184,106,0.3);border-radius:9px;padding:9px 14px"><span style="font-size:18px;font-weight:800;color:#3fdd8a;font-variant-numeric:tabular-nums">${smMvpCount}</span><span style="font-size:13px;color:#9bd9b8;font-weight:600;margin-left:7px">MVP · by Wk 9</span></div>
+  <div style="background:rgba(43,127,255,0.16);border:1px solid rgba(43,127,255,0.32);border-radius:9px;padding:9px 14px"><span style="font-size:18px;font-weight:800;color:#7fb0ff;font-variant-numeric:tabular-nums">${smPlusCount}</span><span style="font-size:13px;color:#aecbff;font-weight:600;margin-left:7px">MVP+ · Wk 10–16</span></div>
+  <div style="background:rgba(232,96,122,0.16);border:1px solid rgba(232,96,122,0.32);border-radius:9px;padding:9px 14px"><span style="font-size:18px;font-weight:800;color:#f4889e;font-variant-numeric:tabular-nums">${smPpCount}</span><span style="font-size:13px;color:#f0b3c1;font-weight:600;margin-left:7px">MVP++ · future</span></div>`;
+
+// ── SCOPE IN ────────────────────────────────────────────────────────────────
+const SCOPE_IN = [
+  { group:'Four portals + access', items:['JAM Ops','Client (Senior/Junior)','Subcontractor','Staff Field','RBAC — 6 roles','MFA for admin/ops'] },
+  { group:'Core operations', items:['Project &amp; incident management','Double-booking detection','Daily site reports','Inspection scheduler','Push messages','Weather widget'] },
+  { group:'Compliance &amp; documents', items:['Safety doc library (13 types)','Insurance expiry alerts','Approval workflows','PTW + QR generation','Inductions','Audit trail'] },
+  { group:'Field &amp; offline', items:['Offline form caching','Photo upload + sync','Conflict resolution','Mobile-first PWA'] },
+  { group:'Intelligence &amp; finance', items:['ESMP generator (AI)','CV creator (AI)','Q-schedule generator (AI)','Finance: PO/quote/invoice','MS Graph + revenue auto-pop','CRM module'] },
+  { group:'Analytics, launch &amp; care', items:['Utilisation &amp; profitability','Emergency &amp; overtime workflows','GDPR tooling','Penetration test','Pilot event + UAT','4-week hypercare'] },
+];
+const scopeEl = document.getElementById('scopeIn');
+if (scopeEl) {
+  scopeEl.innerHTML = SCOPE_IN.map(g => `
+    <div style="padding:14px 0;border-bottom:1px solid #eef1f7">
+      <div style="font-size:13.5px;font-weight:800;color:#102B52;margin-bottom:7px">${g.group}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${g.items.map(it=>`<span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#26663f;background:#eaf7f0;border:1px solid #cdeeda;border-radius:6px;padding:5px 9px"><span class="ms" style="font-size:14px;color:#14B86A">check</span>${it}</span>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ── RISKS ────────────────────────────────────────────────────────────────────
+const RISKS = [
+  { risk:'Scope creep', l:'Med', i:'High', m:'Weekly scope review and formal change-request gate. Any out-of-scope item is logged, estimated and agreed before work begins.' },
+  { risk:'MS 365 Graph access delayed', l:'High', i:'High', m:'Client IT must action API access in Week 1 kickoff — flagged as a blocker. AI work (ESMP, CV, Q-Schedule) is independent and continues without it.' },
+  { risk:'Data migration quality issues', l:'Med', i:'Med', m:'Migration assessment and dry-run by Week 2. Data quality issues are flagged early; JAM ops team verifies imported records before go-live.' },
+  { risk:'Offline sync edge cases', l:'Low', i:'Med', m:'Field PWA tested offline at multiple venues before pilot (Week 13). Conflict resolution logic covered in Week 8 sprint.' },
+  { risk:'Claude API cost overrun', l:'Med', i:'Low', m:'Per-agent spend caps configured from Week 10. Budget alerts at 50% and 80% threshold. Monthly cost review with Conor.' },
+  { risk:'Pen test critical findings late in W15', l:'Low', i:'High', m:'5-day remediation buffer explicitly built into Phase 5. Critical/high findings are contractual go-live blockers — no exceptions.' },
+  { risk:'Client UAT availability', l:'Med', i:'High', m:'UAT dates locked at kickoff. If a session is missed, the dependent milestone moves by the same number of days — not absorbed.' },
+  { risk:'Pilot event cancelled / rescheduled', l:'Low', i:'High', m:'Backup pilot event identified and agreed by Week 2. Pilot runs at minimum scale if primary is unavailable.' },
+  { risk:'Single-vendor dependency (Heaventree)', l:'Low', i:'High', m:'Documentation-first culture throughout. A second senior developer is available from Week 8 if capacity is needed.' },
+];
+const pill = l => `<span class="pill-${l==='High'?'high':l==='Med'?'med':'low'}">${l}</span>`;
+const riskEl = document.getElementById('riskRows');
+if (riskEl) {
+  riskEl.innerHTML = RISKS.map(r=>`
+    <div class="risk-row">
+      <div style="font-size:13.5px;font-weight:700;color:#102B52">${r.risk}</div>
+      <div>${pill(r.l)}</div>
+      <div>${pill(r.i)}</div>
+      <div style="font-size:13px;color:#535f74;line-height:1.5">${r.m}</div>
+    </div>`).join('');
+}
+
+// ── BLOCKERS ─────────────────────────────────────────────────────────────────
+const BLOCKERS = [
+  { icon:'key', title:'MS365 Graph API credentials', need:'Week 10', owner:'JAM Safety IT', detail:'App registration in Azure AD, Graph API permissions granted (Files.ReadWrite, Mail.Read, Sites.ReadWrite.All). Without this: SharePoint sync and Outlook PO monitoring cannot go live.' },
+  { icon:'psychology', title:'Claude API key + billing account', need:'Week 10', owner:'Conor / JAM Safety', detail:'An Anthropic account with billing and API key. All three AI agents (ESMP, CV Creator, Q-Schedule) depend on this. Estimated API cost: €150–400/mo at launch volume.' },
+  { icon:'event', title:'Pilot event confirmed + date', need:'Week 8', owner:'Conor Rainey', detail:'We need a real JAM Safety event during Weeks 13–14 with at least 5 field staff using the app live. Date + venue needed by Week 8 to prepare the environment.' },
+  { icon:'database', title:'Existing data for migration', need:'Week 2', owner:'Conor / ops team', detail:'Export of any current staff records, subcontractor profiles and client accounts — even if it\'s a spreadsheet. Required to scope the migration correctly and avoid a Week 6 bottleneck.' },
+  { icon:'dns', title:'Hosting decision + server access', need:'Week 1', owner:'Conor (advised by Heaventree)', detail:'We recommend DigitalOcean or Hetzner. A full production stack (compute + managed database + Redis + CDN + staging) runs ~€800–1,200/month. Provisioning must happen in Week 1 — confirm any existing hosting preference at kickoff so we can configure the environment immediately.' },
+  { icon:'group_add', title:'UAT participant list', need:'Week 13', owner:'Conor Rainey', detail:'Named ops staff, one client user (Senior) and 2–3 field staff who will attend UAT sessions. They must be available for Week 13 UAT workshops.' },
+  { icon:'security', title:'Pen test vendor booked', need:'Week 13', owner:'Conor / Heaventree', detail:'An independent security testing vendor must be booked before Week 13. Heaventree can recommend vendors. Results are needed by Week 15 for remediation.' },
+];
+const blockerEl = document.getElementById('blockerCards');
+if (blockerEl) {
+  blockerEl.innerHTML = BLOCKERS.map(b=>`
+    <div style="background:#fff;border:1px solid #e3e8f2;border-radius:12px;padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+      <div style="width:38px;height:38px;border-radius:9px;background:#fff8ec;border:1px solid #f3dca6;display:flex;align-items:center;justify-content:center;flex:none">
+        <span class="ms" style="font-size:20px;color:#d9912b">${b.icon}</span>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14.5px;font-weight:800;color:#102B52">${b.title}</div>
+        <div style="display:flex;gap:8px;margin:5px 0 7px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#d9912b;background:#fff8ec;border:1px solid #f3dca6;border-radius:5px;padding:2px 8px"><span class="ms" style="font-size:14px">schedule</span>Needed by ${b.need}</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#6b7d9c;background:#f4f7fc;border:1px solid #dce2ee;border-radius:5px;padding:2px 8px"><span class="ms" style="font-size:14px">person</span>${b.owner}</span>
+        </div>
+        <div style="font-size:13px;color:#535f74;line-height:1.55">${b.detail}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── QUERIES ───────────────────────────────────────────────────────────────────
+const QUERY_GROUPS = [
+  { group:'Project Setup', icon:'rocket_launch', color:'#0a1e3a', items:[
+    { q:'What hosting provider should we use?', why:'Determines environment setup in Week 1. We recommend DigitalOcean or Hetzner for best price/performance.' },
+    { q:'Do you have a company email domain and SMTP credentials for transactional email?', why:'Needed for submission confirmations, review notifications and all system emails from Day 1.' },
+    { q:'What is the pilot event — date, venue, expected field staff count?', why:'Must be confirmed by Week 8. Everything in Phase 5 is sequenced around it.' },
+    { q:'Who is the primary stakeholder on JAM\'s side for UAT sign-off?', why:'This person\'s availability is on the critical path for the MVP gate (Week 9) and launch (Week 16).' },
+  ]},
+  { group:'Data & Migration', icon:'database', color:'#163a6b', items:[
+    { q:'Do you have an existing staff / client / subcontractor database we need to migrate? In what format?', why:'Even a spreadsheet counts. Volume and quality determines the migration approach and Week 6 timeline.' },
+    { q:'Which subcontractors should be onboarded at launch — or is that a post-launch activity?', why:'Affects the onboarding email flow and whether we need bulk-invite functionality by Week 9.' },
+    { q:'Are there existing safety documents that need to be imported into the library?', why:'If yes, we need the file structure and naming convention by Week 4 to load them before the client demo.' },
+    { q:'What is the current process for incident reporting? (paper / email / existing system)', why:'Shapes the incident form fields and any import of historical incidents for the Client Portal view.' },
+  ]},
+  { group:'Microsoft 365', icon:'cloud_sync', color:'#1f5290', items:[
+    { q:'Is JAM Safety on Microsoft 365? Who is the tenant IT admin?', why:'Required to start the Azure AD app registration and Graph API permissions. Blocks all MS365 features until actioned.' },
+    { q:'Which SharePoint document library should approved safety documents sync to?', why:'We need the exact library URL and folder structure before coding the sync logic (Week 10).' },
+    { q:'Which Outlook inbox or shared mailbox should we monitor for PO receipts and client emails?', why:'Determines the inbox authentication scope. A shared mailbox is preferred over a personal account.' },
+    { q:'Are there specific email subjects or senders we should use as matching rules for PO detection?', why:'The more specific the rules, the more accurate the auto-population of revenue in the finance module.' },
+  ]},
+  { group:'Roles & Access', icon:'manage_accounts', color:'#2B7FFF', items:[
+    { q:'Who are the named Ops Admin users at launch? How many Ops Staff?', why:'Determines the number of user accounts to seed, and whether bulk invite flow is needed by Week 2.' },
+    { q:'Will clients get Senior or Junior portal access — or can individual accounts be set to either?', why:'Junior has no revenue data. Senior gets full visibility. This needs a decision before we build the Client Portal (Week 4).' },
+    { q:'Do any subcontractors need portal access before the pilot, or is onboarding post-launch?', why:'If yes, we need a contact list and their required document types to seed the submission forms correctly.' },
+    { q:'Should field staff log in with company email addresses, or should we generate credentials for them?', why:'Affects the authentication flow for potentially 50+ seasonal staff with no JAM email address.' },
+  ]},
+  { group:'Compliance & Legal', icon:'gavel', color:'#14B86A', items:[
+    { q:'What specific RIDDOR (or jurisdiction equivalent) reporting obligations apply to your events?', why:'Determines mandatory fields in the incident report form to ensure regulatory compliance from day one.' },
+    { q:'Are there local legislative packs we should pre-load at launch — Irish / UK / EU jurisdiction specifics?', why:'Affects the document library seeding in Week 5 and the Field Portal\'s document cache.' },
+    { q:'Do you have a preferred pen test vendor, or should Heaventree recommend one?', why:'Vendor must be booked by Week 13. If we\'re recommending, we need a decision by Week 10.' },
+    { q:'What is the data retention policy for incident reports and safety documents?', why:'Drives the auto-archive rules and GDPR erasure scope in Phase 5.' },
+  ]},
+  { group:'Finance', icon:'payments', color:'#d9912b', items:[
+    { q:'Who should have access to the Finance module — Ops Admin only, or also senior Ops Staff?', why:'Affects the RBAC permission matrix we build in Week 1. Easier to expand access than restrict it later.' },
+    { q:'What is your current PO / invoice process — purely email-based, or is there an existing accounting system?', why:'Determines whether Frappe is standalone or needs to export to a third-party tool (e.g. Xero, Sage).' },
+    { q:'Do you need the timesheet module to integrate with a specific payroll system at launch?', why:'Payroll integrations are out of MVP+ scope by default — if needed, it must be flagged as a named requirement now.' },
+  ]},
+];
+const queryEl = document.getElementById('queryGroups');
+if (queryEl) {
+  queryEl.innerHTML = QUERY_GROUPS.map((g,gi)=>`
+    <div class="card" style="overflow:hidden;margin-top:16px">
+      <div style="background:${g.color};padding:13px 22px;display:flex;align-items:center;gap:9px">
+        <span class="ms" style="font-size:18px;color:rgba(255,255,255,.7)">${g.icon}</span>
+        <span style="font-size:14px;font-weight:800;color:#fff">${g.group}</span>
+        <span style="font-size:13px;color:rgba(255,255,255,.5);margin-left:4px">${g.items.length} questions</span>
+      </div>
+      <div style="padding:4px 22px 8px">
+        <div class="query-grid">
+        ${g.items.map((item,i)=>`
+        <div class="query-row">
+          <div style="width:26px;height:26px;border-radius:6px;background:#f4f7fc;border:1px solid #dce2ee;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#6b7d9c;flex:none">${gi*4+i+1}</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#102B52">${item.q}</div>
+            <div style="font-size:13px;color:#6b7d9c;margin-top:2px;line-height:1.5"><span style="font-weight:700">Why it matters:</span> ${item.why}</div>
+          </div>
+        </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+</script>
+<script>
+// ── INVESTMENT SECTION DATA ──────────────────────────────────────────────────
+const PHASES = [
+  { ph:'Phase 1', label:'Foundation & Discovery', weeks:'Weeks 1–2', cost:'€5,000',
+    pct:12.5, color:'#0a1e3a',
+    delivers:'Architecture, environments, authentication system (6 roles + MFA), all portal shells, PWA Service Worker, JAM design system, CI/CD pipeline.' },
+  { ph:'Phase 2', label:'Core Operations', weeks:'Weeks 3–6', cost:'€10,000',
+    pct:25, color:'#163a6b',
+    delivers:'All 4 portal cores, Document Engine (13 types), incident management, subcontractor workflow, Client Portal, daily reports, inspection scheduler, PTW, compliance workflows, data migration Phase 1.' },
+  { ph:'Phase 3', label:'Field & Integration', weeks:'Weeks 7–9', cost:'€7,500',
+    pct:18.75, color:'#1f5290',
+    delivers:'Staff Field PWA (all 4 submit forms), offline sync + conflict resolution, cross-portal data flow, MVP UAT with Conor, security hardening, pen test scope, MVP gate sign-off.' },
+  { ph:'Phase 4', label:'Intelligence & Finance', weeks:'Weeks 10–12', cost:'€7,500',
+    pct:18.75, color:'#2B7FFF',
+    delivers:'NexOS AI runtime, ESMP Generator, CV Creator, Q-Schedule Generator, MS Graph / SharePoint sync, Outlook PO monitoring, Frappe finance module, CRM, BI analytics, timesheets, revenue management.' },
+  { ph:'Phase 5', label:'Hardening, Pilot & Launch', weeks:'Weeks 13–16', cost:'€10,000',
+    pct:25, color:'#4d97ff',
+    delivers:'Live pilot event deployment, UAT sign-off, GDPR tooling, penetration test + full remediation, performance optimisation, staff training, production go-live, 4-week hypercare.' },
+];
+const paEl = document.getElementById('phaseAlloc');
+if (paEl) paEl.innerHTML = PHASES.map((p,i)=>`
+  <div style="display:grid;grid-template-columns:120px 1fr auto;gap:0;padding:14px 24px;border-bottom:1px solid #eef1f7;align-items:center">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a97ad">${p.ph}</div>
+      <div style="font-size:13px;font-weight:700;color:#102B52;margin-top:1px">${p.weeks}</div>
+    </div>
+    <div style="padding:0 16px">
+      <div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:4px">${p.label}</div>
+      <div style="height:5px;border-radius:3px;background:#eef1f7;margin-bottom:6px"><div style="width:${p.pct}%;height:100%;border-radius:3px;background:${p.color}"></div></div>
+      <div style="font-size:13px;color:#535f74;line-height:1.5">${p.delivers}</div>
+    </div>
+    <div style="text-align:right;padding-left:16px;min-width:80px">
+      <div style="font-size:18px;font-weight:800;color:#102B52">${p.cost}</div>
+      <div style="font-size:13px;color:#5a7099;font-weight:600;margin-top:1px">${p.pct <= 12.5 ? '2 weeks' : p.pct===25 ? '4 weeks' : '3 weeks'}</div>
+    </div>
+  </div>`).join('');
+
+const FEE_IN = [
+  'Full team — senior dev, PM, design, QA, DevOps',
+  'All 5 portals (Ops, Client, Subcontractor, Field, Recruitment shell)',
+  'As many MVP+ features as the timeline absorbs',
+  'Data migration from existing systems',
+  'Live pilot event deployment support',
+  'Penetration test remediation (all critical/high findings)',
+  '4-week post-launch hypercare',
+  'Perpetual single-instance software licence for JAM Safety OS',
+  'Microsoft Teams channel, email and WhatsApp support throughout',
+  'Documentation: ops guide, field quick-start, client guide',
+];
+const FEE_OUT = [
+  'Cloud hosting (~€800–1,200/month, billed directly to JAM Safety)',
+  'Claude API usage (~€100–250/month at launch volume)',
+  'Penetration test vendor fee (~€2,000–4,000, booked separately)',
+  'Microsoft 365 subscription (existing JAM cost)',
+  'Ongoing maintenance beyond hypercare (retainer TBD, typically €1,500–2,500/mo)',
+  'Any MVP++ features — Recruitment portal, PPE tracker, native apps (future SOW)',
+];
+const fiEl = document.getElementById('feeIncludes');
+if (fiEl) fiEl.innerHTML = FEE_IN.map(f=>`<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid #eef1f7;align-items:flex-start"><span class="ms" style="font-size:16px;color:#14B86A;flex:none;font-variation-settings:'FILL' 1">check_circle</span><span style="font-size:13.5px;color:#3a4759">${f}</span></div>`).join('');
+const feEl = document.getElementById('feeExcludes');
+if (feEl) feEl.innerHTML = FEE_OUT.map(f=>`<div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid #eef1f7;align-items:flex-start"><span class="ms" style="font-size:16px;color:#d9912b;flex:none">info</span><span style="font-size:13.5px;color:#535f74">${f}</span></div>`).join('');
+
+const MARKET = [
+  { label:'Dublin / London agency (comparable stack, day rates)', cost:'€140,000–220,000', saving:'€100,000–180,000 more', color:'#E14D4D', icon:'trending_up' },
+  { label:'SaaS platform (SafetyIQ, Nvolve, etc.) — 200 users × 3 years', cost:'€86,000–200,000', saving:'No ownership, no custom logic', color:'#d9912b', icon:'lock' },
+  { label:'In-house build (1 senior dev, 18 months, Dublin salary)', cost:'€120,000+', saving:'No delivery guarantee', color:'#d9912b', icon:'person' },
+  { label:'JAM Safety OS (Heaventree, 16 weeks)', cost:'€40,000', saving:'Full ownership · custom to JAM · done in 4 months', color:'#14B86A', icon:'star' },
+];
+const mcEl = document.getElementById('marketComp');
+if (mcEl) mcEl.innerHTML = MARKET.map(m=>`
+  <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:${m.color==='#14B86A'?'#eaf7f0':'#f4f7fc'};border:1px solid ${m.color==='#14B86A'?'#cdeeda':'#e3e8f2'};border-radius:9px;flex-wrap:wrap">
+    <span class="ms" style="font-size:20px;color:${m.color};flex:none">${m.icon}</span>
+    <div style="flex:1;min-width:200px"><div style="font-size:13.5px;font-weight:700;color:#102B52">${m.label}</div><div style="font-size:13px;color:#6b7d9c;margin-top:1px">${m.saving}</div></div>
+    <div style="font-size:16px;font-weight:800;color:${m.color};white-space:nowrap">${m.cost}</div>
+  </div>`).join('');
+
+const OPS_COSTS = [
+  { icon:'dns', label:'Cloud hosting', cost:'€800–1,200/mo', detail:'Managed cloud environment (DigitalOcean / Hetzner): compute, managed PostgreSQL, Redis, CDN and staging. Scales with event volume. JAM Safety billed directly.' },
+  { icon:'psychology', label:'AI API (Claude)', cost:'€100–250/mo', detail:'Consumption-based. Per-function budget caps in admin. Scales with usage volume.' },
+  { icon:'support_agent', label:'Maintenance retainer', cost:'€1,500–2,500/mo', detail:'Post-hypercare: monitoring, bugs, minor features, security patches. Agreed before launch.' },
+];
+const ocEl = document.getElementById('opsCosts');
+if (ocEl) ocEl.innerHTML = OPS_COSTS.map(o=>`
+  <div style="background:#fff;border:1px solid #e3e8f2;border-radius:9px;padding:16px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span class="ms" style="font-size:18px;color:#6b7d9c">${o.icon}</span>
+      <div style="font-size:14px;font-weight:700;color:#102B52">${o.label}</div>
+    </div>
+    <div style="font-size:18px;font-weight:800;color:#102B52;margin-bottom:5px">${o.cost}</div>
+    <div style="font-size:13px;color:#6b7d9c;line-height:1.55">${o.detail}</div>
+  </div>`).join('');
+</script>
+<!-- Live two-sided comments (Heaventree ↔ JAM Safety) — backend on Netlify+Turso -->
+<script>window.JAM_DOC = 'delivery';</script>
+<script>(function(){var s=document.createElement('script');s.src='assets/comments.js?t='+Date.now();document.body.appendChild(s);})();</script>
 </body>
 </html>
