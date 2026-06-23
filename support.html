@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Get help and technical support. Find answers to common questions and contact our support team for assistance.">
+<title>Support | JAM Safety OS — Enterprise Proposal v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#eef1f7;font-family:Inter,system-ui,sans-serif;color:#111c2c;-webkit-font-smoothing:antialiased}
+.ms{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;line-height:1;white-space:nowrap;font-feature-settings:'liga';-webkit-font-feature-settings:'liga';display:inline-block}
+.layout{display:flex;min-height:100vh}
+/* NAV */
+.sidenav{position:fixed;left:0;top:0;bottom:0;width:252px;background:#0a1e3a;display:flex;flex-direction:column;padding:22px 14px;z-index:50;border-right:1px solid rgba(255,255,255,.06)}
+.nav-brand{display:flex;align-items:center;gap:11px;padding:4px 8px 20px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:18px}
+.nav-brand-icon{width:38px;height:38px;border-radius:8px;background:#2B7FFF;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}
+.nav-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7f93b6;padding:0 8px 9px}
+.nav-items{display:flex;flex-direction:column;gap:3px}
+.nav-item{height:40px;display:flex;align-items:center;gap:12px;padding:0 11px;cursor:pointer;border-radius:7px;font-size:14px;font-weight:600;color:#dbe5f5;transition:background .15s;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.active{background:#13315c}
+.nav-meta{margin-top:auto;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:14px}
+/* MAIN */
+.main{flex:1;margin-left:252px;display:flex;flex-direction:column;min-width:0}
+.topbar{position:sticky;top:0;z-index:40;height:66px;background:rgba(238,241,247,.88);backdrop-filter:blur(8px) saturate(140%);border-bottom:1px solid #dce2ee;display:flex;align-items:center;justify-content:space-between;padding:0 34px}
+.content{flex:1;padding:30px 34px 80px;max-width:1160px;width:100%}
+/* SECTIONS */
+.section{display:none;flex-direction:column;gap:24px}
+.section.active{display:flex}
+/* CARDS */
+.card{background:#fff;border:1px solid #e3e8f2;border-radius:12px}
+.card-header{padding:18px 22px;border-bottom:1px solid #e3e8f2;display:flex;align-items:center;gap:10px}
+.card-body{padding:20px 22px}
+.card-narrow{max-width:600px}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:4px 10px;font-size:13.5px;font-weight:600}
+.badge-mvp{color:#235c40;background:#eaf7f0;border:1px solid #cdeeda}
+.badge-plus{color:#1b5fc4;background:#e9f1ff;border:1px solid #cfe0ff}
+.badge-pp{color:#a83e58;background:#fdecef;border:1px solid #f6d0d8}
+/* TYPOGRAPHY */
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#2B7FFF;margin-bottom:10px}
+.h1{font-size:48px;font-weight:800;letter-spacing:-.025em;color:#fff;line-height:1.05}
+.h2{font-size:22px;font-weight:800;color:#102B52;letter-spacing:-.01em}
+.h3{font-size:16px;font-weight:800;color:#102B52}
+.body{font-size:14px;line-height:1.7;color:#3a4759}
+.label{font-size:14px;font-weight:600;color:#4a5f7c}
+/* GRID HELPERS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+/* COVER */
+.cover{background:#0a1e3a;border-radius:14px;overflow:hidden;position:relative;padding:44px 46px 38px;box-shadow:0 24px 60px -28px rgba(10,30,58,.55)}
+.cover::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(120,150,200,.15) 1px,transparent 1px);background-size:26px 26px;opacity:.7;pointer-events:none}
+.cover::after{content:'';position:absolute;top:0;right:0;width:46%;height:100%;background:radial-gradient(circle at 80% 30%,rgba(43,127,255,.3),transparent 60%);pointer-events:none}
+/* FAQ */
+.faq-item{border-bottom:1px solid #eef1f7;padding:16px 0}
+.faq-item:last-child{border-bottom:none}
+.faq-question{font-size:14px;font-weight:700;color:#102B52;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.faq-answer{font-size:13.5px;color:#535f74;line-height:1.65;margin-top:10px;display:none}
+.faq-item.open .faq-answer{display:block}
+/* CONTACT METHODS */
+.contact-method{display:flex;gap:14px;align-items:flex-start;padding:18px;background:#f5f7fb;border:1px solid #dce2ee;border-radius:10px}
+.contact-method-icon{width:40px;height:40px;border-radius:9px;background:#e9f1ff;border:1px solid #cfe0ff;display:flex;align-items:center;justify-content:center;flex:none}
+/* FORM */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:13px;font-weight:700;color:#102B52;margin-bottom:6px}
+.form-input,.form-textarea{width:100%;padding:10px 12px;border:1px solid #dce2ee;border-radius:8px;font-family:inherit;font-size:14px;color:#102B52}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:#2B7FFF;box-shadow:0 0 0 3px rgba(43,127,255,.1)}
+.form-textarea{resize:vertical;min-height:120px}
+.form-button{background:#2B7FFF;color:#fff;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.form-button:hover{background:#1e5fa8}
+/* STATUS BADGE */
+.status-badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600}
+.status-open{color:#1b5fc4;background:#e9f1ff;border:1px solid #cfe0ff}
+.status-inprogress{color:#9a6512;background:#fdeccf;border:1px solid #fde68a}
+.status-resolved{color:#235c40;background:#eaf7f0;border:1px solid #cdeeda}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══ LEFT NAV ═══ -->
+<aside class="sidenav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon"><span class="ms" style="font-size:22px;color:#fff;font-variation-settings:'FILL' 1">shield</span></div>
+    <div>
+      <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:.01em">JAM Safety</div>
+      <div style="font-size:12.5px;font-weight:600;color:#9fb0cc;letter-spacing:.04em;text-transform:uppercase;margin-top:1px">× Heaventree</div>
+    </div>
+  </div>
+  <div class="nav-label">Enterprise Proposal v2</div>
+  <div class="nav-items">
+    <div class="nav-item" onclick="window.location.href='index.html'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">dashboard</span><span>Overview</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#architecture'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">memory</span><span>Architecture</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#timeline'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">timeline</span><span>Timeline</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#sitemap'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">account_tree</span><span>App Sitemap</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#portals'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">grid_view</span><span>Portal Deep-Dive</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#scope'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">fact_check</span><span>Scope</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#risks'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">gpp_maybe</span><span>Risks &amp; Blockers</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#queries'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">contact_support</span><span>Client Queries</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#investment'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">payments</span><span>Investment</span></div>
+    <div class="nav-item" onclick="window.location.href='index.html#terms'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">gavel</span><span>Terms of Work</span></div>
+    <div class="nav-item active" onclick="window.location.href='support.html'" style="cursor:pointer"><span class="ms" style="font-size:19px;flex:none">help</span><span>Support</span></div>
+  </div>
+  <div class="nav-meta" style="margin-top:auto">
+    <div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:22px;font-weight:800;color:#fff">16</span><span style="font-size:13px;font-weight:600;color:#9fb0cc">weeks</span></div>
+    <div style="display:flex;align-items:baseline;gap:6px;margin-top:3px"><span style="font-size:22px;font-weight:800;color:#fff">€40k</span><span style="font-size:13px;font-weight:600;color:#9fb0cc">fixed · MVP+</span></div>
+    <div style="height:1px;background:rgba(255,255,255,.08);margin:10px 0"></div>
+    <div style="font-size:13.5px;color:#9fb0cc;line-height:1.5">Proposal v2 · June 2026<br>Prepared for Conor Rainey</div>
+    <a href="Technical Deep Dive.html" style="display:flex;align-items:center;gap:7px;margin-top:10px;background:rgba(43,127,255,.12);border:1px solid rgba(43,127,255,.25);border-radius:7px;padding:8px 11px;text-decoration:none">
+      <span class="ms" style="font-size:16px;color:#4d97ff">terminal</span>
+      <span style="font-size:12px;font-weight:700;color:#4d97ff;line-height:1.3">Technical Deep Dive →</span>
+    </a>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+  <header class="topbar">
+    <div>
+      <div style="font-size:18px;font-weight:800;color:#102B52;letter-spacing:-.01em" id="topTitle">Support</div>
+      <div style="font-size:14px;color:#5a7099;font-weight:500;margin-top:1px">Help Centre & Technical Support</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;background:#eef3ff;border:1px solid #cfe0ff;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:700;color:#1b5fc4;text-decoration:none">
+        <span class="ms" style="font-size:16px">arrow_back</span>Back to Proposal
+      </a>
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #dce2ee;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;color:#6b7d9c">
+        <span style="width:6px;height:6px;border-radius:50%;background:#14B86A"></span>Support Team Online
+      </span>
+    </div>
+  </header>
+
+  <div style="flex:1;padding:30px 34px 80px;overflow-y:auto">
+  <div style="max-width:1140px">
+
+  <!-- ══════════════════════ SUPPORT HERO ══════════════════════ -->
+  <div class="cover" style="position:relative;margin-bottom:30px">
+    <div style="position:relative;z-index:1">
+      <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;margin-bottom:24px">
+        <span style="width:7px;height:7px;border-radius:50%;background:#2B7FFF"></span>
+        <span style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#cdd9ef">24/7 Support · Fast Response</span>
+      </div>
+      <h1 class="h1">We're here to help</h1>
+      <p style="margin:16px 0 0;font-size:17px;line-height:1.55;color:#aebcd6;max-width:62ch;font-weight:450">Get answers to common questions, submit support tickets, access our knowledge base and reach our support team via email, chat or phone. Your issue is our priority.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px">
+        <button onclick="document.getElementById('contact-form').scrollIntoView({behavior:'smooth'})" style="background:#2B7FFF;color:#fff;border:none;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px">
+          <span class="ms" style="font-size:18px">mail</span>Submit a Ticket
+        </button>
+        <a href="https://chat.heaventree.io" target="_blank" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px">
+          <span class="ms" style="font-size:18px">chat</span>Live Chat
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ QUICK CONTACT ══════════════════════ -->
+  <div style="margin-bottom:30px">
+    <div class="h2" style="margin-bottom:16px">Get in touch</div>
+    <div class="grid-3">
+      <div class="contact-method">
+        <div class="contact-method-icon"><span class="ms" style="font-size:22px;color:#2B7FFF">mail</span></div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:3px">Email Support</div>
+          <div style="font-size:13px;color:#535f74;margin-bottom:8px">Response within 2 hours during business hours</div>
+          <a href="mailto:support@heaventree.io" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">support@heaventree.io</a>
+        </div>
+      </div>
+      <div class="contact-method">
+        <div class="contact-method-icon"><span class="ms" style="font-size:22px;color:#2B7FFF">chat</span></div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:3px">Live Chat</div>
+          <div style="font-size:13px;color:#535f74;margin-bottom:8px">Instant messaging during business hours (9am–6pm GMT)</div>
+          <a href="https://chat.heaventree.io" target="_blank" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">Open chat →</a>
+        </div>
+      </div>
+      <div class="contact-method">
+        <div class="contact-method-icon"><span class="ms" style="font-size:22px;color:#2B7FFF">phone</span></div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#102B52;margin-bottom:3px">Phone Support</div>
+          <div style="font-size:13px;color:#535f74;margin-bottom:8px">Urgent issues during UK / Ireland business hours</div>
+          <a href="tel:+442071838282" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">+44 207 183 8282</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ FAQ SECTION ══════════════════════ -->
+  <div style="margin-bottom:30px">
+    <div class="h2" style="margin-bottom:6px">Frequently Asked Questions</div>
+    <p class="label" style="margin-bottom:16px">Find quick answers to common questions about the JAM Safety OS platform.</p>
+    
+    <div class="card">
+      <div class="card-body">
+        <div class="faq-item open">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>What is the uptime guarantee for the platform?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            JAM Safety OS is hosted on enterprise-grade cloud infrastructure with 99.9% uptime SLA. We monitor the platform 24/7 and maintain redundant systems across multiple availability zones. During the hypercare period (first 4 weeks post-launch), our team provides daily standups to address any issues immediately.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How do I reset my password?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            Click "Forgot Password" on the login screen. Enter your email address and you'll receive a password reset link within 2 minutes. If you don't see it, check your spam folder. For security reasons, the reset link expires after 24 hours. Contact support if you need additional assistance.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>What browsers are supported?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            JAM Safety OS works on all modern browsers: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+. The Staff Field Portal is a progressive web app (PWA) and works on iOS and Android devices. For the best experience, keep your browser updated to the latest version.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How is my data backed up?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            All data is automatically backed up every 6 hours to geographically redundant storage. We retain daily backups for 30 days and weekly backups for 1 year. In the unlikely event of data loss, we can restore to any point within the retention window. Backups are encrypted and tested regularly.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>Can I export my data?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            Yes. All portals have one-click export functionality for reports, incident data, manpower records and safety documents. Exports are available in PDF, CSV and Excel formats. You can also request a full data export via GDPR data portability requests — we'll deliver a complete dataset within 30 days.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How do I add new users to the platform?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            Ops Admins can add users directly in the JAM Ops Portal under Settings → User Management. You can assign roles (Ops Admin, Ops Staff, Client Senior, Client Junior, Subcontractor, Field Staff) and send automated invite emails. Bulk user imports via CSV are also available for seasonal staff onboarding.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>What happens if I forget my MFA code?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            If you've lost access to your authenticator app, contact support immediately with proof of identity. We can disable MFA temporarily and send you a recovery code via email. For security, we'll ask you to re-enable MFA on your next login.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>Is the Staff Field Portal available offline?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            Yes. The Staff Field Portal is a progressive web app that works completely offline. Forms are cached locally and synced automatically when connectivity returns. This is especially useful at venues with poor signal. No internet connection is required to submit reports, inspections or incident forms.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How do I report a security vulnerability?</span>
+            <span class="ms" style="font-size:20px;color:#2B7FFF;flex:none">expand_more</span>
+          </div>
+          <div class="faq-answer">
+            Please report security issues to <strong>security@heaventree.io</strong> rather than using the public support channels. Include a detailed description of the vulnerability and steps to reproduce it. We'll acknowledge receipt within 24 hours and work with you on a fix. Do not share vulnerability details publicly until we've issued a patch.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ KNOWLEDGE BASE ══════════════════════ -->
+  <div style="margin-bottom:30px">
+    <div class="h2" style="margin-bottom:16px">Knowledge Base</div>
+    <div class="grid-2">
+      <div class="card" style="cursor:pointer;transition:all .15s" onmouseover="this.style.boxShadow='0 8px 24px -12px rgba(10,30,58,0.2)'" onmouseout="this.style.boxShadow='none'">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">school</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Getting Started Guide</div>
+          </div>
+          <p class="body" style="margin-bottom:12px">Learn the basics of JAM Safety OS. Set up your account, configure your workspace and complete your first tasks on each portal.</p>
+          <a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">Read guide →</a>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer;transition:all .15s" onmouseover="this.style.boxShadow='0 8px 24px -12px rgba(10,30,58,0.2)'" onmouseout="this.style.boxShadow='none'">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">admin_panel_settings</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Admin &amp; Configuration</div>
+          </div>
+          <p class="body" style="margin-bottom:12px">Configure user roles, permissions, document templates, approval workflows and system settings for your organisation.</p>
+          <a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">View documentation →</a>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer;transition:all .15s" onmouseover="this.style.boxShadow='0 8px 24px -12px rgba(10,30,58,0.2)'" onmouseout="this.style.boxShadow='none'">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">data_usage</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Data Management &amp; Privacy</div>
+          </div>
+          <p class="body" style="margin-bottom:12px">Understand GDPR compliance, data retention policies, user data export and how to manage personal information securely.</p>
+          <a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">Learn more →</a>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer;transition:all .15s" onmouseover="this.style.boxShadow='0 8px 24px -12px rgba(10,30,58,0.2)'" onmouseout="this.style.boxShadow='none'">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">troubleshooting</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Troubleshooting &amp; FAQs</div>
+          </div>
+          <p class="body" style="margin-bottom:12px">Solutions to common issues: login problems, sync errors, offline mode, file uploads and browser compatibility.</p>
+          <a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">Troubleshoot now →</a>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer;transition:all .15s" onmouseover="this.style.boxShadow='0 8px 24px -12px rgba(10,30,58,0.2)'" onmouseout="this.style.boxShadow='none'">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">api</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">API Documentation</div>
+          </div>
+          <p class="body" style="margin-bottom:12px">Developer guide for integrating JAM Safety OS with third-party systems. REST endpoints, authentication and code examples.</p>
+          <a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">API docs →</a>
+        </div>
+      </div>
+
+      <div class="card" style="cursor:pointer;transition:all .15s" onmouseover="this.style.boxShadow='0 8px 24px -12px rgba(10,30,58,0.2)'" onmouseout="this.style.boxShadow='none'">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">video_library</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Video Tutorials</div>
+          </div>
+          <p class="body" style="margin-bottom:12px">Step-by-step video guides for all major features. Watch how to use each portal, submit forms and generate reports.</p>
+          <a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">Watch tutorials →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ SUPPORT TICKET SYSTEM ══════════════════════ -->
+  <div style="margin-bottom:30px">
+    <div class="h2" style="margin-bottom:16px">Your Support Tickets</div>
+    <p class="label" style="margin-bottom:16px">Track the status of your submitted issues and check for updates.</p>
+    
+    <div class="card" style="overflow:hidden">
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr style="background:#f4f7fc;border-bottom:1px solid #e3e8f2">
+              <th style="padding:14px 18px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;color:#8a97ad;letter-spacing:.05em">Ticket ID</th>
+              <th style="padding:14px 18px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;color:#8a97ad;letter-spacing:.05em">Subject</th>
+              <th style="padding:14px 18px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;color:#8a97ad;letter-spacing:.05em">Status</th>
+              <th style="padding:14px 18px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;color:#8a97ad;letter-spacing:.05em">Created</th>
+              <th style="padding:14px 18px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;color:#8a97ad;letter-spacing:.05em">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #eef1f7">
+              <td style="padding:14px 18px;font-size:13px;font-weight:700;color:#102B52">#JAM-2024-0847</td>
+              <td style="padding:14px 18px;font-size:13px;color:#535f74">Staff Field PWA offline sync issue</td>
+              <td style="padding:14px 18px"><span class="status-badge status-inprogress">In Progress</span></td>
+              <td style="padding:14px 18px;font-size:13px;color:#8a97ad">2 days ago</td>
+              <td style="padding:14px 18px"><a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">View</a></td>
+            </tr>
+            <tr style="border-bottom:1px solid #eef1f7">
+              <td style="padding:14px 18px;font-size:13px;font-weight:700;color:#102B52">#JAM-2024-0823</td>
+              <td style="padding:14px 18px;font-size:13px;color:#535f74">MS Graph API permissions configuration</td>
+              <td style="padding:14px 18px"><span class="status-badge status-resolved">Resolved</span></td>
+              <td style="padding:14px 18px;font-size:13px;color:#8a97ad">1 week ago</td>
+              <td style="padding:14px 18px"><a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">View</a></td>
+            </tr>
+            <tr style="border-bottom:1px solid #eef1f7">
+              <td style="padding:14px 18px;font-size:13px;font-weight:700;color:#102B52">#JAM-2024-0801</td>
+              <td style="padding:14px 18px;font-size:13px;color:#535f74">ESMP generator AI agent configuration</td>
+              <td style="padding:14px 18px"><span class="status-badge status-resolved">Resolved</span></td>
+              <td style="padding:14px 18px;font-size:13px;color:#8a97ad">2 weeks ago</td>
+              <td style="padding:14px 18px"><a href="#" style="font-size:13px;font-weight:700;color:#2B7FFF;text-decoration:none">View</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ CONTACT FORM ══════════════════════ -->
+  <div style="margin-bottom:30px" id="contact-form">
+    <div class="h2" style="margin-bottom:6px">Submit a Support Ticket</div>
+    <p class="label" style="margin-bottom:16px">Can't find the answer? Fill out the form below and our support team will get back to you within 2 hours during business hours.</p>
+    
+    <div class="card">
+      <div class="card-body">
+        <form style="display:flex;flex-direction:column;gap:16px" onsubmit="handleSubmit(event)">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Your Name *</label>
+              <input type="text" class="form-input" placeholder="Conor Rainey" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" class="form-input" placeholder="conor@jamsafety.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <input type="text" class="form-input" placeholder="Brief description of your issue" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-input" required style="appearance:none;background-image:url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%232B7FFF%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3e%3cpolyline points=%226 9 12 15 18 9%3e%3c/polyline%3e%3c/svg%3e');background-repeat:no-repeat;background-position:right 10px center;background-size:20px;padding-right:36px">
+              <option value="">Select a category...</option>
+              <option value="technical">Technical Issue</option>
+              <option value="account">Account &amp; Access</option>
+              <option value="feature">Feature Request</option>
+              <option value="integration">Integration &amp; API</option>
+              <option value="security">Security Concern</option>
+              <option value="billing">Billing &amp; Invoicing</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Priority *</label>
+            <div style="display:flex;gap:12px">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;color:#535f74">
+                <input type="radio" name="priority" value="low" checked>
+                <span>Low (general question)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;color:#535f74">
+                <input type="radio" name="priority" value="medium">
+                <span>Medium (feature not working)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;font-weight:600;color:#535f74">
+                <input type="radio" name="priority" value="high">
+                <span>High (platform down)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description *</label>
+            <textarea class="form-textarea" placeholder="Please describe your issue in detail. Include any error messages, steps to reproduce and what you've already tried." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Portal / Feature (optional)</label>
+            <select class="form-input" style="appearance:none;background-image:url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%232B7FFF%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3e%3cpolyline points=%226 9 12 15 18 9%3e%3c/polyline%3e%3c/svg%3e');background-repeat:no-repeat;background-position:right 10px center;background-size:20px;padding-right:36px">
+              <option value="">-- Select if applicable --</option>
+              <option value="ops">JAM Ops Portal</option>
+              <option value="client">Client Portal</option>
+              <option value="subcontractor">Subcontractor Portal</option>
+              <option value="field">Staff Field Portal</option>
+              <option value="recruitment">Recruitment Portal</option>
+              <option value="other">Other / Multiple</option>
+            </select>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:12px;background:#f5f7fb;border-radius:8px">
+            <input type="checkbox" id="agree" style="margin-top:3px;cursor:pointer" required>
+            <label for="agree" style="font-size:13px;color:#535f74;cursor:pointer;line-height:1.5">I understand that support response times are 2 hours during business hours (9am–6pm GMT). For urgent issues outside these hours, please call our emergency line.</label>
+          </div>
+
+          <button type="submit" class="form-button">
+            <span class="ms" style="font-size:18px">send</span>Submit Ticket
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ SLA & RESPONSE TIMES ══════════════════════ -->
+  <div style="margin-bottom:30px">
+    <div class="h2" style="margin-bottom:16px">Support SLA & Response Times</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#e8607a">priority_high</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Critical Issues</div>
+          </div>
+          <div style="font-size:13px;color:#535f74;line-height:1.65">
+            <strong>Platform down or data loss</strong><br>
+            <strong>Response:</strong> 30 minutes<br>
+            <strong>Resolution target:</strong> 4 hours<br>
+            Available 24/7 via phone
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#d9912b">warning</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">High Priority</div>
+          </div>
+          <div style="font-size:13px;color:#535f74;line-height:1.65">
+            <strong>Major feature not working</strong><br>
+            <strong>Response:</strong> 1 hour<br>
+            <strong>Resolution target:</strong> 8 hours<br>
+            Business hours support
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#2B7FFF">info</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Medium Priority</div>
+          </div>
+          <div style="font-size:13px;color:#535f74;line-height:1.65">
+            <strong>Minor feature issue or question</strong><br>
+            <strong>Response:</strong> 2 hours<br>
+            <strong>Resolution target:</strong> 24 hours<br>
+            Email &amp; chat support
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span class="ms" style="font-size:24px;color:#14B86A">info</span>
+            <div style="font-size:15px;font-weight:700;color:#102B52">Low Priority</div>
+          </div>
+          <div style="font-size:13px;color:#535f74;line-height:1.65">
+            <strong>General question or feature request</strong><br>
+            <strong>Response:</strong> 24 hours<br>
+            <strong>Resolution target:</strong> 5 business days<br>
+            Email support
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ STATUS PAGE ══════════════════════ -->
+  <div style="background:#0a1e3a;border-radius:12px;padding:26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+    <div style="flex:1;min-width:240px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span class="ms" style="font-size:20px;color:#2B7FFF">monitor_heart</span>
+        <div style="font-size:14px;font-weight:800;color:#fff">System Status</div>
+      </div>
+      <p style="font-size:13.5px;color:#aebcd6;line-height:1.6;margin-bottom:12px">Check the real-time status of all JAM Safety OS services. Get updates on any maintenance or incidents.</p>
+      <a href="https://status.heaventree.io" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#7fb0ff;text-decoration:none">
+        <span>View status page</span>
+        <span class="ms" style="font-size:16px">open_in_new</span>
+      </a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding:16px;background:rgba(43,127,255,.1);border:1px solid rgba(43,127,255,.2);border-radius:9px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#14B86A"></span>
+        <span style="font-size:13px;font-weight:600;color:#dbe5f5">All systems operational</span>
+      </div>
+      <div style="font-size:12px;color:#7f93b6">Last updated: 2 minutes ago</div>
+    </div>
+  </div>
+
+  </div><!-- /max-width -->
+  </div><!-- /content scroll -->
+</main>
+</div><!-- /layout -->
+
+<script>
+function handleSubmit(event) {
+  event.preventDefault();
+  alert('Thank you for submitting your support ticket! We will get back to you within 2 hours during business hours (9am–6pm GMT).\n\nYour ticket number is: #JAM-2024-0856');
+  event.target.reset();
+}
+
+// FAQ toggle functionality
+document.querySelectorAll('.faq-question').forEach(q => {
+  q.addEventListener('click', function() {
+    this.parentElement.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
